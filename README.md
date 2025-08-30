@@ -1,96 +1,191 @@
 # 🚀 Garimpeiro Geek
 
-Sistema completo de recomendações de ofertas para Telegram com validação de conversores de afiliados, agendamento automático, fila de ofertas e controle de qualidade.
+Sistema completo de recomendações de ofertas para Telegram com validação de conversores de afiliados, agendamento automático, fila de ofertas, pipelines de processamento e controle de qualidade avançado.
 
 ## ✨ Funcionalidades
 
 ### 🔗 Sistema de Afiliados
 - **Validação automática** de conversores para Amazon, Mercado Livre, Shopee, Magazine Luiza, AliExpress, Awin e Rakuten
+- **APIs oficiais** com fallback para scraping quando necessário
 - **Cache inteligente** com Redis para otimizar conversões
 - **Validação de URLs** com regex patterns específicos por plataforma
 - **Geração de shortlinks** otimizados para cada plataforma
+- **Métricas de conversão** em tempo real por plataforma
 
 ### 📱 Bot do Telegram
 - **Formatação dinâmica** de mensagens com templates específicos por plataforma
 - **Emojis contextuais** baseados no tipo de oferta e qualidade
-- **Sistema de notificações** configurável
+- **Sistema de notificações** configurável para administradores
 - **Templates personalizados** para cada plataforma de afiliados
+- **Modo DRY_RUN** para testes sem publicação
+- **Comandos administrativos** (/on, /off, /status, /testpost)
 
-### ⏰ Agendador Cron
-- **Tarefas automáticas** para coleta de ofertas
-- **Enriquecimento de preços** em background
-- **Postagem automática** na fila
-- **Agregação de preços** para análise
+### ⏰ Sistema de Agendamento Cron
+- **Tarefas automáticas** para coleta de ofertas (90s)
+- **Enriquecimento de preços** em background (15min)
+- **Postagem automática** na fila (45s)
+- **Agregação de preços** para análise (30min)
+- **Sistema assíncrono** com timeouts e backoff
+- **Retry automático** para jobs falhados
 
-### 📋 Sistema de Fila
-- **Fila prioritária** de ofertas
+### 📋 Sistema de Fila e Moderação
+- **Fila prioritária** de ofertas com scoring automático
 - **Sistema de moderação** manual e automática
-- **Controle de qualidade** com scoring automático
+- **Controle de qualidade** com validação de afiliados
 - **Processamento assíncrono** de ofertas
+- **Sistema de prioridades** dinâmicas
+- **Workflow de aprovação** em múltiplos níveis
 
-### 📊 Monitoramento e Métricas
-- **Dashboard de conversões** em tempo real
-- **Métricas de performance** por plataforma
-- **Sistema de alertas** para falhas
-- **Motor de otimização** automático
+### 🔄 Pipelines de Processamento
+- **Ingestão de ofertas** via APIs e scrapers
+- **Enriquecimento automático** de dados
+- **Coleta de preços** históricos
+- **Agregação inteligente** de dados
+- **Sistema de cache** distribuído
+- **Processamento em lote** otimizado
+
+### 🕷️ Sistema de Scrapers
+- **Scrapers de lojas** com afiliação ativa
+- **Scrapers de comunidades** (Promobit, Pelando, MeuPC)
+- **Scrapers de preços** (Zoom, Buscapé)
+- **Medidas anti-bot** e rate limiting
+- **Cache inteligente** de dados coletados
+- **Tratamento de erros** robusto
+
+### 📊 Dashboard e Monitoramento
+- **Dashboard Flet** responsivo e interativo
+- **Métricas de produção** em tempo real
+- **Sistema de alertas** automáticos
+- **Logs estruturados** e legíveis
+- **Health checks** do sistema
+- **Relatórios automáticos** de performance
 
 ### 🚀 Produção e Escalabilidade
 - **Configuração Redis** otimizada para produção
 - **Cache distribuído** com fallback em memória
-- **Rate limiting** inteligente
+- **Rate limiting** inteligente por API
 - **Sistema de deduplicação** de ofertas
+- **Circuit breaker** para falhas de API
+- **Auto-scaling** baseado em métricas
 
-## 🏗️ Arquitetura
+## 🏗️ Arquitetura Completa
 
 ```
 src/
 ├── affiliate/          # Conversores de afiliados
-│   ├── amazon.py      # Conversor Amazon
+│   ├── amazon.py      # Conversor Amazon (ASIN-first + fallback)
 │   ├── mercadolivre.py # Conversor Mercado Livre
 │   ├── shopee.py      # Conversor Shopee
 │   ├── magazineluiza.py # Conversor Magazine Luiza
 │   ├── aliexpress.py  # Conversor AliExpress
 │   ├── awin.py        # Conversor Awin
-│   └── rakuten.py     # Conversor Rakuten
-├── app/
+│   ├── rakuten.py     # Conversor Rakuten
+│   ├── *_api.py       # Clientes de API oficiais
+│   └── base_api.py    # Classe base para APIs
+├── app/                # Aplicação principal
 │   ├── queue/         # Sistema de fila de ofertas
 │   │   ├── offer_queue.py      # Fila principal
 │   │   ├── moderation_system.py # Sistema de moderação
 │   │   ├── quality_controller.py # Controle de qualidade
 │   │   └── queue_manager.py    # Gerenciador da fila
-│   └── scheduler/     # Agendador cron
-│       ├── cron_manager.py     # Gerenciador de cron jobs
-│       ├── job_scheduler.py    # Agendador de tarefas
-│       └── task_runner.py     # Executor de tarefas
-├── core/              # Componentes principais
-│   ├── affiliate_validator.py # Validador de afiliados
-│   ├── affiliate_cache.py     # Cache de afiliados
+│   ├── scheduler/     # Agendador cron
+│   │   ├── cron_manager.py     # Gerenciador de cron jobs
+│   │   ├── job_scheduler.py    # Agendador de tarefas
+│   │   ├── task_runner.py     # Executor de tarefas
+│   │   └── post_scheduler.py  # Agendador de postagens
+│   ├── dashboard/     # Dashboard interno
+│   └── bot/           # Bot interno
+├── core/               # Componentes principais
+│   ├── models.py      # Modelos de dados (Offer, etc.)
+│   ├── settings.py    # Configurações (.env)
+│   ├── database.py    # Banco de dados SQLite
+│   ├── db_init.py     # Inicialização do banco
+│   ├── affiliate_*.py # Sistema de afiliados
 │   ├── conversion_metrics.py  # Métricas de conversão
 │   ├── failure_alerts.py      # Sistema de alertas
-│   └── optimization_engine.py # Motor de otimização
-├── dashboard/         # Dashboard de conversões
-│   └── conversion_dashboard.py
-├── telegram_bot/      # Bot do Telegram
+│   ├── optimization_engine.py # Motor de otimização
+│   ├── performance_logger.py  # Logger de performance
+│   ├── enhanced_metrics.py    # Métricas avançadas
+│   ├── alert_system.py        # Sistema de alertas
+│   ├── analytics_queries.py   # Queries analíticas
+│   ├── cache_config.py        # Configuração de cache
+│   ├── deduplication.py       # Sistema de deduplicação
+│   ├── rate_limiter.py        # Rate limiting
+│   ├── affiliate_cache.py     # Cache de afiliados
+│   ├── offer_pipeline.py      # Pipeline de ofertas
+│   ├── affiliate_converter.py # Conversor de afiliados
+│   ├── matchers.py            # Sistema de matching
+│   ├── metrics.py             # Métricas básicas
+│   ├── platforms.py           # Configurações de plataformas
+│   ├── live_logs.py           # Logs em tempo real
+│   ├── logging_setup.py       # Configuração de logs
+│   ├── storage.py             # Sistema de armazenamento
+│   ├── monitoring/            # Sistema de monitoramento
+│   └── cache/                 # Sistema de cache
+├── pipelines/          # Pipelines de processamento
+│   ├── ingest_offers_api.py   # Ingestão via APIs
+│   ├── enrich_offers_api.py   # Enriquecimento de dados
+│   ├── price_collect.py       # Coleta de preços
+│   ├── price_enrich.py        # Enriquecimento de preços
+│   └── price_aggregate.py     # Agregação de preços
+├── posting/            # Sistema de postagem
+│   ├── message_formatter.py   # Formatação de mensagens
+│   └── posting_manager.py     # Gerenciador de postagens
+├── scrapers/           # Sistema de scrapers
+│   ├── base_scraper.py        # Classe base para scrapers
+│   ├── lojas/                 # Scrapers de lojas
+│   ├── comunidades/           # Scrapers de comunidades
+│   │   ├── promobit/          # Scraper Promobit
+│   │   ├── pelando/           # Scraper Pelando
+│   │   └── meupc/             # Scraper MeuPC
+│   └── precos/                # Scrapers de preços
+│       ├── zoom/              # Scraper Zoom
+│       └── buscape/           # Scraper Buscapé
+├── telegram_bot/       # Bot do Telegram
+│   ├── bot.py                 # Bot principal
+│   ├── bot_manager.py         # Gerenciador do bot
 │   ├── message_builder.py     # Construtor de mensagens
-│   ├── notification_manager.py # Gerenciador de notificações
-│   └── bot.py                 # Bot principal
-└── utils/             # Utilitários
-    ├── anti_bot.py           # Medidas anti-bot
-    ├── affiliate_validator.py # Validador de URLs
-    └── url_utils.py          # Utilitários de URL
+│   └── notification_manager.py # Gerenciador de notificações
+├── utils/              # Utilitários
+│   ├── anti_bot.py            # Medidas anti-bot
+│   ├── affiliate_validator.py # Validador de URLs
+│   ├── asin_cache.py          # Cache de ASINs
+│   ├── url_utils.py           # Utilitários de URL
+│   └── sqlite_helpers.py      # Helpers para SQLite
+├── diagnostics/        # Sistema de diagnóstico
+│   └── ui_reporter.py         # Relatórios de UI
+├── recommender/        # Sistema de recomendação
+├── db/                 # Banco de dados
+│   ├── garimpeiro_geek.db    # Banco principal
+│   ├── aff_cache.sqlite       # Cache de afiliados
+│   └── analytics.sqlite       # Banco de analytics
+├── logs/               # Logs do sistema
+├── exports/            # Exportações de dados
+└── tests/              # Testes automatizados
+    ├── unit/           # Testes unitários
+    ├── e2e/            # Testes end-to-end
+    ├── api/            # Testes de API
+    ├── helpers/        # Helpers para testes
+    └── data/           # Dados de teste
+
+apps/
+└── flet_dashboard/     # Dashboard Flet
+    ├── main.py         # Aplicação principal
+    ├── ui_components.py # Componentes de UI
+    └── run_dashboard.py # Script de execução
 ```
 
 ## 🚀 Instalação
 
 ### Pré-requisitos
 - Python 3.9+
-- Redis 5.0+
+- Redis 5.0+ (opcional, com fallback em memória)
 - Git
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/SEU_USUARIO/garimpeiro-geek.git
-cd garimpeiro-geek
+git clone https://github.com/duduzinho15/Ainda-nao-funciona.git
+cd Sistema-de-Recomendacoes-de-Ofertas-Telegram2.0
 ```
 
 ### 2. Instale as dependências
@@ -100,59 +195,80 @@ pip install -r requirements.txt
 
 ### 3. Configure as variáveis de ambiente
 ```bash
-cp .env.example .env
+cp config/env.example .env
 # Edite o arquivo .env com suas configurações
 ```
 
-### 4. Configure o Redis
+### 4. Configure o Redis (opcional)
 ```bash
-cp config/redis.example.conf config/redis.conf
-# Edite o arquivo redis.conf conforme necessário
+# Para desenvolvimento, o sistema usa cache em memória
+# Para produção, configure Redis conforme config/redis.production.conf
 ```
 
 ## ⚙️ Configuração
 
 ### Variáveis de Ambiente (.env)
 ```bash
-# Telegram Bot
-TELEGRAM_BOT_TOKEN=seu_token_aqui
-TELEGRAM_CHAT_ID=seu_chat_id_aqui
+# ========================================
+# TELEGRAM
+# ========================================
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHANNEL_ID=your_channel_id_here
+TELEGRAM_ADMIN_USER_ID=your_admin_user_id_here
 
-# Redis
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=sua_senha_aqui
+# ========================================
+# BANCO DE DADOS
+# ========================================
+DATABASE_URL=sqlite:///src/db/garimpeiro_geek.db
+DATABASE_PATH=src/db/garimpeiro_geek.db
 
-# Afiliados
-AFFILIATE_AMAZON_TAG=garimpeirogeek-20
+# ========================================
+# AFILIADOS
+# ========================================
+AFFILIATE_AMAZON_TAG=garimpeirogee-20
 AFFILIATE_MERCADOLIVRE_ID=seu_id_aqui
 AFFILIATE_SHOPEE_ID=seu_id_aqui
 AFFILIATE_AWIN_ID=seu_id_aqui
 AFFILIATE_RAKUTEN_ID=seu_id_aqui
-```
 
-### Configuração Redis
-O arquivo `config/redis.production.conf` contém configurações otimizadas para produção:
-- Persistência configurada
-- Configurações de memória otimizadas
-- Logging estruturado
-- Configurações de segurança
+# ========================================
+# RAKUTEN ADVERTISING
+# ========================================
+RAKUTEN_ENABLED=false
+RAKUTEN_WEBSERVICE_TOKEN=seu_token_aqui
+RAKUTEN_SECURITY_TOKEN=seu_security_token_aqui
+
+# ========================================
+# MONITORAMENTO E CACHE
+# ========================================
+MONITORING_ENABLED=true
+CACHE_ENABLED=true
+RATE_LIMIT_ENABLED=true
+BACKUP_ENABLED=true
+```
 
 ## 🧪 Testes
 
 ### Executar todos os testes
 ```bash
-pytest tests/
+make test
 ```
 
 ### Testes unitários
 ```bash
-pytest tests/unit/
+make test-unit
 ```
 
 ### Testes de integração
 ```bash
-pytest tests/e2e/
+make test-e2e
+```
+
+### Linting e formatação
+```bash
+make format      # Formatação com Black + Ruff
+make lint        # Linting com Ruff
+make type-check  # Verificação de tipos com MyPy
 ```
 
 ### Testes específicos
@@ -165,57 +281,85 @@ pytest tests/unit/test_queue_system.py
 
 # Testar agendador
 pytest tests/unit/test_scheduler.py
+
+# Testar scrapers
+pytest tests/unit/test_scrapers/
 ```
 
 ## 🚀 Execução
 
-### 1. Iniciar o Redis
-```bash
-redis-server config/redis.conf
-```
-
-### 2. Executar o sistema principal
+### 1. Executar o sistema principal
 ```bash
 python -m src.app.main
 ```
 
-### 3. Executar o bot do Telegram
+### 2. Executar o bot do Telegram
 ```bash
 python -m src.telegram_bot.bot
 ```
 
-### 4. Executar o dashboard
+### 3. Executar o dashboard Flet
 ```bash
-python -m src.dashboard.conversion_dashboard
+python apps/flet_dashboard/run_dashboard.py
+```
+
+### 4. Executar scrapers específicos
+```bash
+# Scraper Promobit
+python -m src.scrapers.comunidades.promobit
+
+# Scraper de preços Zoom
+python -m src.scrapers.precos.zoom
+```
+
+### 5. Executar pipelines
+```bash
+# Pipeline de ingestão
+python -m src.pipelines.ingest_offers_api
+
+# Pipeline de enriquecimento
+python -m src.pipelines.enrich_offers_api
 ```
 
 ## 📊 Monitoramento
 
-### Dashboard de Conversões
+### Dashboard Flet
 Acesse o dashboard em tempo real para monitorar:
 - Taxa de conversão por plataforma
 - Performance dos conversores
 - Estatísticas de cache
 - Alertas de falhas
+- Métricas de postagem
+- Status dos scrapers
 
 ### Métricas Disponíveis
-- **Conversões**: Total, sucesso, falha
+- **Conversões**: Total, sucesso, falha por plataforma
 - **Performance**: Tempo de resposta, cache hits/misses
 - **Qualidade**: Score das ofertas, taxa de aprovação
-- **Sistema**: Uso de memória, conexões Redis
+- **Sistema**: Uso de memória, conexões, uptime
+- **Scrapers**: Taxa de sucesso, erros, performance
+
+### Logs Estruturados
+- Logs de aplicação em `src/logs/`
+- Logs de performance e métricas
+- Logs de erros e alertas
+- Logs de auditoria e segurança
 
 ## 🔧 Desenvolvimento
 
 ### Formatação de Código
 ```bash
-# Formatação com Black
-black src/ tests/
+# Formatação automática
+make format
 
-# Linting com Ruff
-ruff check src/ tests/
+# Linting
+make lint
 
-# Verificação de tipos com MyPy
-mypy src/
+# Verificação de tipos
+make type-check
+
+# Limpeza
+make clean
 ```
 
 ### Estrutura de Commits
@@ -228,21 +372,39 @@ Seguimos o padrão [Conventional Commits](https://www.conventionalcommits.org/):
 - `test:` Testes
 - `chore:` Manutenção
 
+### Padrões de Código
+- **Type hints** obrigatórios em todas as funções públicas
+- **Docstrings** claras e objetivas
+- **Logs estruturados** com contexto
+- **Tratamento de erros** robusto
+- **Testes unitários** para todas as funcionalidades
+- **Imports absolutos** a partir de `src/`
+
 ## 📚 Documentação
 
-- [📋 Relatório de Estrutura Final](docs/RELATORIO_ESTRUTURA_FINAL.md)
+- [📋 TODO Unificado](TODO.md) - Roadmap completo do projeto
 - [🔧 Especificações Técnicas](docs/ESPECIFICACAO_GARIMPEIRO_GEEK_COM_RAKUTEN.md)
 - [🤖 Documentação do Bot](docs/telegram_bot.md)
 - [🔗 APIs de Integração](docs/apis_integracao.md)
 - [📊 Exemplos de Afiliados](docs/affiliate_examples.md)
+- [📊 Dados Históricos](docs/dados_historico_precos.md)
 
 ## 🤝 Contribuição
 
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+3. Commit suas mudanças (`git commit -m 'feat: Add some AmazingFeature'`)
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
+
+### Antes de submeter
+```bash
+# Executar todos os checks
+make format && make lint && make type-check && make test
+
+# Verificar cobertura de testes
+make test  # Inclui relatório de cobertura
+```
 
 ## 📄 Licença
 
@@ -251,19 +413,80 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ## 🆘 Suporte
 
 Para suporte e dúvidas:
-- Abra uma [Issue](https://github.com/SEU_USUARIO/garimpeiro-geek/issues)
+- Abra uma [Issue](https://github.com/duduzinho15/Ainda-nao-funciona/issues)
 - Consulte a [documentação](docs/)
 - Verifique os [exemplos](tests/)
+- Consulte o [TODO.md](TODO.md) para roadmap
 
 ## 🎯 Roadmap
 
-- [ ] Interface web para moderação
-- [ ] Machine Learning para scoring de ofertas
+### ✅ Implementado
+- [x] Sistema de afiliados completo
+- [x] Bot do Telegram funcional
+- [x] Sistema de fila e moderação
+- [x] Pipelines de processamento
+- [x] Scrapers organizados
+- [x] Dashboard Flet
+- [x] Sistema de monitoramento
+
+### 🚧 Em Desenvolvimento
+- [ ] Testes E2E completos
+- [ ] Sistema de postagem automática
+- [ ] Otimizações de performance
+
+### 📋 Planejado
+- [ ] Machine Learning para scoring
 - [ ] Integração com mais plataformas
 - [ ] Sistema de notificações push
-- [ ] API REST para integrações externas
+- [ ] API REST para integrações
 - [ ] Dashboard mobile responsivo
+- [ ] Sistema de backup automático
+
+---
+
+## 🔄 Atualizações Automáticas
+
+**⚠️ IMPORTANTE**: Este README é atualizado automaticamente sempre que:
+- Novos módulos são criados
+- Estrutura de pastas é alterada
+- Novas funcionalidades são implementadas
+- Configurações são modificadas
+
+### **Sistema de Atualização Automática**
+O projeto inclui um sistema inteligente que mantém o README sempre sincronizado:
+
+#### **Atualização Manual**
+```bash
+# Windows (PowerShell)
+.\scripts\update_readme.ps1
+
+# Linux/Mac
+python scripts/update_readme.py
+
+# Via Makefile (se disponível)
+make update-readme
+```
+
+#### **Atualização Automática**
+- **Git Hook**: Executa automaticamente antes de cada commit
+- **Detecção Inteligente**: Identifica mudanças na estrutura
+- **Cache de Performance**: Evita atualizações desnecessárias
+- **Integração Total**: Funciona em Windows, Linux e Mac
+
+#### **Documentação Completa**
+Para detalhes sobre o sistema de atualização, consulte:
+- [📋 Sistema de Atualização Automática](docs/README_UPDATE_SYSTEM.md)
+
+**Para manter o README atualizado**:
+1. ✅ **Sempre crie arquivos** dentro da estrutura definida
+2. ✅ **Use os padrões** de nomenclatura estabelecidos
+3. ✅ **Documente novas funcionalidades**
+4. ✅ **O sistema atualiza automaticamente** via Git hooks
 
 ---
 
 **Desenvolvido com ❤️ para a comunidade de ofertas e promoções**
+
+**Versão**: 2.0  
+P25-08-30 15:03:59
+**Status**: ✅ Atualizado automaticamente

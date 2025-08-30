@@ -1,7 +1,7 @@
 # Makefile para Garimpeiro Geek
 # Sistema de Recomendações de Ofertas Telegram
 
-.PHONY: help install test lint format clean docker-build docker-run docker-stop
+.PHONY: help install test lint format clean docker-build docker-run docker-stop docs update-readme
 
 # Default target
 help:
@@ -25,7 +25,8 @@ help:
 	@echo ""
 	@echo "🔧 Utilitários:"
 	@echo "  clean            - Limpar arquivos temporários"
-	@echo "  docs             - Gerar documentação"
+	@echo "  docs             - Gerar documentação e atualizar README"
+	@echo "  update-readme    - Atualizar README.md automaticamente"
 	@echo "  release          - Criar nova release"
 
 # Desenvolvimento
@@ -95,7 +96,12 @@ clean:
 
 docs:
 	@echo "📚 Gerando documentação..."
-	# Adicionar comandos para gerar documentação se necessário
+	@echo "📝 Atualizando README.md..."
+	python scripts/update_readme.py
+
+update-readme:
+	@echo "📝 Atualizando README.md automaticamente..."
+	python scripts/update_readme.py
 
 release:
 	@echo "🚀 Criando nova release..."
