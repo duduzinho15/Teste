@@ -1,419 +1,371 @@
 """
-Message Formatter para o sistema Garimpeiro Geek.
-Formata ofertas para postagem no Telegram com templates profissionais.
+Sistema de Formatação de Mensagens para Ofertas
+Formata ofertas com templates profissionais por plataforma
 """
 
-from typing import Dict, List, Optional, Any
-from datetime import datetime, timedelta
-from decimal import Decimal
 import re
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Any
+from datetime import datetime, timedelta
 
-from src.core.models import Offer
+from ..core.models import Offer
 
 
 @dataclass
 class MessageTemplate:
-    """Template de mensagem para uma plataforma."""
+    """Template de mensagem para uma plataforma"""
+    
     platform: str
-    emoji: str
-    format_string: str
-    required_fields: List[str]
-    optional_fields: List[str]
+    emoji_prefix: str
+    title_format: str
+    price_format: str
+    discount_format: str
+    store_format: str
+    category_format: str
+    coupon_format: str
+    badge_format: str
+    footer_format: str
 
 
 class MessageFormatter:
-    """Formata ofertas para postagem no Telegram."""
+    """Formatador de mensagens para ofertas"""
     
     def __init__(self):
-        """Inicializa o formatter com templates padrão."""
-        self.templates = self._create_default_templates()
-        self.emojis = self._create_emoji_mapping()
-        self.quality_badges = self._create_quality_badges()
-    
-    def _create_default_templates(self) -> Dict[str, MessageTemplate]:
-        """Cria templates padrão para cada plataforma."""
-        return {
+        # Templates por plataforma
+        self.templates = {
             "amazon": MessageTemplate(
                 platform="Amazon",
-                emoji="📦",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🛒",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "mercadolivre": MessageTemplate(
                 platform="Mercado Livre",
-                emoji="🛒",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🛍️",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "shopee": MessageTemplate(
                 platform="Shopee",
-                emoji="🛍️",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🛒",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "magazineluiza": MessageTemplate(
                 platform="Magazine Luiza",
-                emoji="🏪",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🛍️",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "aliexpress": MessageTemplate(
                 platform="AliExpress",
-                emoji="🌏",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🌏",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "awin": MessageTemplate(
                 platform="Awin",
-                emoji="🔗",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🔄",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             ),
             "rakuten": MessageTemplate(
                 platform="Rakuten",
-                emoji="🎯",
-                format_string=(
-                    "{emoji} **{title}**\n\n"
-                    "💰 **Preço Atual**: R$ {price}\n"
-                    "💸 **Preço Original**: R$ {original_price}\n"
-                    "🎯 **Desconto**: {discount_percentage}%\n"
-                    "{coupon_info}"
-                    "{price_history_badge}\n"
-                    "🏪 **Loja**: {store}\n"
-                    "📂 **Categoria**: {category}\n"
-                    "🔗 **Link**: {affiliate_url}\n"
-                    "{urgency_badge}"
-                ),
-                required_fields=["title", "price", "affiliate_url"],
-                optional_fields=["original_price", "discount_percentage", "store", "category", "coupon_code", "stock_quantity"]
+                emoji_prefix="🎁",
+                title_format="**{title}**",
+                price_format="💰 **R$ {current_price:.2f}**",
+                discount_format="🎯 **{discount_percentage}% OFF**",
+                store_format="🏪 {store}",
+                category_format="📂 {category}",
+                coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+                badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+                footer_format="🔗 [Ver oferta]({affiliate_url})"
             )
         }
+        
+        # Template padrão para plataformas não reconhecidas
+        self.default_template = MessageTemplate(
+            platform="Loja",
+            emoji_prefix="🛒",
+            title_format="**{title}**",
+            price_format="💰 **R$ {current_price:.2f}**",
+            discount_format="🎯 **{discount_percentage}% OFF**",
+            store_format="🏪 {store}",
+            category_format="📂 {category}",
+            coupon_format="🎫 Cupom: **{coupon}**" if "{coupon}" else "",
+            badge_format="🔥 **Menor preço em 90 dias!**" if "{is_lowest_price}" else "",
+            footer_format="🔗 [Ver oferta]({affiliate_url})"
+        )
     
-    def _create_emoji_mapping(self) -> Dict[str, str]:
-        """Cria mapeamento de emojis por categoria."""
-        return {
-            "price": {
-                "high": "👑",
-                "medium": "💰",
-                "low": "💎"
-            },
-            "discount": {
-                "high": "🔥",
-                "medium": "💎",
-                "low": "💰"
-            },
-            "urgency": {
-                "high": "⚡",
-                "medium": "🎯",
-                "low": "📌"
-            },
-            "quality": {
-                "excellent": "🏆",
-                "good": "⭐",
-                "average": "📊"
-            }
-        }
-    
-    def _create_quality_badges(self) -> Dict[str, str]:
-        """Cria badges de qualidade."""
-        return {
-            "menor_preco_90d": "🏆 **MENOR PREÇO DOS ÚLTIMOS 90 DIAS!**",
-            "menor_preco_30d": "💎 **BOM PREÇO!**",
-            "preco_estavel": "📊 **Preço estável**",
-            "preco_em_alta": "📈 **Preço em alta**"
-        }
-    
-    def format_offer(self, offer: Offer, platform: Optional[str] = None) -> str:
+    def format_offer_message(self, offer: Offer, platform: Optional[str] = None) -> str:
         """
-        Formata uma oferta para postagem no Telegram.
+        Formata uma oferta em mensagem completa
         
         Args:
             offer: Oferta a ser formatada
             platform: Plataforma específica (opcional)
             
         Returns:
-            Mensagem formatada para o Telegram
+            Mensagem formatada
         """
-        if not offer:
-            raise ValueError("Oferta não pode ser nula")
+        try:
+            # Identificar plataforma se não fornecida
+            if not platform:
+                platform = self._identify_platform(offer)
+            
+            # Obter template
+            template = self.templates.get(platform, self.default_template)
+            
+            # Preparar dados para formatação
+            message_data = self._prepare_message_data(offer, template)
+            
+            # Construir mensagem
+            message = self._build_message(template, message_data)
+            
+            return message
+            
+        except Exception as e:
+            # Fallback para mensagem simples
+            return self._format_simple_message(offer)
+    
+    def _identify_platform(self, offer: Offer) -> str:
+        """Identifica a plataforma baseada na oferta"""
+        if hasattr(offer, 'platform') and offer.platform:
+            return offer.platform.lower()
         
-        # Determinar plataforma
-        if not platform:
-            platform = "generic"
+        # Tentar identificar pelo URL
+        if hasattr(offer, 'url') and offer.url:
+            url = offer.url.lower()
+            if 'amazon' in url or 'amzn.to' in url:
+                return 'amazon'
+            elif 'mercadolivre' in url:
+                return 'mercadolivre'
+            elif 'shopee' in url:
+                return 'shopee'
+            elif 'magazine' in url:
+                return 'magazineluiza'
+            elif 'aliexpress' in url:
+                return 'aliexpress'
+            elif 'awin' in url or 'tidd.ly' in url:
+                return 'awin'
+            elif 'rakuten' in url:
+                return 'rakuten'
         
-        # Obter template
-        template = self.templates.get(platform.lower(), self.templates["amazon"])
+        return 'default'
+    
+    def _prepare_message_data(self, offer: Offer, template: MessageTemplate) -> Dict[str, Any]:
+        """Prepara dados para formatação da mensagem"""
+        # Preços
+        current_price = getattr(offer, 'price', getattr(offer, 'current_price', 0))
+        original_price = getattr(offer, 'original_price', 0)
         
-        # Preparar dados para formatação
-        format_data = self._prepare_format_data(offer, template)
+        # Calcular desconto se não fornecido
+        discount_percentage = getattr(offer, 'discount_percentage', 0)
+        if not discount_percentage and original_price and current_price:
+            discount_percentage = int(((original_price - current_price) / original_price) * 100)
         
-        # Aplicar template
-        message = template.format_string.format(**format_data)
+        # Outros campos
+        title = getattr(offer, 'title', 'Produto')
+        store = getattr(offer, 'store', 'Loja')
+        category = getattr(offer, 'category', 'Categoria')
+        coupon = getattr(offer, 'coupon', '')
+        affiliate_url = getattr(offer, 'url', getattr(offer, 'affiliate_url', ''))
         
-        # Validar campos obrigatórios
-        self._validate_required_fields(format_data, template.required_fields)
+        # Verificar se é menor preço (simulado)
+        is_lowest_price = getattr(offer, 'is_lowest_price', False)
+        
+        return {
+            'title': title,
+            'current_price': current_price,
+            'original_price': original_price,
+            'discount_percentage': discount_percentage,
+            'store': store,
+            'category': category,
+            'coupon': coupon,
+            'affiliate_url': affiliate_url,
+            'is_lowest_price': is_lowest_price
+        }
+    
+    def _build_message(self, template: MessageTemplate, data: Dict[str, Any]) -> str:
+        """Constrói a mensagem usando o template"""
+        message_parts = []
+        
+        # Emoji e título da plataforma
+        message_parts.append(f"{template.emoji_prefix} **{template.platform}**")
+        message_parts.append("")
+        
+        # Título do produto
+        title = template.title_format.format(**data)
+        message_parts.append(title)
+        message_parts.append("")
+        
+        # Preço atual
+        if data['current_price']:
+            price = template.price_format.format(**data)
+            message_parts.append(price)
+        
+        # Preço original (se diferente)
+        if data['original_price'] and data['original_price'] > data['current_price']:
+            original = f"~~R$ {data['original_price']:.2f}~~"
+            message_parts.append(original)
+        
+        # Desconto
+        if data['discount_percentage']:
+            discount = template.discount_format.format(**data)
+            message_parts.append(discount)
+        
+        # Cupom
+        if data['coupon']:
+            coupon = template.coupon_format.format(**data)
+            message_parts.append(coupon)
+        
+        # Badge de menor preço
+        if data['is_lowest_price']:
+            badge = template.badge_format.format(**data)
+            message_parts.append(badge)
+        
+        message_parts.append("")
+        
+        # Informações da loja
+        store_info = template.store_format.format(**data)
+        message_parts.append(store_info)
+        
+        # Categoria
+        if data['category']:
+            category_info = template.category_format.format(**data)
+            message_parts.append(category_info)
+        
+        message_parts.append("")
+        
+        # Link da oferta
+        if data['affiliate_url']:
+            footer = template.footer_format.format(**data)
+            message_parts.append(footer)
+        
+        return "\n".join(message_parts)
+    
+    def _format_simple_message(self, offer: Offer) -> str:
+        """Formatação simples de fallback"""
+        title = getattr(offer, 'title', 'Produto')
+        price = getattr(offer, 'price', getattr(offer, 'current_price', 0))
+        store = getattr(offer, 'store', 'Loja')
+        url = getattr(offer, 'url', getattr(offer, 'affiliate_url', ''))
+        
+        message = f"🛒 **{title}**\n"
+        message += f"💰 **R$ {price:.2f}**\n"
+        message += f"🏪 {store}\n"
+        
+        if url:
+            message += f"🔗 [Ver oferta]({url})"
         
         return message
     
-    def _prepare_format_data(self, offer: Offer, template: MessageTemplate) -> Dict[str, Any]:
-        """Prepara dados para formatação da mensagem."""
-        # Emoji da plataforma
-        emoji = template.emoji
-        
-        # Formatação de preços
-        current_price = self._format_price(offer.price)
-        original_price = self._format_price(offer.original_price) if offer.original_price else None
-        
-        # Cálculo de desconto
-        discount_percentage = self._calculate_discount(offer.price, offer.original_price)
-        
-        # Informações de cupom
-        coupon_info = self._format_coupon_info(offer)
-        
-        # Badge de histórico de preços
-        price_history_badge = self._get_price_history_badge(offer)
-        
-        # Badge de urgência
-        urgency_badge = self._get_urgency_badge(offer)
-        
-        # Loja e categoria
-        store = offer.store or "Loja Oficial"
-        category = offer.category or "Geral"
-        
-        # Link de afiliado
-        affiliate_url = offer.affiliate_url or "Link não disponível"
-        
-        return {
-            "emoji": emoji,
-            "title": offer.title or "Produto sem título",
-            "price": current_price,
-            "original_price": original_price or "N/A",
-            "discount_percentage": discount_percentage,
-            "coupon_info": coupon_info,
-            "price_history_badge": price_history_badge,
-            "store": store,
-            "category": category,
-            "affiliate_url": affiliate_url,
-            "urgency_badge": urgency_badge
-        }
-    
-    def _format_price(self, price: Optional[Decimal]) -> str:
-        """Formata preço para exibição."""
-        if not price:
-            return "0.00"
-        
-        return f"{float(price):.2f}".replace(".", ",")
-    
-    def _calculate_discount(self, price: Optional[Decimal], original_price: Optional[Decimal]) -> str:
-        """Calcula percentual de desconto."""
-        if not price or not original_price:
-            return "0"
-        
-        if original_price <= price:
-            return "0"
-        
-        discount = ((original_price - price) / original_price) * 100
-        return f"{discount:.0f}"
-    
-    def _format_coupon_info(self, offer: Offer) -> str:
-        """Formata informações de cupom."""
-        if not offer.coupon_code:
-            return ""
-        
-        coupon_text = f"🎫 **CUPOM**: {offer.coupon_code}"
-        
-        if offer.coupon_discount:
-            coupon_text += f" ({offer.coupon_discount}% OFF)"
-        
-        if offer.coupon_valid_until:
-            coupon_text += f" - Válido até {offer.coupon_valid_until.strftime('%d/%m/%Y')}"
-        
-        return coupon_text + "\n"
-    
-    def _get_price_history_badge(self, offer: Offer) -> str:
-        """Obtém badge de histórico de preços."""
-        # Simulação de análise de preços
-        # Em produção, isso viria de um sistema de análise de preços
-        
-        if hasattr(offer, 'price_history') and offer.price_history:
-            # Lógica para determinar se é menor preço
-            return self.quality_badges.get("menor_preco_90d", "")
-        
-        return ""
-    
-    def _get_urgency_badge(self, offer: Offer) -> str:
-        """Obtém badge de urgência."""
-        if hasattr(offer, 'stock_quantity') and offer.stock_quantity:
-            if offer.stock_quantity <= 5:
-                return f"\n⚠️ **ESTOQUE BAIXO**: Apenas {offer.stock_quantity} unidades!"
-            elif offer.stock_quantity <= 20:
-                return f"\n🎯 **Estoque limitado**: {offer.stock_quantity} unidades"
-        
-        return ""
-    
-    def _validate_required_fields(self, format_data: Dict[str, Any], required_fields: List[str]):
-        """Valida campos obrigatórios."""
-        missing_fields = []
-        
-        for field in required_fields:
-            if not format_data.get(field):
-                missing_fields.append(field)
-        
-        if missing_fields:
-            raise ValueError(f"Campos obrigatórios ausentes: {', '.join(missing_fields)}")
-    
-    def format_multiple_offers(self, offers: List[Offer], max_per_message: int = 3) -> List[str]:
+    def validate_message(self, message: str) -> Dict[str, Any]:
         """
-        Formata múltiplas ofertas em mensagens separadas.
+        Valida uma mensagem formatada
+        
+        Args:
+            message: Mensagem a ser validada
+            
+        Returns:
+            Resultado da validação
+        """
+        validation_result = {
+            'is_valid': True,
+            'errors': [],
+            'warnings': [],
+            'stats': {}
+        }
+        
+        try:
+            # Verificar campos obrigatórios
+            required_fields = ['**', '💰', '🔗']
+            for field in required_fields:
+                if field not in message:
+                    validation_result['errors'].append(f"Campo obrigatório ausente: {field}")
+                    validation_result['is_valid'] = False
+            
+            # Verificar comprimento
+            if len(message) < 50:
+                validation_result['warnings'].append("Mensagem muito curta")
+            
+            if len(message) > 2000:
+                validation_result['errors'].append("Mensagem muito longa")
+                validation_result['is_valid'] = False
+            
+            # Estatísticas
+            validation_result['stats'] = {
+                'length': len(message),
+                'lines': len(message.split('\n')),
+                'emojis': len(re.findall(r'[🛒🛍️🌏🔄🎁💰🎯🏪📂🎫🔥🔗]', message))
+            }
+            
+        except Exception as e:
+            validation_result['errors'].append(f"Erro na validação: {str(e)}")
+            validation_result['is_valid'] = False
+        
+        return validation_result
+    
+    def format_batch_offers(self, offers: List[Offer]) -> List[str]:
+        """
+        Formata um lote de ofertas
         
         Args:
             offers: Lista de ofertas
-            max_per_message: Máximo de ofertas por mensagem
             
         Returns:
             Lista de mensagens formatadas
         """
-        if not offers:
-            return []
-        
         messages = []
-        current_message = ""
-        current_count = 0
         
         for offer in offers:
             try:
-                formatted_offer = self.format_offer(offer)
-                
-                # Adicionar separador se não for a primeira oferta
-                if current_count > 0:
-                    current_message += "\n\n" + "─" * 40 + "\n\n"
-                
-                current_message += formatted_offer
-                current_count += 1
-                
-                # Verificar se atingiu o limite por mensagem
-                if current_count >= max_per_message:
-                    messages.append(current_message)
-                    current_message = ""
-                    current_count = 0
-                    
+                message = self.format_offer_message(offer)
+                messages.append(message)
             except Exception as e:
-                # Log do erro e continuar com a próxima oferta
-                print(f"Erro ao formatar oferta: {e}")
-                continue
-        
-        # Adicionar última mensagem se houver conteúdo
-        if current_message:
-            messages.append(current_message)
+                # Log do erro e mensagem de fallback
+                fallback_message = f"❌ Erro ao formatar oferta: {str(e)}"
+                messages.append(fallback_message)
         
         return messages
-    
-    def get_platform_templates(self) -> Dict[str, MessageTemplate]:
-        """Retorna todos os templates disponíveis."""
-        return self.templates.copy()
-    
-    def add_custom_template(self, platform: str, template: MessageTemplate):
-        """Adiciona template customizado para uma plataforma."""
-        self.templates[platform.lower()] = template
-    
-    def validate_template(self, template: MessageTemplate) -> bool:
-        """Valida se um template é válido."""
-        try:
-            # Testar formatação com dados de exemplo
-            test_data = {
-                "emoji": "📦",
-                "title": "Produto Teste",
-                "price": "99.99",
-                "original_price": "199.99",
-                "discount_percentage": "50",
-                "coupon_info": "",
-                "price_history_badge": "",
-                "store": "Loja Teste",
-                "category": "Teste",
-                "affiliate_url": "https://exemplo.com",
-                "urgency_badge": ""
-            }
-            
-            template.format_string.format(**test_data)
-            return True
-            
-        except Exception:
-            return False
 
 
-# Instância global para uso em todo o sistema
+# Instância global para uso em outros módulos
 message_formatter = MessageFormatter()
 

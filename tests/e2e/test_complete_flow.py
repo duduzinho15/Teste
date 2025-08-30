@@ -54,7 +54,7 @@ class CompleteFlowTester:
             scraped_at=datetime.now(),
         )
 
-    def test_url_conversion_flow(
+    async def test_url_conversion_flow(
         self, raw_url: str, expected_affiliate_url: str, platform: str
     ) -> Dict[str, Any]:
         """Testar fluxo de conversão de URL bruta para afiliado"""
@@ -83,16 +83,20 @@ class CompleteFlowTester:
             else:
                 result["errors"].append(f"Validation failed: {error}")
 
-            # 3. Validar com PostingManager
-            posting_result = self.posting_manager.validate_affiliate_url(
-                converted_url, platform
+            # 3. Validar com PostingManager (criar oferta de teste)
+            test_offer = self.create_test_offer(
+                title="Produto Teste",
+                price=99.99,
+                url=converted_url,
+                store=platform
             )
-            if posting_result.is_valid:
+            
+            try:
+                # Submeter oferta para validação
+                request_id = await self.posting_manager.submit_offer(test_offer)
                 result["posting_success"] = True
-            else:
-                result["errors"].append(
-                    f"PostingManager rejected: {posting_result.validation_errors}"
-                )
+            except Exception as e:
+                result["errors"].append(f"PostingManager rejected: {str(e)}")
 
         except Exception as e:
             result["errors"].append(f"Exception: {str(e)}")
@@ -145,7 +149,7 @@ class CompleteFlowTester:
 # ============================================================================
 
 
-def test_complete_flow_awin_valid():
+async def test_complete_flow_awin_valid():
     """Teste completo do fluxo Awin com links válidos"""
     tester = CompleteFlowTester()
 
@@ -154,7 +158,7 @@ def test_complete_flow_awin_valid():
         raw_url = AWIN[key]["raw"]
         deeplink = AWIN[key]["deeplink"]
 
-        result = tester.test_url_conversion_flow(raw_url, deeplink, "awin")
+        result = await tester.test_url_conversion_flow(raw_url, deeplink, "awin")
 
         # Verificar que todo o fluxo funcionou
         assert result["conversion_success"], f"Conversão falhou para {key}"
@@ -168,7 +172,7 @@ def test_complete_flow_awin_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_awin_invalid():
+async def test_complete_flow_awin_invalid():
     """Teste completo do fluxo Awin com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -187,7 +191,7 @@ def test_complete_flow_awin_invalid():
         tester.test_results["invalid_links_tested"] += 1
 
 
-def test_complete_flow_amazon_valid():
+async def test_complete_flow_amazon_valid():
     """Teste completo do fluxo Amazon com links válidos"""
     tester = CompleteFlowTester()
 
@@ -198,7 +202,7 @@ def test_complete_flow_amazon_valid():
         # Simular que convertemos um produto bruto para canônico
         raw_url = AMAZON["product_1"]  # URL sem tag
 
-        result = tester.test_url_conversion_flow(raw_url, canonical_url, "amazon")
+        result = await tester.test_url_conversion_flow(raw_url, canonical_url, "amazon")
 
         assert result["conversion_success"], f"Conversão falhou para {key}"
         assert result[
@@ -211,7 +215,7 @@ def test_complete_flow_amazon_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_amazon_invalid():
+async def test_complete_flow_amazon_invalid():
     """Teste completo do fluxo Amazon com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -230,7 +234,7 @@ def test_complete_flow_amazon_invalid():
         tester.test_results["invalid_links_tested"] += 1
 
 
-def test_complete_flow_shopee_valid():
+async def test_complete_flow_shopee_valid():
     """Teste completo do fluxo Shopee com links válidos"""
     tester = CompleteFlowTester()
 
@@ -241,7 +245,7 @@ def test_complete_flow_shopee_valid():
         # Simular que convertemos um produto bruto para shortlink
         raw_product = SHOPEE["product_1"]
 
-        result = tester.test_url_conversion_flow(raw_product, shortlink, "shopee")
+        result = await tester.test_url_conversion_flow(raw_product, shortlink, "shopee")
 
         assert result["conversion_success"], f"Conversão falhou para {key}"
         assert result[
@@ -254,7 +258,7 @@ def test_complete_flow_shopee_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_shopee_invalid():
+async def test_complete_flow_shopee_invalid():
     """Teste completo do fluxo Shopee com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -274,7 +278,7 @@ def test_complete_flow_shopee_invalid():
         tester.test_results["invalid_links_tested"] += 1
 
 
-def test_complete_flow_mercado_livre_valid():
+async def test_complete_flow_mercado_livre_valid():
     """Teste completo do fluxo Mercado Livre com links válidos"""
     tester = CompleteFlowTester()
 
@@ -285,7 +289,7 @@ def test_complete_flow_mercado_livre_valid():
         # Simular que convertemos um produto bruto para shortlink
         raw_product = MERCADO_LIVRE["produto_1"]
 
-        result = tester.test_url_conversion_flow(raw_product, shortlink, "mercadolivre")
+        result = await tester.test_url_conversion_flow(raw_product, shortlink, "mercadolivre")
 
         assert result["conversion_success"], f"Conversão falhou para {key}"
         assert result[
@@ -298,7 +302,7 @@ def test_complete_flow_mercado_livre_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_mercado_livre_invalid():
+async def test_complete_flow_mercado_livre_invalid():
     """Teste completo do fluxo Mercado Livre com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -318,7 +322,7 @@ def test_complete_flow_mercado_livre_invalid():
         tester.test_results["invalid_links_tested"] += 1
 
 
-def test_complete_flow_aliexpress_valid():
+async def test_complete_flow_aliexpress_valid():
     """Teste completo do fluxo AliExpress com links válidos"""
     tester = CompleteFlowTester()
 
@@ -329,7 +333,7 @@ def test_complete_flow_aliexpress_valid():
         # Simular que convertemos um produto bruto para shortlink
         raw_product = ALIEXPRESS["product_1"]
 
-        result = tester.test_url_conversion_flow(raw_product, shortlink, "aliexpress")
+        result = await tester.test_url_conversion_flow(raw_product, shortlink, "aliexpress")
 
         assert result["conversion_success"], f"Conversão falhou para {key}"
         assert result[
@@ -342,7 +346,7 @@ def test_complete_flow_aliexpress_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_aliexpress_invalid():
+async def test_complete_flow_aliexpress_invalid():
     """Teste completo do fluxo AliExpress com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -361,7 +365,7 @@ def test_complete_flow_aliexpress_invalid():
         tester.test_results["invalid_links_tested"] += 1
 
 
-def test_complete_flow_magalu_valid():
+async def test_complete_flow_magalu_valid():
     """Teste completo do fluxo Magazine Luiza com links válidos"""
     tester = CompleteFlowTester()
 
@@ -372,7 +376,7 @@ def test_complete_flow_magalu_valid():
         # Simular que convertemos uma URL bruta para vitrine
         raw_url = "https://www.magazineluiza.com.br/produto/123"
 
-        result = tester.test_url_conversion_flow(raw_url, vitrine_url, "magazineluiza")
+        result = await tester.test_url_conversion_flow(raw_url, vitrine_url, "magazineluiza")
 
         assert result["conversion_success"], f"Conversão falhou para {key}"
         assert result[
@@ -385,7 +389,7 @@ def test_complete_flow_magalu_valid():
         tester.test_results["valid_links_tested"] += 1
 
 
-def test_complete_flow_magalu_invalid():
+async def test_complete_flow_magalu_invalid():
     """Teste completo do fluxo Magazine Luiza com URLs inválidas"""
     tester = CompleteFlowTester()
 
@@ -408,7 +412,7 @@ def test_complete_flow_magalu_invalid():
 # ============================================================================
 
 
-def test_complete_flow_integration_all_platforms():
+async def test_complete_flow_integration_all_platforms():
     """Teste de integração completa com todas as plataformas"""
     tester = CompleteFlowTester()
 

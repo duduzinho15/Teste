@@ -25,6 +25,12 @@ class AffiliateConverter:
 
         # Configurações de afiliados por loja
         self.affiliate_configs = {
+            "awin": {
+                "enabled": True,
+                "tag": "awin",  # Identificador Awin
+                "domains": ["awin1.com", "tidd.ly", "comfy.com.br", "trocafy.com.br", "lg.com", "kabum.com.br"],
+                "param_name": "awin",
+            },
             "amazon": {
                 "enabled": True,
                 "tag": "garimpeirogeek-20",  # Seu tag de afiliado Amazon

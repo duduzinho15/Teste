@@ -1,564 +1,556 @@
 """
-Gerenciador de validação e postagem de ofertas.
+Sistema de Gerenciamento de Postagem
+Gerencia o processo completo de postagem de ofertas
 """
 
+import asyncio
 import logging
-import re
-import time
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from enum import Enum
 
-from src.core.enhanced_metrics import enhanced_metrics
-from src.core.metrics import Metrics
-from src.core.models import Offer
-from src.core.performance_logger import (
-    log_affiliate_invalid,
-    log_post_blocked,
-    log_post_success,
-)
+from ..core.models import Offer
+from ..core.affiliate_validator import AffiliateValidator
+from .message_formatter import message_formatter
+from .scheduler import job_scheduler
 
-logger = logging.getLogger(__name__)
+
+class PostingStatus(Enum):
+    """Status de uma postagem"""
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    POSTED = "posted"
+    FAILED = "failed"
+
+
+class PostingQuality(Enum):
+    """Qualidade de uma postagem"""
+    EXCELLENT = "excellent"
+    GOOD = "good"
+    AVERAGE = "average"
+    POOR = "poor"
+    REJECTED = "rejected"
 
 
 @dataclass
-class PostingValidationResult:
-    """Resultado da validação de postagem"""
-
-    is_valid: bool
-    platform: str
-    affiliate_url: str
-    validation_errors: List[str]
-    blocked_reason: Optional[str] = None
+class PostingRequest:
+    """Requisição de postagem"""
+    
+    id: str
+    offer: Offer
+    status: PostingStatus = PostingStatus.PENDING
+    quality_score: float = 0.0
+    quality_level: PostingQuality = PostingQuality.AVERAGE
+    created_at: datetime = None
+    processed_at: Optional[datetime] = None
+    posted_at: Optional[datetime] = None
+    moderator_notes: Optional[str] = None
+    auto_approved: bool = False
+    flags: List[str] = None
+    metadata: Dict[str, Any] = None
+    
+    def __post_init__(self):
+        if self.created_at is None:
+            self.created_at = datetime.now()
+        if self.flags is None:
+            self.flags = []
+        if self.metadata is None:
+            self.metadata = {}
 
 
 class PostingManager:
-    """Gerenciador de postagem com validação de afiliados"""
-
+    """Gerenciador de postagem de ofertas"""
+    
     def __init__(self):
-        self.metrics = Metrics()
-
-        # Regex de validação por plataforma (consolidado conforme especificação)
-        self.validation_regex = {
-            "awin": r"^https?://(www\.)?awin1\.com/cread\.php\?.*awinmid=.*&.*awinaffid=.*&.*ued=.*$",
-            "mercadolivre": (
-                r"^https?://(www\.)?mercadolivre\.com(\.br)?/sec/.+|"
-                r"^https?://www\.mercadolivre\.com\.br/social/garimpeirogeek.+$"
-            ),
-            "magalu": r"^https?://(?:www\.)?magazinevoce\.com\.br/magazinegarimpeirogeek/.+$",
-            "amazon": r"^https?://(www\.)?amazon\.com\.br/.+tag=garimpeirogee-20.*language=pt_BR",
-            "shopee": r"^https?://s\.shopee\.com\.br/.+$",
-            "aliexpress": r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]{6,}$",
-            "rakuten": r"^https?://click\.linksynergy\.com/deeplink\?(.+)$",
+        self.logger = logging.getLogger("posting_manager")
+        self.validator = AffiliateValidator()
+        
+        # Fila de postagem
+        self.posting_queue: List[PostingRequest] = []
+        self.posted_offers: List[PostingRequest] = []
+        self.rejected_offers: List[PostingRequest] = []
+        
+        # Configurações
+        self.auto_approval_threshold = 0.8  # Score mínimo para aprovação automática
+        self.max_daily_posts = 50  # Máximo de postagens por dia
+        self.quality_thresholds = {
+            PostingQuality.EXCELLENT: 0.9,
+            PostingQuality.GOOD: 0.7,
+            PostingQuality.AVERAGE: 0.5,
+            PostingQuality.POOR: 0.3
         }
-
-        # Regras específicas por plataforma
-        self.platform_rules = {
-            "amazon": {
-                "require_asin": True,
-                "require_tag": "garimpeirogee-20",
-                "require_language": "pt_BR",
-            },
-            "awin": {
-                "require_awinmid": True,
-                "require_awinaffid": True,
-                "require_ued": True,
-            },
-            "shopee": {"require_shortlink": True, "block_categories": True},
-            "mercadolivre": {
-                "require_shortlink_or_social": True,
-                "block_products": True,
-            },
-            "magalu": {"require_vitrine": True, "block_magazineluiza": True},
-            "aliexpress": {"require_shortlink": True, "block_raw_products": True},
+        
+        # Callbacks
+        self.on_post_callback: Optional[Callable] = None
+        self.on_reject_callback: Optional[Callable] = None
+        
+        # Estatísticas
+        self.stats = {
+            "total_requests": 0,
+            "approved": 0,
+            "rejected": 0,
+            "posted": 0,
+            "failed": 0,
+            "auto_approved": 0,
+            "manual_approved": 0
         }
-
-    def validate_affiliate_url(
-        self, affiliate_url: str, platform: str
-    ) -> PostingValidationResult:
+    
+    async def submit_offer(self, offer: Offer) -> str:
         """
-        Valida se o link de afiliado segue o formato correto da plataforma
-
+        Submete uma oferta para postagem
+        
         Args:
-            affiliate_url: URL de afiliado a ser validada
-            platform: Nome da plataforma
-
+            offer: Oferta a ser postada
+            
         Returns:
-            Resultado da validação
+            ID da requisição de postagem
         """
-        start_time = time.time()
-        validation_errors = []
-
-        # Normalizar plataforma para lowercase
-        platform_normalized = platform.lower() if platform else "unknown"
-
-        # Verificar se a plataforma é suportada
-        if platform_normalized not in self.validation_regex:
-            validation_errors.append(f"Plataforma '{platform}' não suportada")
-            self._log_validation_event(
-                "plataforma_nao_suportada", platform_normalized, affiliate_url
-            )
-            return PostingValidationResult(
-                is_valid=False,
-                platform=platform,
-                affiliate_url=affiliate_url,
-                validation_errors=validation_errors,
-                blocked_reason="plataforma_nao_suportada",
-            )
-
-        # Verificar se o link não está vazio
-        if not affiliate_url or not affiliate_url.strip():
-            validation_errors.append("Link de afiliado está vazio")
-            return PostingValidationResult(
-                is_valid=False,
-                platform=platform,
-                affiliate_url=affiliate_url,
-                validation_errors=validation_errors,
-                blocked_reason="link_vazio",
-            )
-
-        # Verificar se o link não é uma URL bruta da loja
-        if self._is_raw_store_url(affiliate_url, platform_normalized):
-            validation_errors.append(
-                "Link é URL bruta da loja, não deeplink de afiliado"
-            )
-            # Log do evento para métricas
-            log_affiliate_invalid(platform_normalized, affiliate_url, "url_bruta_loja")
-            self._log_validation_event(
-                "affiliate_format_invalid", platform_normalized, affiliate_url
-            )
-            return PostingValidationResult(
-                is_valid=False,
-                platform=platform,
-                affiliate_url=affiliate_url,
-                validation_errors=validation_errors,
-                blocked_reason="url_bruta_loja",
-            )
-
-        # Aplicar regras específicas da plataforma
-        platform_validation = self._validate_platform_specific_rules(
-            affiliate_url, platform_normalized
-        )
-        if not platform_validation["is_valid"]:
-            validation_errors.extend(platform_validation["errors"])
-            self._log_validation_event(
-                "affiliate_format_invalid", platform_normalized, affiliate_url
-            )
-            return PostingValidationResult(
-                is_valid=False,
-                platform=platform,
-                affiliate_url=affiliate_url,
-                validation_errors=validation_errors,
-                blocked_reason=platform_validation["blocked_reason"],
-            )
-
-        # Validar formato geral com regex
-        if not re.match(self.validation_regex[platform_normalized], affiliate_url):
-            validation_errors.append(
-                f"Formato de link de afiliado inválido para {platform}"
-            )
-            self._log_validation_event(
-                "affiliate_format_invalid", platform_normalized, affiliate_url
-            )
-            return PostingValidationResult(
-                is_valid=False,
-                platform=platform,
-                affiliate_url=affiliate_url,
-                validation_errors=validation_errors,
-                blocked_reason="formato_invalido",
-            )
-
-        # Calcular latência de validação
-        validation_latency = int((time.time() - start_time) * 1000)
-        self._log_validation_event(
-            "deeplink_latency_ms", platform_normalized, str(validation_latency)
-        )
-
-        # Validação bem-sucedida
-        return PostingValidationResult(
-            is_valid=True,
-            platform=platform,
-            affiliate_url=affiliate_url,
-            validation_errors=[],
-            blocked_reason=None,
-        )
-
-    def _validate_platform_specific_rules(
-        self, affiliate_url: str, platform: str
-    ) -> Dict:
-        """
-        Valida regras específicas da plataforma conforme especificação
-        """
-        rules = self.platform_rules.get(platform, {})
-        errors = []
-        blocked_reason = None
-
         try:
-            if platform == "amazon":
-                # Amazon: ASIN obrigatório + tag=garimpeirogee-20 + language=pt_BR
-                if rules.get("require_asin"):
-                    # Verificar se há ASIN na URL
-                    try:
-                        from src.utils.affiliate_validator import (
-                            validate_amazon_asin_format,
-                        )
-                        from src.utils.url_utils import extract_asin_from_url
-
-                        asin = extract_asin_from_url(affiliate_url)
-                        if not asin:
-                            errors.append(
-                                "ASIN obrigatório não encontrado na URL Amazon"
-                            )
-                            blocked_reason = "amazon_sem_asin"
-                        elif not validate_amazon_asin_format(asin):
-                            errors.append(f"Formato de ASIN inválido: {asin}")
-                            blocked_reason = "amazon_asin_invalido"
-                    except ImportError:
-                        errors.append(
-                            "Erro interno: módulo de extração de ASIN não disponível"
-                        )
-                        blocked_reason = "amazon_erro_interno"
-
-                if (
-                    rules.get("require_tag")
-                    and "tag=garimpeirogee-20" not in affiliate_url
-                ):
-                    errors.append("Tag de afiliado 'garimpeirogee-20' é obrigatória")
-                    blocked_reason = "amazon_affiliate_invalido"
-
-                if (
-                    rules.get("require_language")
-                    and "language=pt_BR" not in affiliate_url
-                ):
-                    errors.append("Parâmetro 'language=pt_BR' é obrigatório")
-                    blocked_reason = "amazon_affiliate_invalido"
-
-            elif platform == "awin":
-                # Awin: cread.php com awinmid, awinaffid, ued (URL-encoded)
-                if rules.get("require_awinmid") and "awinmid=" not in affiliate_url:
-                    errors.append("Parâmetro 'awinmid' é obrigatório")
-                    blocked_reason = "awin_deeplink_invalido"
-
-                if rules.get("require_awinaffid") and "awinaffid=" not in affiliate_url:
-                    errors.append("Parâmetro 'awinaffid' é obrigatório")
-                    blocked_reason = "awin_deeplink_invalido"
-
-                if rules.get("require_ued") and "ued=" not in affiliate_url:
-                    errors.append("Parâmetro 'ued' é obrigatório")
-                    blocked_reason = "awin_deeplink_invalido"
-
-            elif platform == "shopee":
-                # Shopee: somente https://s.shopee.com.br/... com formato válido
-                if rules.get("require_shortlink"):
-                    # Verificar se é shortlink válido com formato correto
-                    import re
-
-                    shortlink_pattern = (
-                        r"^https?://s\.shopee\.com\.br/[A-Za-z0-9]{4,20}$"
-                    )
-                    if not re.match(shortlink_pattern, affiliate_url):
-                        errors.append(
-                            "Shopee requer shortlink válido: s.shopee.com.br/[4-20 caracteres alfanuméricos]"
-                        )
-                        blocked_reason = "shopee_shortlink_invalido"
-
-            elif platform == "mercadolivre":
-                # Mercado Livre: somente /sec/ ou /social/garimpeirogeek
-                if rules.get("require_shortlink_or_social"):
-                    import re
-
-                    # Verificar shortlinks válidos
-                    shortlink_pattern = r"^https?://(?:www\.)?mercadolivre\.com(?:\.br)?/sec/[A-Za-z0-9]+$"
-                    # Verificar páginas sociais válidas
-                    social_pattern = (
-                        r"^https?://(?:www\.)?mercadolivre\.com\.br/social/garimpeirogeek\?.*"
-                        r"matt_word=garimpeirogeek"
-                    )
-
-                    is_shortlink = re.match(shortlink_pattern, affiliate_url)
-                    is_social = re.match(social_pattern, affiliate_url)
-
-                    if not (is_shortlink or is_social):
-                        errors.append(
-                            "ML requer shortlink /sec/[código] ou página social garimpeirogeek com matt_word"
-                        )
-                        blocked_reason = "ml_affiliate_invalido"
-
-            elif platform == "magalu":
-                # Magalu: somente vitrine magazinegarimpeirogeek (com ou sem www)
-                if rules.get("require_vitrine"):
-                    import re
-
-                    vitrine_pattern = r"^https?://(?:www\.)?magazinevoce\.com\.br/magazinegarimpeirogeek/"
-                    if not re.match(vitrine_pattern, affiliate_url):
-                        errors.append(
-                            "Magalu requer vitrine magazinevoce.com.br/magazinegarimpeirogeek/..."
-                        )
-                        blocked_reason = "magalu_vitrine_invalida"
-
-            elif platform == "aliexpress":
-                # AliExpress: somente s.click.aliexpress.com/e/...
-                if rules.get("require_shortlink") and not affiliate_url.startswith(
-                    "https://s.click.aliexpress.com/e/"
-                ):
-                    errors.append(
-                        "AliExpress requer shortlink https://s.click.aliexpress.com/e/..."
-                    )
-                    blocked_reason = "aliexpress_shortlink_invalido"
-
-        except Exception as e:
-            logger.error(
-                f"Erro ao validar regras específicas da plataforma {platform}: {e}"
+            # Validar oferta
+            validation_result = await self._validate_offer(offer)
+            
+            if not validation_result["is_valid"]:
+                raise ValueError(f"Oferta inválida: {validation_result['errors']}")
+            
+            # Criar requisição de postagem
+            request_id = f"post_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+            
+            posting_request = PostingRequest(
+                id=request_id,
+                offer=offer,
+                metadata={
+                    "validation_score": validation_result["score"],
+                    "validation_details": validation_result["details"]
+                }
             )
-            errors.append(f"Erro interno na validação: {e}")
-            blocked_reason = "erro_interno"
-
+            
+            # Avaliar qualidade
+            quality_result = await self._evaluate_quality(posting_request)
+            posting_request.quality_score = quality_result["score"]
+            posting_request.quality_level = quality_result["level"]
+            
+            # Verificar aprovação automática
+            if posting_request.quality_score >= self.auto_approval_threshold:
+                posting_request.auto_approved = True
+                posting_request.status = PostingStatus.APPROVED
+                self.stats["auto_approved"] += 1
+                self.logger.info(f"Oferta aprovada automaticamente: {offer.title}")
+            else:
+                self.logger.info(f"Oferta requer moderação: {offer.title} (score: {posting_request.quality_score:.2f})")
+            
+            # Adicionar à fila
+            self.posting_queue.append(posting_request)
+            self.stats["total_requests"] += 1
+            
+            self.logger.info(f"Oferta submetida: {offer.title} (ID: {request_id})")
+            return request_id
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao submeter oferta: {e}")
+            raise
+    
+    async def _validate_offer(self, offer: Offer) -> Dict[str, Any]:
+        """Valida uma oferta antes da postagem"""
+        validation_result = {
+            "is_valid": True,
+            "score": 0.0,
+            "errors": [],
+            "warnings": [],
+            "details": {}
+        }
+        
+        try:
+            # Validar campos obrigatórios
+            if not offer.title or len(offer.title.strip()) < 5:
+                validation_result["errors"].append("Título muito curto ou vazio")
+                validation_result["is_valid"] = False
+            
+            if not offer.price or offer.price <= 0:
+                validation_result["errors"].append("Preço inválido")
+                validation_result["is_valid"] = False
+            
+            if not offer.url:
+                validation_result["errors"].append("URL não fornecida")
+                validation_result["is_valid"] = False
+            
+            # Validar URL de afiliado
+            if offer.url:
+                url_validation = self.validator.validate_url(offer.url)
+                validation_result["details"]["url_validation"] = {
+                    "status": url_validation.status.value,
+                    "score": url_validation.score,
+                    "message": url_validation.message
+                }
+                
+                if url_validation.status.value == "invalid":
+                    validation_result["errors"].append(f"URL inválida: {url_validation.message}")
+                    validation_result["is_valid"] = False
+            
+            # Calcular score de validação
+            if validation_result["is_valid"]:
+                validation_result["score"] = 1.0
+                if url_validation and hasattr(url_validation, 'score'):
+                    validation_result["score"] = url_validation.score
+            else:
+                validation_result["score"] = 0.0
+            
+        except Exception as e:
+            validation_result["errors"].append(f"Erro na validação: {str(e)}")
+            validation_result["is_valid"] = False
+            validation_result["score"] = 0.0
+        
+        return validation_result
+    
+    async def _evaluate_quality(self, posting_request: PostingRequest) -> Dict[str, Any]:
+        """Avalia a qualidade de uma oferta para postagem"""
+        quality_result = {
+            "score": 0.0,
+            "level": PostingQuality.AVERAGE,
+            "factors": {},
+            "recommendations": []
+        }
+        
+        try:
+            offer = posting_request.offer
+            factors = {}
+            
+            # Avaliar título (0-25 pontos)
+            title_score = self._evaluate_title(offer.title)
+            factors["title"] = title_score
+            quality_result["score"] += title_score * 0.25
+            
+            # Avaliar preço (0-25 pontos)
+            price_score = self._evaluate_price(offer.price, getattr(offer, 'original_price', None))
+            factors["price"] = price_score
+            quality_result["score"] += price_score * 0.25
+            
+            # Avaliar desconto (0-20 pontos)
+            discount_score = self._evaluate_discount(offer.price, getattr(offer, 'original_price', None))
+            factors["discount"] = discount_score
+            quality_result["score"] += discount_score * 0.20
+            
+            # Avaliar loja (0-15 pontos)
+            store_score = self._evaluate_store(offer.store)
+            factors["store"] = store_score
+            quality_result["score"] += store_score * 0.15
+            
+            # Avaliar categoria (0-15 pontos)
+            category_score = self._evaluate_category(offer.category)
+            factors["category"] = category_score
+            quality_result["score"] += category_score * 0.15
+            
+            quality_result["factors"] = factors
+            
+            # Determinar nível de qualidade
+            if quality_result["score"] >= self.quality_thresholds[PostingQuality.EXCELLENT]:
+                quality_result["level"] = PostingQuality.EXCELLENT
+            elif quality_result["score"] >= self.quality_thresholds[PostingQuality.GOOD]:
+                quality_result["level"] = PostingQuality.GOOD
+            elif quality_result["score"] >= self.quality_thresholds[PostingQuality.AVERAGE]:
+                quality_result["level"] = PostingQuality.AVERAGE
+            elif quality_result["score"] >= self.quality_thresholds[PostingQuality.POOR]:
+                quality_result["level"] = PostingQuality.POOR
+            else:
+                quality_result["level"] = PostingQuality.REJECTED
+            
+            # Gerar recomendações
+            quality_result["recommendations"] = self._generate_quality_recommendations(factors)
+            
+        except Exception as e:
+            self.logger.error(f"Erro na avaliação de qualidade: {e}")
+            quality_result["score"] = 0.0
+            quality_result["level"] = PostingQuality.REJECTED
+        
+        return quality_result
+    
+    def _evaluate_title(self, title: str) -> float:
+        """Avalia qualidade do título"""
+        if not title:
+            return 0.0
+        
+        title = title.strip()
+        score = 0.0
+        
+        # Comprimento
+        if 10 <= len(title) <= 100:
+            score += 0.4
+        elif 5 <= len(title) < 10:
+            score += 0.2
+        
+        # Palavras-chave
+        keywords = ["smartphone", "notebook", "headphone", "monitor", "gaming", "wireless", "bluetooth"]
+        if any(keyword.lower() in title.lower() for keyword in keywords):
+            score += 0.3
+        
+        # Formatação
+        if title[0].isupper() and not title.isupper():
+            score += 0.3
+        
+        return min(score, 1.0)
+    
+    def _evaluate_price(self, price: float, original_price: Optional[float]) -> float:
+        """Avalia qualidade do preço"""
+        if not price or price <= 0:
+            return 0.0
+        
+        score = 0.0
+        
+        # Faixa de preço
+        if 50 <= price <= 5000:
+            score += 0.5
+        elif 10 <= price < 50 or 5000 < price <= 10000:
+            score += 0.3
+        else:
+            score += 0.1
+        
+        # Comparação com preço original
+        if original_price and original_price > price:
+            score += 0.5
+        
+        return min(score, 1.0)
+    
+    def _evaluate_discount(self, price: float, original_price: Optional[float]) -> float:
+        """Avalia qualidade do desconto"""
+        if not original_price or original_price <= price:
+            return 0.0
+        
+        discount_percentage = ((original_price - price) / original_price) * 100
+        
+        if discount_percentage >= 30:
+            return 1.0
+        elif discount_percentage >= 20:
+            return 0.8
+        elif discount_percentage >= 10:
+            return 0.6
+        elif discount_percentage >= 5:
+            return 0.4
+        else:
+            return 0.2
+    
+    def _evaluate_store(self, store: str) -> float:
+        """Avalia qualidade da loja"""
+        if not store:
+            return 0.0
+        
+        # Lojas conhecidas
+        known_stores = ["amazon", "mercadolivre", "shopee", "magazine luiza", "aliexpress"]
+        store_lower = store.lower()
+        
+        if any(known_store in store_lower for known_store in known_stores):
+            return 1.0
+        elif len(store) >= 3:
+            return 0.5
+        else:
+            return 0.2
+    
+    def _evaluate_category(self, category: str) -> float:
+        """Avalia qualidade da categoria"""
+        if not category:
+            return 0.0
+        
+        # Categorias válidas
+        valid_categories = ["eletrônicos", "informática", "celulares", "computadores", "games", "casa"]
+        category_lower = category.lower()
+        
+        if any(valid_cat in category_lower for valid_cat in valid_categories):
+            return 1.0
+        elif len(category) >= 3:
+            return 0.5
+        else:
+            return 0.2
+    
+    def _generate_quality_recommendations(self, factors: Dict[str, float]) -> List[str]:
+        """Gera recomendações baseadas nos fatores de qualidade"""
+        recommendations = []
+        
+        if factors.get("title", 0) < 0.5:
+            recommendations.append("Melhorar título - adicionar mais detalhes")
+        
+        if factors.get("price", 0) < 0.5:
+            recommendations.append("Verificar preço - pode estar muito baixo ou alto")
+        
+        if factors.get("discount", 0) < 0.5:
+            recommendations.append("Desconto baixo - considerar ofertas com maior desconto")
+        
+        if factors.get("store", 0) < 0.5:
+            recommendations.append("Verificar credibilidade da loja")
+        
+        if factors.get("category", 0) < 0.5:
+            recommendations.append("Categoria muito genérica - especificar melhor")
+        
+        return recommendations
+    
+    async def approve_offer(self, request_id: str, moderator_notes: Optional[str] = None) -> bool:
+        """Aprova uma oferta para postagem"""
+        try:
+            request = self._find_request(request_id)
+            if not request:
+                return False
+            
+            request.status = PostingStatus.APPROVED
+            request.processed_at = datetime.now()
+            request.moderator_notes = moderator_notes
+            request.auto_approved = False
+            
+            self.stats["approved"] += 1
+            self.stats["manual_approved"] += 1
+            
+            self.logger.info(f"Oferta aprovada manualmente: {request.offer.title}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao aprovar oferta: {e}")
+            return False
+    
+    async def reject_offer(self, request_id: str, reason: str) -> bool:
+        """Rejeita uma oferta"""
+        try:
+            request = self._find_request(request_id)
+            if not request:
+                return False
+            
+            request.status = PostingStatus.REJECTED
+            request.processed_at = datetime.now()
+            request.moderator_notes = reason
+            
+            # Mover para lista de rejeitadas
+            self.posting_queue.remove(request)
+            self.rejected_offers.append(request)
+            
+            self.stats["rejected"] += 1
+            
+            # Executar callback se configurado
+            if self.on_reject_callback:
+                await self.on_reject_callback(request, reason)
+            
+            self.logger.info(f"Oferta rejeitada: {request.offer.title} - {reason}")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao rejeitar oferta: {e}")
+            return False
+    
+    async def post_approved_offers(self) -> int:
+        """Posta todas as ofertas aprovadas"""
+        try:
+            approved_requests = [r for r in self.posting_queue if r.status == PostingStatus.APPROVED]
+            
+            if not approved_requests:
+                self.logger.info("Nenhuma oferta aprovada para postar")
+                return 0
+            
+            posted_count = 0
+            
+            for request in approved_requests:
+                try:
+                    # Formatar mensagem
+                    message = message_formatter.format_offer_message(request.offer)
+                    
+                    # Validar mensagem
+                    message_validation = message_formatter.validate_message(message)
+                    
+                    if not message_validation["is_valid"]:
+                        self.logger.warning(f"Mensagem inválida para {request.offer.title}: {message_validation['errors']}")
+                        continue
+                    
+                    # Simular postagem
+                    await self._post_message(message, request.offer)
+                    
+                    # Atualizar status
+                    request.status = PostingStatus.POSTED
+                    request.posted_at = datetime.now()
+                    
+                    # Mover para lista de postadas
+                    self.posting_queue.remove(request)
+                    self.posted_offers.append(request)
+                    
+                    posted_count += 1
+                    self.stats["posted"] += 1
+                    
+                    self.logger.info(f"Oferta postada: {request.offer.title}")
+                    
+                    # Executar callback se configurado
+                    if self.on_post_callback:
+                        await self.on_post_callback(request, message)
+                    
+                    # Aguardar entre postagens para evitar spam
+                    await asyncio.sleep(1)
+                    
+                except Exception as e:
+                    self.logger.error(f"Erro ao postar oferta {request.offer.title}: {e}")
+                    request.status = PostingStatus.FAILED
+                    self.stats["failed"] += 1
+            
+            self.logger.info(f"Postagem concluída: {posted_count} ofertas postadas")
+            return posted_count
+            
+        except Exception as e:
+            self.logger.error(f"Erro na postagem em lote: {e}")
+            return 0
+    
+    async def _post_message(self, message: str, offer: Offer):
+        """Posta uma mensagem (simulado)"""
+        # Simular postagem
+        await asyncio.sleep(0.5)
+        
+        # Em produção, aqui seria feita a postagem real no Telegram
+        self.logger.debug(f"📝 Mensagem postada:\n{message[:100]}...")
+    
+    def _find_request(self, request_id: str) -> Optional[PostingRequest]:
+        """Encontra uma requisição pelo ID"""
+        for request in self.posting_queue:
+            if request.id == request_id:
+                return request
+        return None
+    
+    def get_queue_status(self) -> Dict[str, Any]:
+        """Retorna status da fila de postagem"""
         return {
-            "is_valid": len(errors) == 0,
-            "errors": errors,
-            "blocked_reason": blocked_reason,
+            "queue_size": len(self.posting_queue),
+            "pending": len([r for r in self.posting_queue if r.status == PostingStatus.PENDING]),
+            "approved": len([r for r in self.posting_queue if r.status == PostingStatus.APPROVED]),
+            "posted_today": len([r for r in self.posted_offers if r.posted_at and r.posted_at.date() == datetime.now().date()]),
+            "rejected_today": len([r for r in self.rejected_offers if r.processed_at and r.processed_at.date() == datetime.now().date()]),
+            "max_daily_posts": self.max_daily_posts
         }
-
-    def _is_raw_store_url(self, url: str, platform: str) -> bool:
-        """
-        Verifica se é uma URL bruta da loja (não deeplink de afiliado)
-        """
-        raw_url_patterns = {
-            "amazon": [
-                r"^https?://(www\.)?amazon\.com\.br/[^?]*$",  # Sem parâmetros
-                r"^https?://(www\.)?amazon\.com\.br/[^?]*\?[^=]*$",  # Sem tag
-            ],
-            "shopee": [
-                r"^https?://(www\.)?shopee\.com\.br/i\.\d+\.\d+",  # Produto bruto
-                r"^https?://(www\.)?shopee\.com\.br/cat\.",  # Categoria
-            ],
-            "mercadolivre": [
-                r"^https?://(www\.)?mercadolivre\.com\.br/.*?/p/MLB",  # Produto bruto /p/MLB
-                r"^https?://produto\.mercadolivre\.com\.br/MLB-",  # Produto bruto domínio produto.
-                r"^https?://(www\.)?mercadolivre\.com\.br/.*?/up/MLB",  # Produto bruto /up/MLB
-                r"^https?://(www\.)?mercadolivre\.com\.br/.*?/item/MLB",  # Produto bruto /item/MLB
-                r"^https?://(www\.)?mercadolivre\.com\.br/.*?MLB[U]?[0-9]",  # Qualquer produto com MLB/MLBU
-                r"^https?://(www\.)?mercadolivre\.com\.br/categoria/",  # Categorias
-                r"^https?://(www\.)?mercadolivre\.com\.br/search\?",  # Buscas
-            ],
-            "magalu": [
-                r"^https?://(www\.)?magazineluiza\.com\.br/",  # Domínio bloqueado
-            ],
-            "aliexpress": [
-                r"^https?://pt\.aliexpress\.com/item/\d+\.html",  # Produto bruto pt.aliexpress.com
-                r"^https?://(?:www\.)?aliexpress\.com/item/\d+\.html",  # Produto bruto aliexpress.com
-                r"^https?://pt\.aliexpress\.com/store/",  # Loja pt.aliexpress.com
-                r"^https?://(?:www\.)?aliexpress\.com/store/",  # Loja aliexpress.com
-                r"^https?://pt\.aliexpress\.com/category/",  # Categoria pt.aliexpress.com
-                r"^https?://(?:www\.)?aliexpress\.com/category/",  # Categoria aliexpress.com
-                r"^https?://pt\.aliexpress\.com/wholesale/",  # Busca wholesale
-                r"^https?://(?:www\.)?aliexpress\.com/wholesale/",  # Busca wholesale
-            ],
+    
+    def get_quality_stats(self) -> Dict[str, Any]:
+        """Retorna estatísticas de qualidade"""
+        quality_counts = {
+            PostingQuality.EXCELLENT: 0,
+            PostingQuality.GOOD: 0,
+            PostingQuality.AVERAGE: 0,
+            PostingQuality.POOR: 0,
+            PostingQuality.REJECTED: 0
         }
-
-        patterns = raw_url_patterns.get(platform, [])
-        for pattern in patterns:
-            if re.match(pattern, url, re.IGNORECASE):
-                return True
-
-        return False
-
-    def _log_validation_event(self, event_type: str, platform: str, details: str):
-        """
-        Registra eventos de validação padronizados
-        """
-        try:
-            if event_type == "affiliate_format_invalid":
-                enhanced_metrics.log_affiliate_validation_failure(
-                    platform=platform, url=details, reason="formato_invalido"
-                )
-                logger.warning(f"Formato de afiliado inválido - {platform}: {details}")
-
-            elif event_type == "deeplink_latency_ms":
-                # Registrar latência como métrica de performance
-                enhanced_metrics.log_asin_extraction_attempt(
-                    url=f"latency_{platform}",
-                    strategy="validation",
-                    success=True,
-                    duration_ms=int(details),
-                )
-
-            elif event_type in ["plataforma_nao_suportada", "url_bruta_loja"]:
-                enhanced_metrics.log_affiliate_validation_failure(
-                    platform=platform, url=details, reason=event_type
-                )
-                logger.warning(
-                    f"Erro de validação - {platform}: {event_type} - {details}"
-                )
-
-        except Exception as e:
-            logger.error(f"Erro ao registrar evento de validação: {e}")
-
-    def validate_and_post_offer(self, offer: Offer) -> PostingValidationResult:
-        """
-        Valida e posta uma oferta (método principal)
-        """
-        try:
-            # Validar link de afiliado
-            if not offer.affiliate_url:
-                return PostingValidationResult(
-                    is_valid=False,
-                    platform=offer.store or "unknown",
-                    affiliate_url="",
-                    validation_errors=["Oferta não possui link de afiliado"],
-                    blocked_reason="sem_link_afiliado",
-                )
-
-            # Usar store como plataforma se não houver platform específica
-            platform = getattr(offer, "platform", None) or offer.store or "unknown"
-
-            validation_result = self.validate_affiliate_url(
-                offer.affiliate_url, platform
-            )
-
-            if not validation_result.is_valid:
-                # Log do bloqueio
-                log_post_blocked(
-                    platform,
-                    validation_result.blocked_reason or "validacao_falhou",
-                    {"affiliate_url": offer.affiliate_url, "title": offer.title},
-                )
-
-                # Registrar métrica de bloqueio
-                enhanced_metrics.log_posting_block(
-                    platform=platform,
-                    url=offer.affiliate_url,
-                    block_reason=validation_result.blocked_reason or "validacao_falhou",
-                )
-
-                return validation_result
-
-            # Validação bem-sucedida - logar sucesso
-            log_post_success(platform, offer.title, "telegram")
-            enhanced_metrics.log_posting_block(
-                platform=platform,
-                url=offer.affiliate_url,
-                block_reason="success",  # Usar log_posting_block com sucesso
-            )
-
-            return validation_result
-
-        except Exception as e:
-            logger.error(f"Erro ao validar e postar oferta: {e}")
-            enhanced_metrics.log_posting_block(
-                platform=getattr(offer, "platform", offer.store) or "unknown",
-                url=offer.affiliate_url or "",
-                block_reason="erro_interno",
-            )
-
-            return PostingValidationResult(
-                is_valid=False,
-                platform=getattr(offer, "platform", offer.store) or "unknown",
-                affiliate_url=offer.affiliate_url or "",
-                validation_errors=[f"Erro interno: {e}"],
-                blocked_reason="erro_interno",
-            )
-
-    def _log_blocked_posting(
-        self, offer: Offer, validation_result: PostingValidationResult
-    ):
-        """Registra postagem bloqueada nas métricas"""
-        try:
-            self.metrics.record_event(
-                "perf",
-                "affiliate_format_invalid",
-                {
-                    "store": offer.store or "unknown",
-                    "platform": validation_result.platform,
-                    "blocked_reason": validation_result.blocked_reason,
-                    "affiliate_url": validation_result.affiliate_url,
-                    "validation_errors": validation_result.validation_errors,
-                },
-            )
-        except Exception as e:
-            logger.error(f"Erro ao registrar bloqueio: {e}")
-
-    def _log_successful_posting(
-        self, offer: Offer, validation_result: PostingValidationResult
-    ):
-        """Registra postagem bem-sucedida nas métricas"""
-        try:
-            self.metrics.record_event(
-                "perf",
-                "offer_posted_successfully",
-                {
-                    "store": offer.store or "unknown",
-                    "platform": validation_result.platform,
-                    "affiliate_url": validation_result.affiliate_url,
-                },
-            )
-        except Exception as e:
-            logger.error(f"Erro ao registrar sucesso: {e}")
-
-    def _send_admin_warning(
-        self, offer: Offer, validation_result: PostingValidationResult
-    ):
-        """Envia aviso para o admin sobre postagem bloqueada"""
-        try:
-            # Aqui seria enviado o aviso real para o admin
-            # Por enquanto, apenas log
-            warning_msg = (
-                f"🚫 POSTAGEM BLOQUEADA\n"
-                f"Store: {offer.store}\n"
-                f"Motivo: {validation_result.blocked_reason}\n"
-                f"URL: {validation_result.affiliate_url}\n"
-                f"Erros: {', '.join(validation_result.validation_errors)}"
-            )
-            logger.warning(warning_msg)
-
-        except Exception as e:
-            logger.error(f"Erro ao enviar aviso para admin: {e}")
-
-    def get_validation_stats(self) -> Dict:
-        """Retorna estatísticas de validação"""
-        try:
-            # Buscar estatísticas do banco
-            blocked_count = self.metrics.get_event_count(
-                "perf", "affiliate_format_invalid"
-            )
-            success_count = self.metrics.get_event_count(
-                "perf", "offer_posted_successfully"
-            )
-
-            return {
-                "blocked_posts": blocked_count,
-                "successful_posts": success_count,
-                "total_attempts": blocked_count + success_count,
-                "block_rate": (
-                    blocked_count / (blocked_count + success_count)
-                    if (blocked_count + success_count) > 0
-                    else 0
-                ),
-            }
-        except Exception as e:
-            logger.error(f"Erro ao obter estatísticas: {e}")
-            return {}
+        
+        for request in self.posting_queue:
+            quality_counts[request.quality_level] += 1
+        
+        return {
+            "quality_distribution": {level.value: count for level, count in quality_counts.items()},
+            "average_score": sum(r.quality_score for r in self.posting_queue) / len(self.posting_queue) if self.posting_queue else 0,
+            "auto_approval_rate": self.stats["auto_approved"] / max(self.stats["total_requests"], 1)
+        }
+    
+    def get_posting_stats(self) -> Dict[str, Any]:
+        """Retorna estatísticas gerais de postagem"""
+        return {
+            **self.stats,
+            "queue_status": self.get_queue_status(),
+            "quality_stats": self.get_quality_stats()
+        }
+    
+    def set_post_callback(self, callback: Callable):
+        """Define callback para quando uma oferta é postada"""
+        self.on_post_callback = callback
+    
+    def set_reject_callback(self, callback: Callable):
+        """Define callback para quando uma oferta é rejeitada"""
+        self.on_reject_callback = callback
 
 
-# Instância global
+# Instância global para uso em outros módulos
 posting_manager = PostingManager()
-
-
-def validate_affiliate_url(url: str, platform: str) -> PostingValidationResult:
-    """Função de conveniência para validar URL de afiliado"""
-    return posting_manager.validate_affiliate_url(url, platform)
-
-
-def post_offer(offer: Offer, channel_id: str) -> bool:
-    """Função de conveniência para postar oferta"""
-    # Usar o método validate_and_post_offer que existe
-    validation_result = posting_manager.validate_and_post_offer(offer)
-    return validation_result.is_valid
-
-
-__all__ = [
-    "PostingManager",
-    "PostingValidationResult",
-    "posting_manager",
-    "validate_affiliate_url",
-    "post_offer",
-]

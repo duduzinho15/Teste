@@ -36,10 +36,12 @@ class AffiliateCache:
         self.redis_client = None
         self.is_connected = False
 
+        # Sempre inicializar fallback cache
+        self._fallback_cache = {}
+        self._fallback_timestamps = {}
+
         if not REDIS_AVAILABLE:
             logger.warning("Redis não disponível, usando cache em memória")
-            self._fallback_cache = {}
-            self._fallback_timestamps = {}
 
     async def connect(self) -> bool:
         """Conecta ao Redis"""

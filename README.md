@@ -44,6 +44,16 @@ Sistema completo de recomendações de ofertas para Telegram com validação de 
 - **Sistema de cache** distribuído
 - **Processamento em lote** otimizado
 
+### 📝 Sistema de Postagem Automática
+- **Formatação profissional** de mensagens por plataforma
+- **Templates com emojis** e campos opcionais
+- **Agendador de jobs** (coleta 90s, enriquecimento 15min, postagem 45s)
+- **Gerenciador de postagem** com controle de qualidade
+- **Aprovação automática** baseada em score (threshold 0.8)
+- **Sistema de moderação** manual para ofertas de baixa qualidade
+- **Controle de rate limiting** e prevenção de spam
+- **Validação de mensagens** antes da postagem
+
 ### 🕷️ Sistema de Scrapers
 - **Scrapers de lojas** com afiliação ativa
 - **Scrapers de comunidades** (Promobit, Pelando, MeuPC)
