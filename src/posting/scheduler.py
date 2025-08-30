@@ -10,9 +10,9 @@ from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass, field
 from enum import Enum
 
-from ..core.models import Offer
-from ..core.affiliate_converter import AffiliateConverter
-from ..core.affiliate_validator import AffiliateValidator
+from core.models import Offer
+from core.affiliate_converter import AffiliateConverter
+from core.affiliate_validator import AffiliateValidator
 from .message_formatter import message_formatter
 
 

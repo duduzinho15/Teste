@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 
-from ..core.models import Offer
+from core.models import Offer
 
 
 @dataclass
