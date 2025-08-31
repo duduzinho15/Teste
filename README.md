@@ -472,6 +472,30 @@ python -m src.pipelines.ingest_offers_api
 python -m src.pipelines.enrich_offers_api
 ```
 
+### 6. Executar demonstrações dos sistemas
+```bash
+# Demonstração do sistema de testes em produção
+python demo_production_testing.py
+
+# Demonstração do sistema de monitoramento de conversão
+python demo_conversion_monitoring.py
+
+# Demonstração do sistema de feedback dos usuários
+python demo_user_feedback.py
+
+# Demonstração do sistema de expansão de categorias
+python demo_category_expansion.py
+
+# Teste rápido do sistema de expansão de categorias
+python demo_category_expansion.py quick
+
+# Demonstração do sistema de IA para otimização
+python demo_ai_optimization.py
+
+# Teste rápido do sistema de IA para otimização
+python demo_ai_optimization.py quick
+```
+
 ## 📊 Monitoramento
 
 ### Dashboard Flet
@@ -611,8 +635,28 @@ Para suporte e dúvidas:
 - [x] **APIs Rakuten e Shopee habilitadas e funcionais**
 - [x] **🛒 Aba Mercado Livre implementada no Dashboard** (Métricas específicas, qualidade de links, performance e receita)
 - [x] **🔧 Sistema Completo de Moderação Manual do Mercado Livre** (Scraping automático, conversão manual via dashboard, postagem automática)
+- [x] **🎯 Sistema de Priorização Geek Completo** (Algoritmo de score, alertas, comandos Telegram, dashboard Flet)
+- [x] **📊 Sistema de Teste em Produção** (Pipeline de dados reais, monitor de performance, validador do sistema)
+- [x] **📈 Sistema de Monitoramento de Conversão Geek vs Geral** (Rastreamento, análise, dashboard, relatórios)
+- [x] **🔄 Sistema de Feedback dos Usuários** (Coleta, análise, ajuste automático de scores, dashboard interativo)
+- [x] **📈 Sistema de Expansão de Categorias** (Análise de tendências, pesquisa de mercado, expansão automática, otimização)
+- [x] **🤖 Sistema de IA para Otimização Automática** (Machine Learning, predição de scores, otimização automática, dashboard interativo)
+
+### **🤖 Sistema de IA para Otimização Automática de Priorização**
+- **AIOptimizer**: Otimizador principal que coordena todo o sistema de IA
+- **DataCollector**: Coleta dados históricos e features para treinamento dos modelos
+- **ModelTrainer**: Treina modelos de machine learning (Random Forest, Gradient Boosting, Linear Regression)
+- **PredictionEngine**: Motor de predição que otimiza scores baseado em dados históricos
+- **OptimizationDashboard**: Interface interativa para monitorar e controlar o sistema
+- **Features Inteligentes**: Preço, score geek, taxa de conversão, engajamento, horário, estação, reputação da loja
+- **Modelos de IA**: 3 algoritmos diferentes com métricas de performance (R², MSE, MAE, Cross-Validation)
+- **Auto-retreinamento**: Sistema que retreina modelos automaticamente baseado em novos dados
+- **Confiança e Insights**: Análise de confiança das predições e fatores-chave que influenciam os scores
+- **Otimização em Lote**: Processamento eficiente de múltiplas ofertas simultaneamente
+- **Histórico Completo**: Tracking de todas as otimizações realizadas pelo sistema
 
 ### 📋 Planejado
+- [ ] Machine Learning para scoring avançado
 - [ ] Machine Learning para scoring
 - [ ] Integração com mais plataformas
 - [ ] Sistema de notificações push

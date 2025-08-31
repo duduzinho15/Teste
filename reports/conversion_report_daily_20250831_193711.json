@@ -1,0 +1,202 @@
+{
+  "report_info": {
+    "generated_at": "2025-08-31T19:37:11.240991",
+    "report_type": "daily",
+    "period": "day",
+    "config": {
+      "report_type": "daily",
+      "period": "day",
+      "include_insights": true,
+      "include_trends": true,
+      "include_recommendations": true,
+      "include_category_breakdown": true,
+      "export_format": "json",
+      "output_directory": "reports"
+    },
+    "tracker_stats": {
+      "total_events": 11,
+      "tracking_enabled": true,
+      "data_file": "conversion_data.json"
+    }
+  },
+  "metrics_summary": {
+    "total_conversions": 11,
+    "total_revenue": 7399.94,
+    "total_commission": 739.94,
+    "average_order_value": 672.7218181818182,
+    "overall_conversion_rate": 0.01,
+    "geek_conversion_rate": 0.01,
+    "general_conversion_rate": 0.01,
+    "period": "day",
+    "timestamp": "2025-08-31T19:37:11.240543"
+  },
+  "geek_vs_general": {
+    "geek": {
+      "conversions": 3,
+      "revenue": 3499.99,
+      "commission": 349.99,
+      "conversion_rate": 0.01,
+      "percentage_of_total": 27.27272727272727,
+      "trend": "stable",
+      "avg_order_value": 1166.6633333333334
+    },
+    "general": {
+      "conversions": 8,
+      "revenue": 3899.95,
+      "commission": 389.95,
+      "conversion_rate": 0.01,
+      "percentage_of_total": 72.72727272727273,
+      "trend": "stable",
+      "avg_order_value": 487.49375
+    },
+    "comparison": {
+      "geek_vs_general_ratio": 0.375,
+      "geek_revenue_ratio": 0.8974448390363979,
+      "geek_conversion_rate_ratio": 1.0
+    }
+  },
+  "category_analysis": {
+    "total_categories": 4,
+    "top_performing": [
+      {
+        "rank": 1,
+        "category": "gaming_consoles",
+        "conversions": 3,
+        "revenue": 3499.99,
+        "commission": 349.99,
+        "geek_conversions": 3,
+        "general_conversions": 0
+      },
+      {
+        "rank": 2,
+        "category": "smart_home_tech",
+        "conversions": 3,
+        "revenue": 2999.99,
+        "commission": 299.99,
+        "geek_conversions": 0,
+        "general_conversions": 3
+      },
+      {
+        "rank": 3,
+        "category": "home_appliances",
+        "conversions": 3,
+        "revenue": 699.98,
+        "commission": 69.98,
+        "geek_conversions": 0,
+        "general_conversions": 3
+      },
+      {
+        "rank": 4,
+        "category": "gaming_accessories",
+        "conversions": 2,
+        "revenue": 199.98,
+        "commission": 19.98,
+        "geek_conversions": 0,
+        "general_conversions": 2
+      }
+    ],
+    "worst_performing": [
+      {
+        "rank": 4,
+        "category": "gaming_consoles",
+        "conversions": 3,
+        "revenue": 3499.99,
+        "commission": 349.99,
+        "geek_conversions": 3,
+        "general_conversions": 0
+      },
+      {
+        "rank": 3,
+        "category": "smart_home_tech",
+        "conversions": 3,
+        "revenue": 2999.99,
+        "commission": 299.99,
+        "geek_conversions": 0,
+        "general_conversions": 3
+      },
+      {
+        "rank": 2,
+        "category": "home_appliances",
+        "conversions": 3,
+        "revenue": 699.98,
+        "commission": 69.98,
+        "geek_conversions": 0,
+        "general_conversions": 3
+      },
+      {
+        "rank": 1,
+        "category": "gaming_accessories",
+        "conversions": 2,
+        "revenue": 199.98,
+        "commission": 19.98,
+        "geek_conversions": 0,
+        "general_conversions": 2
+      }
+    ],
+    "category_breakdown": {
+      "gaming_consoles": {
+        "conversions": 3,
+        "revenue": 3499.99,
+        "commission": 349.99,
+        "geek_conversions": 3,
+        "general_conversions": 0,
+        "geek_percentage": 100.0
+      },
+      "smart_home_tech": {
+        "conversions": 3,
+        "revenue": 2999.99,
+        "commission": 299.99,
+        "geek_conversions": 0,
+        "general_conversions": 3,
+        "geek_percentage": 0.0
+      },
+      "home_appliances": {
+        "conversions": 3,
+        "revenue": 699.98,
+        "commission": 69.98,
+        "geek_conversions": 0,
+        "general_conversions": 3,
+        "geek_percentage": 0.0
+      },
+      "gaming_accessories": {
+        "conversions": 2,
+        "revenue": 199.98,
+        "commission": 19.98,
+        "geek_conversions": 0,
+        "general_conversions": 2,
+        "geek_percentage": 0.0
+      }
+    }
+  },
+  "insights": [
+    {
+      "insight_type": "warning",
+      "title": "Baixo Engajamento Geek",
+      "description": "Conversões geek representam apenas 27.3% do total",
+      "severity": "medium",
+      "confidence": 0.8,
+      "recommendations": [
+        "Revisar estratégia de priorização geek",
+        "Analisar qualidade dos produtos geek",
+        "Investigar preferências da audiência"
+      ],
+      "data_points": {
+        "geek_ratio": 0.2727272727272727,
+        "total_conversions": 11
+      },
+      "timestamp": "2025-08-31T19:37:11.240651"
+    }
+  ],
+  "trends": [],
+  "recommendations": [
+    "Analisar qualidade dos produtos geek",
+    "Revisar estratégia de priorização geek",
+    "Investigar preferências da audiência"
+  ],
+  "performance_score": 23.333333333333332,
+  "raw_data": {
+    "metrics": {
+      "timestamp": "2025-08-31T19:37:11.240543",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": 

@@ -74,16 +74,22 @@ class GeekPrioritizer:
         pattern = "|".join(map(re.escape, keywords))
         return re.compile(pattern, re.IGNORECASE)
     
-    def calculate_geek_score(self, offer: Offer) -> GeekScore:
+    def calculate_geek_score(self, offer_or_category: Offer | str) -> GeekScore | float:
         """
-        Calcula score de priorização geek para uma oferta
+        Calcula score de priorização geek para uma oferta ou categoria
         
         Args:
-            offer: Oferta a ser avaliada
+            offer_or_category: Oferta a ser avaliada ou string da categoria
             
         Returns:
-            GeekScore com detalhes da priorização
+            GeekScore com detalhes da priorização ou float para categoria
         """
+        if isinstance(offer_or_category, str):
+            # Se for string, calcular score simples para categoria
+            return self._calculate_category_score(offer_or_category)
+        
+        # Se for Offer, calcular score completo
+        offer = offer_or_category
         self.logger.info(f"Calculando score geek para: {offer.title[:50]}...")
         
         # Scores individuais
@@ -98,6 +104,43 @@ class GeekPrioritizer:
         
         # Determinar nível geek
         geek_level = self._determine_geek_level(overall_score)
+    
+    def _calculate_category_score(self, category: str) -> float:
+        """
+        Calcula score simples para uma categoria
+        
+        Args:
+            category: Nome da categoria
+            
+        Returns:
+            Score de relevância geek (0.0 a 1.0)
+        """
+        try:
+            # Verificar se é uma categoria primária
+            primary_categories = self.geek_config.get("primary_categories", {})
+            if category in primary_categories:
+                return primary_categories[category].get("priority_score", 0.8)
+            
+            # Verificar se contém palavras-chave geek
+            category_lower = category.lower()
+            geek_keywords = self.geek_config.get("geek_keywords", [])
+            
+            for keyword in geek_keywords:
+                if keyword.lower() in category_lower:
+                    return 0.7
+            
+            # Verificar sempre prioritário
+            always_priority = self.geek_config.get("always_priority", [])
+            for keyword in always_priority:
+                if keyword.lower() in category_lower:
+                    return 0.9
+            
+            # Score base para categorias gerais
+            return 0.3
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao calcular score para categoria {category}: {e}")
+            return 0.5
         
         # Multiplicador de prioridade
         priority_multiplier = self._calculate_priority_multiplier(overall_score, geek_level)

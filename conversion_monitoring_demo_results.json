@@ -1,0 +1,21 @@
+{
+  "demo_info": {
+    "timestamp": "2025-08-31T19:38:31.933074",
+    "components_tested": [
+      "tracker",
+      "analyzer",
+      "dashboard",
+      "reporter"
+    ],
+    "status": "success"
+  },
+  "tracker_stats": {
+    "total_events": 11,
+    "tracking_enabled": true
+  },
+  "dashboard_stats": {
+    "total_updates": 0,
+    "last_refresh": null,
+    "uptime_seconds": 0
+  }
+}

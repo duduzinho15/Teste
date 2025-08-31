@@ -1,0 +1,725 @@
+{
+  "events": [
+    {
+      "timestamp": "2025-08-31T19:38:25.916470",
+      "offer_id": "offer_0",
+      "offer_title": "PlayStation 5 Console Digital Edition",
+      "category": "gaming_consoles",
+      "geek_level": "secondary",
+      "geek_score": 0.49,
+      "price": "3499.99",
+      "discount_percentage": 12.5,
+      "store": "Loja Geek",
+      "conversion_type": "purchase",
+      "user_segment": "geek",
+      "revenue": "3499.99",
+      "commission": "349.99"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916545",
+      "offer_id": "offer_1",
+      "offer_title": "Smart TV Samsung 55\" 4K",
+      "category": "smart_home_tech",
+      "geek_level": "general",
+      "geek_score": 0.46,
+      "price": "2999.99",
+      "discount_percentage": 14.3,
+      "store": "Loja Tech",
+      "conversion_type": "purchase",
+      "user_segment": "geek",
+      "revenue": "2999.99",
+      "commission": "299.99"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916595",
+      "offer_id": "offer_2",
+      "offer_title": "Microondas Panasonic 30L",
+      "category": "home_appliances",
+      "geek_level": "general",
+      "geek_score": 0.12,
+      "price": "599.99",
+      "discount_percentage": 25.0,
+      "store": "Loja Casa",
+      "conversion_type": "purchase",
+      "user_segment": "general",
+      "revenue": "599.99",
+      "commission": "59.99"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916637",
+      "offer_id": "offer_3",
+      "offer_title": "PlayStation 5 Console Digital Edition",
+      "category": "gaming_consoles",
+      "geek_level": "secondary",
+      "geek_score": 0.49,
+      "price": "3499.99",
+      "discount_percentage": 12.5,
+      "store": "Loja Geek",
+      "conversion_type": "click",
+      "user_segment": "geek",
+      "revenue": null,
+      "commission": null
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916674",
+      "offer_id": "offer_4",
+      "offer_title": "Smart TV Samsung 55\" 4K",
+      "category": "smart_home_tech",
+      "geek_level": "general",
+      "geek_score": 0.46,
+      "price": "2999.99",
+      "discount_percentage": 14.3,
+      "store": "Loja Tech",
+      "conversion_type": "click",
+      "user_segment": "general",
+      "revenue": null,
+      "commission": null
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916713",
+      "offer_id": "offer_5",
+      "offer_title": "Microondas Panasonic 30L",
+      "category": "home_appliances",
+      "geek_level": "general",
+      "geek_score": 0.12,
+      "price": "599.99",
+      "discount_percentage": 25.0,
+      "store": "Loja Casa",
+      "conversion_type": "click",
+      "user_segment": "geek",
+      "revenue": null,
+      "commission": null
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916747",
+      "offer_id": "offer_6",
+      "offer_title": "PlayStation 5 Console Digital Edition",
+      "category": "gaming_consoles",
+      "geek_level": "secondary",
+      "geek_score": 0.49,
+      "price": "3499.99",
+      "discount_percentage": 12.5,
+      "store": "Loja Geek",
+      "conversion_type": "click",
+      "user_segment": "general",
+      "revenue": null,
+      "commission": null
+    },
+    {
+      "timestamp": "2025-08-31T19:38:25.916782",
+      "offer_id": "offer_7",
+      "offer_title": "Smart TV Samsung 55\" 4K",
+      "category": "smart_home_tech",
+      "geek_level": "general",
+      "geek_score": 0.46,
+      "price": "2999.99",
+      "discount_percentage": 14.3,
+      "store": "Loja Tech",
+      "conversion_type": "click",
+      "user_segment": "geek",
+      "revenue": null,
+      "commission": null
+    },
+    {
+      "timestamp": "2025-08-31T19:38:27.921248",
+      "offer_id": "offer_8",
+      "offer_title": "Produto Teste 1",
+      "category": "gaming_accessories",
+      "geek_level": "general",
+      "geek_score": 0.4,
+      "price": "99.99",
+      "discount_percentage": 23.1,
+      "store": "Loja Teste",
+      "conversion_type": "purchase",
+      "user_segment": "geek",
+      "revenue": "99.99",
+      "commission": "9.99"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:29.921953",
+      "offer_id": "offer_9",
+      "offer_title": "Produto Teste 2",
+      "category": "home_appliances",
+      "geek_level": "general",
+      "geek_score": 0.0,
+      "price": "99.99",
+      "discount_percentage": 23.1,
+      "store": "Loja Teste",
+      "conversion_type": "purchase",
+      "user_segment": "general",
+      "revenue": "99.99",
+      "commission": "9.99"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.924025",
+      "offer_id": "offer_10",
+      "offer_title": "Produto Teste 3",
+      "category": "gaming_accessories",
+      "geek_level": "general",
+      "geek_score": 0.4,
+      "price": "99.99",
+      "discount_percentage": 23.1,
+      "store": "Loja Teste",
+      "conversion_type": "purchase",
+      "user_segment": "geek",
+      "revenue": "99.99",
+      "commission": "9.99"
+    }
+  ],
+  "metrics": [
+    {
+      "timestamp": "2025-08-31T19:38:25.917555",
+      "period": "day",
+      "total_conversions": 8,
+      "total_revenue": "7099.97",
+      "total_commission": "709.97",
+      "average_order_value": "887.49625",
+      "geek_conversions": 3,
+      "general_conversions": 5,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3599.98",
+      "geek_commission": "349.99",
+      "general_commission": "359.98",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 2,
+          "revenue": "599.99",
+          "commission": "59.99",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.924568",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.924640",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "up",
+      "overall_trend": "up"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.925755",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.925807",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.926518",
+      "period": "week",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.926576",
+      "period": "week",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.927563",
+      "period": "month",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.927650",
+      "period": "month",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.928923",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    },
+    {
+      "timestamp": "2025-08-31T19:38:31.928993",
+      "period": "day",
+      "total_conversions": 11,
+      "total_revenue": "7399.94",
+      "total_commission": "739.94",
+      "average_order_value": "672.7218181818181818181818182",
+      "geek_conversions": 3,
+      "general_conversions": 8,
+      "geek_revenue": "3499.99",
+      "general_revenue": "3899.95",
+      "geek_commission": "349.99",
+      "general_commission": "389.95",
+      "geek_conversion_rate": 0.01,
+      "general_conversion_rate": 0.01,
+      "overall_conversion_rate": 0.01,
+      "category_performance": {
+        "gaming_consoles": {
+          "conversions": 3,
+          "revenue": "3499.99",
+          "commission": "349.99",
+          "geek_conversions": 3,
+          "general_conversions": 0
+        },
+        "smart_home_tech": {
+          "conversions": 3,
+          "revenue": "2999.99",
+          "commission": "299.99",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "home_appliances": {
+          "conversions": 3,
+          "revenue": "699.98",
+          "commission": "69.98",
+          "geek_conversions": 0,
+          "general_conversions": 3
+        },
+        "gaming_accessories": {
+          "conversions": 2,
+          "revenue": "199.98",
+          "commission": "19.98",
+          "geek_conversions": 0,
+          "general_conversions": 2
+        }
+      },
+      "geek_trend": "stable",
+      "general_trend": "stable",
+      "overall_trend": "stable"
+    }
+  ],
+  "real_time_metrics": {
+    "total_conversions_today": 11,
+    "geek_conversions_today": 3,
+    "general_conversions_today": 8,
+    "total_revenue_today": "7399.94",
+    "geek_revenue_today": "3499.99",
+    "general_revenue_today": "3899.95",
+    "last_conversion_time": "2025-08-31T19:38:31.924025",
+    "conversion_rate_24h": 0.0
+  },
+  "last_save": "2025-08-31T19:38:31.930718"
+}

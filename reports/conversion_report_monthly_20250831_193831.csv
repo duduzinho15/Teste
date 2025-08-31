@@ -1,0 +1,44 @@
+Relatório de Conversão Geek vs Geral
+Gerado em: 2025-08-31T19:38:31.927749
+Período: month
+
+MÉTRICAS RESUMIDAS
+Métrica,Valor
+total_conversions,11
+total_revenue,7399.94
+total_commission,739.94
+average_order_value,672.7218181818182
+overall_conversion_rate,0.01
+geek_conversion_rate,0.01
+general_conversion_rate,0.01
+period,month
+timestamp,2025-08-31T19:38:31.927563
+
+COMPARAÇÃO GEEK VS GERAL
+Segmento,Conversões,Receita,Taxa de Conversão,Ticket Médio
+Geek,3,R$ 3499.99,1.000%,R$ 1166.66
+Geral,8,R$ 3899.95,1.000%,R$ 487.49
+
+TOP 5 CATEGORIAS
+Rank,Categoria,Conversões,Receita,Comissão
+1,gaming_consoles,3,R$ 3499.99,R$ 349.99
+2,smart_home_tech,3,R$ 2999.99,R$ 299.99
+3,home_appliances,3,R$ 699.98,R$ 69.98
+4,gaming_accessories,2,R$ 199.98,R$ 19.98
+
+INSIGHTS
+Tipo,Título,Descrição,Severidade
+warning,Baixo Engajamento Geek,Conversões geek representam apenas 27.3% do total,medium
+opportunity,Maior Valor Geek,Ticket médio geek (R$ 1166.66) é 2.4x maior que geral,low
+opportunity,Melhor Categoria: gaming_consoles,Categoria gaming_consoles gerou R$ 3499.99 em receita,low
+
+RECOMENDAÇÕES
+Investigar preferências da audiência
+Desenvolver estratégias de upselling para geek
+Aumentar oferta de produtos gaming_consoles
+Focar em produtos premium geek
+Expandir parcerias em gaming_consoles
+Revisar estratégia de priorização geek
+Otimizar campanhas para gaming_consoles
+Analisar qualidade dos produtos geek
+Priorizar produtos geek de alto valor
