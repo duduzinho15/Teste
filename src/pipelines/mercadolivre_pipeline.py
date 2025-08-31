@@ -144,6 +144,11 @@ class MercadoLivrePipeline:
         try:
             self.logger.info("Executando scraping automático")
             
+            # Verificar se o scraper está inicializado
+            if not self.scraper:
+                self.logger.warning("Scraper não inicializado, pulando scraping")
+                return []
+            
             # Executar scraping
             offers = await self.scraper.run(max_results=self.max_offers_per_run)
             

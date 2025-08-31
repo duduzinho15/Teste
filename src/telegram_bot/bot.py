@@ -39,6 +39,7 @@ except ImportError:
 
 from .message_builder import MessageBuilder
 from .notification_manager import NotificationManager
+from .manual_posting_handler import manual_posting_handler
 
 
 class TelegramBot:
@@ -69,6 +70,10 @@ class TelegramBot:
         self.authorized_users = set()
         if chat_id:
             self.authorized_users.add(chat_id)
+        
+        # Adicionar usuário autorizado para postagem manual
+        # TODO: Configurar via variável de ambiente
+        manual_posting_handler.add_authorized_user(123456789)  # Substituir pelo seu ID
 
     async def start(self):
         """Inicia o bot"""
@@ -85,6 +90,10 @@ class TelegramBot:
 
             # Handler para botões inline
             self.application.add_handler(CallbackQueryHandler(self.handle_callback))
+            
+            # Handler para mensagens de texto (postagem manual)
+            from telegram.ext import MessageHandler, filters
+            self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_text_message))
 
             # Iniciar bot
             await self.application.initialize()
@@ -198,7 +207,18 @@ class TelegramBot:
         elif data.startswith("config_"):
             await self.handle_config_callback(query, data)
         else:
-            await query.edit_message_text("❌ Ação não reconhecida")
+            # Delegar para handler de postagem manual
+            await manual_posting_handler.handle_callback(update, context)
+    
+    async def handle_text_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Processa mensagens de texto para postagem manual"""
+        try:
+            # Delegar para handler de postagem manual
+            await manual_posting_handler.handle_manual_link(update, context)
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao processar mensagem de texto: {e}")
+            await update.message.reply_text("❌ Erro ao processar mensagem")
 
     async def handle_offer_callback(self, query, data: str):
         """Trata callbacks relacionados a ofertas"""

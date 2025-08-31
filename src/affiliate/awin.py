@@ -28,6 +28,7 @@ ALLOWED_MIDS = {
     "kabum": 17729,
     "ninja": 106765,
     "samsung": 25539,
+    "gigantec": 115463,
 }
 
 # AFFIDs permitidos (configuráveis via .env)
@@ -62,6 +63,7 @@ def get_mid_for_store(store_name: str) -> Optional[int]:
         "ninja.com.br": 106765,
         "samsung.com": 25539,
         "samsung.com.br": 25539,
+        "gigantec.com.br": 115463,
     }
 
     for domain, mid in store_domain_map.items():
@@ -95,6 +97,7 @@ def validate_store_domain(url: str) -> Tuple[bool, str, str]:
             "ninja.com.br",
             "samsung.com",
             "samsung.com.br",
+            "gigantec.com.br",
         ]
 
         for allowed_domain in allowed_domains:

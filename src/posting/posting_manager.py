@@ -10,8 +10,8 @@ from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass
 from enum import Enum
 
-from core.models import Offer
-from core.affiliate_validator import AffiliateValidator
+from src.core.models import Offer
+from src.core.affiliate_validator import AffiliateValidator
 from .message_formatter import message_formatter
 from .scheduler import job_scheduler
 
@@ -62,7 +62,7 @@ class PostingRequest:
 
 class PostingManager:
     """Gerenciador de postagem de ofertas"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger("posting_manager")
         self.validator = AffiliateValidator()
@@ -100,6 +100,172 @@ class PostingManager:
     async def submit_offer(self, offer: Offer) -> str:
         """
         Submete uma oferta para postagem
+
+        Args:
+            offer: Oferta a ser postada
+
+        Returns:
+            ID da requisição de postagem
+        """
+        try:
+            # Validar oferta
+            validation_result = await self.validator.validate_url(offer.affiliate_url)
+            if validation_result.status.value != "valid":
+                self.logger.warning(f"Oferta rejeitada - URL inválida: {offer.affiliate_url}")
+                return None
+            
+            # Calcular score de qualidade
+            quality_score = self._calculate_quality_score(offer)
+            quality_level = self._get_quality_level(quality_score)
+            
+            # Criar requisição de postagem
+            request_id = f"post_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(self.posting_queue)}"
+            posting_request = PostingRequest(
+                id=request_id,
+                offer=offer,
+                quality_score=quality_score,
+                quality_level=quality_level,
+                auto_approved=quality_score >= self.auto_approval_threshold
+            )
+            
+            # Adicionar à fila
+            self.posting_queue.append(posting_request)
+            self.stats["total_requests"] += 1
+            
+            if posting_request.auto_approved:
+                self.stats["auto_approved"] += 1
+                self.logger.info(f"Oferta aprovada automaticamente: {offer.title}")
+            else:
+                self.logger.info(f"Oferta aguardando aprovação: {offer.title}")
+            
+            return request_id
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao submeter oferta: {e}")
+            return None
+    
+    async def post_offer_manual(self, offer: Offer, message: str, image_path: str = None) -> bool:
+        """
+        Posta uma oferta manualmente (para sistema de postagem manual)
+        
+        Args:
+            offer: Oferta a ser postada
+            message: Mensagem formatada
+            image_path: Caminho da imagem (opcional)
+            
+        Returns:
+            True se postagem bem-sucedida
+        """
+        try:
+            self.logger.info(f"Postagem manual iniciada: {offer.title}")
+            
+            # Validar oferta
+            validation_result = await self.validator.validate_url(offer.affiliate_url)
+            if validation_result.status.value != "valid":
+                self.logger.warning(f"Postagem manual rejeitada - URL inválida: {offer.affiliate_url}")
+                return False
+            
+            # Registrar preço histórico
+            from core.price_history import price_history_tracker
+            await price_history_tracker.record_price(
+                title=offer.title,
+                platform=offer.store,
+                price=float(offer.price),
+                original_price=float(offer.original_price) if offer.original_price else None,
+                url=offer.affiliate_url,
+                category=offer.category or "geral"
+            )
+            
+            # Postar no canal do Telegram
+            success = await self._post_to_telegram(offer, message, image_path)
+            
+            if success:
+                # Registrar estatísticas
+                self.stats["posted"] += 1
+                self.stats["manual_approved"] += 1
+                
+                # Adicionar aos postados
+                request_id = f"manual_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                posting_request = PostingRequest(
+                    id=request_id,
+                    offer=offer,
+                    status=PostingStatus.POSTED,
+                    quality_score=1.0,  # Postagens manuais têm score máximo
+                    quality_level=PostingQuality.EXCELLENT,
+                    created_at=datetime.now(),
+                    posted_at=datetime.now(),
+                    auto_approved=False
+                )
+                self.posted_offers.append(posting_request)
+                
+                self.logger.info(f"Postagem manual realizada com sucesso: {offer.title}")
+                return True
+            else:
+                self.logger.error(f"Falha na postagem manual: {offer.title}")
+                return False
+
+        except Exception as e:
+            self.logger.error(f"Erro na postagem manual: {e}")
+        return False
+
+    async def _post_to_telegram(self, offer: Offer, message: str, image_path: str = None) -> bool:
+        """
+        Posta oferta no canal do Telegram
+        
+        Args:
+            offer: Oferta a ser postada
+            message: Mensagem formatada
+            image_path: Caminho da imagem (opcional)
+            
+        Returns:
+            True se postagem bem-sucedida
+        """
+        try:
+            # Importar bot do Telegram
+            from telegram_bot.bot import telegram_bot
+            
+            if not telegram_bot:
+                self.logger.error("Bot do Telegram não disponível")
+                return False
+            
+            # Postar mensagem com ou sem imagem
+            if image_path and os.path.exists(image_path):
+                # Postar com imagem
+                with open(image_path, 'rb') as image_file:
+                    success = await telegram_bot.send_photo_to_channel(
+                        photo=image_file,
+                        caption=message,
+                        parse_mode='Markdown'
+                    )
+            else:
+                # Postar apenas texto
+                success = await telegram_bot.send_message_to_channel(
+                    text=message,
+                    parse_mode='Markdown'
+                )
+            
+            return success
+            
+        except Exception as e:
+            self.logger.error(f"Erro ao postar no Telegram: {e}")
+            return False
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Retorna estatísticas do gerenciador de postagem"""
+        return {
+            "total_requests": self.stats["total_requests"],
+            "approved": self.stats["approved"],
+            "rejected": self.stats["rejected"],
+            "posted": self.stats["posted"],
+            "failed": self.stats["failed"],
+            "auto_approved": self.stats["auto_approved"],
+            "manual_approved": self.stats["manual_approved"],
+            "queue_size": len(self.posting_queue),
+            "posted_count": len(self.posted_offers),
+            "rejected_count": len(self.rejected_offers)
+        }
+        """
+        Submete uma oferta para postagem
         
         Args:
             offer: Oferta a ser postada
@@ -109,7 +275,7 @@ class PostingManager:
         """
         try:
             # Validar oferta
-            validation_result = await self._validate_offer(offer)
+            validation_result = self._validate_offer(offer)
             
             if not validation_result["is_valid"]:
                 raise ValueError(f"Oferta inválida: {validation_result['errors']}")
@@ -127,7 +293,7 @@ class PostingManager:
             )
             
             # Avaliar qualidade
-            quality_result = await self._evaluate_quality(posting_request)
+            quality_result = self._evaluate_quality(posting_request)
             posting_request.quality_score = quality_result["score"]
             posting_request.quality_level = quality_result["level"]
             
@@ -151,7 +317,7 @@ class PostingManager:
             self.logger.error(f"Erro ao submeter oferta: {e}")
             raise
     
-    async def _validate_offer(self, offer: Offer) -> Dict[str, Any]:
+    def _validate_offer(self, offer: Offer) -> Dict[str, Any]:
         """Valida uma oferta antes da postagem"""
         validation_result = {
             "is_valid": True,
@@ -195,7 +361,7 @@ class PostingManager:
                     validation_result["score"] = url_validation.score
             else:
                 validation_result["score"] = 0.0
-            
+
         except Exception as e:
             validation_result["errors"].append(f"Erro na validação: {str(e)}")
             validation_result["is_valid"] = False
@@ -203,7 +369,7 @@ class PostingManager:
         
         return validation_result
     
-    async def _evaluate_quality(self, posting_request: PostingRequest) -> Dict[str, Any]:
+    def _evaluate_quality(self, posting_request: PostingRequest) -> Dict[str, Any]:
         """Avalia a qualidade de uma oferta para postagem"""
         quality_result = {
             "score": 0.0,
@@ -427,7 +593,7 @@ class PostingManager:
             
             self.logger.info(f"Oferta rejeitada: {request.offer.title} - {reason}")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"Erro ao rejeitar oferta: {e}")
             return False

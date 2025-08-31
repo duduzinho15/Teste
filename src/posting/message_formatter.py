@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 
-from core.models import Offer
+from src.core.models import Offer
 
 
 @dataclass
@@ -166,8 +166,23 @@ class MessageFormatter:
     
     def _identify_platform(self, offer: Offer) -> str:
         """Identifica a plataforma baseada na oferta"""
-        if hasattr(offer, 'platform') and offer.platform:
-            return offer.platform.lower()
+        # Tentar identificar pelo store
+        if hasattr(offer, 'store') and offer.store:
+            store = offer.store.lower()
+            if 'amazon' in store:
+                return 'amazon'
+            elif 'mercadolivre' in store:
+                return 'mercadolivre'
+            elif 'shopee' in store:
+                return 'shopee'
+            elif 'magazine' in store:
+                return 'magazineluiza'
+            elif 'aliexpress' in store:
+                return 'aliexpress'
+            elif 'awin' in store:
+                return 'awin'
+            elif 'rakuten' in store:
+                return 'rakuten'
         
         # Tentar identificar pelo URL
         if hasattr(offer, 'url') and offer.url:
@@ -198,174 +213,134 @@ class MessageFormatter:
         # Calcular desconto se não fornecido
         discount_percentage = getattr(offer, 'discount_percentage', 0)
         if not discount_percentage and original_price and current_price:
-            discount_percentage = int(((original_price - current_price) / original_price) * 100)
+            discount_percentage = ((original_price - current_price) / original_price) * 100
         
-        # Outros campos
-        title = getattr(offer, 'title', 'Produto')
-        store = getattr(offer, 'store', 'Loja')
-        category = getattr(offer, 'category', 'Categoria')
+        # Cupom
         coupon = getattr(offer, 'coupon', '')
-        affiliate_url = getattr(offer, 'url', getattr(offer, 'affiliate_url', ''))
         
-        # Verificar se é menor preço (simulado)
+        # Badge de menor preço
         is_lowest_price = getattr(offer, 'is_lowest_price', False)
         
+        # URL de afiliado
+        affiliate_url = getattr(offer, 'affiliate_url', getattr(offer, 'url', ''))
+        
         return {
-            'title': title,
+            'title': getattr(offer, 'title', 'Produto'),
             'current_price': current_price,
             'original_price': original_price,
-            'discount_percentage': discount_percentage,
-            'store': store,
-            'category': category,
+            'discount_percentage': round(discount_percentage, 0) if discount_percentage else 0,
+            'store': getattr(offer, 'store', 'Loja'),
+            'category': getattr(offer, 'category', 'Geral'),
             'coupon': coupon,
-            'affiliate_url': affiliate_url,
-            'is_lowest_price': is_lowest_price
+            'is_lowest_price': is_lowest_price,
+            'affiliate_url': affiliate_url
         }
     
     def _build_message(self, template: MessageTemplate, data: Dict[str, Any]) -> str:
-        """Constrói a mensagem usando o template"""
-        message_parts = []
-        
-        # Emoji e título da plataforma
-        message_parts.append(f"{template.emoji_prefix} **{template.platform}**")
-        message_parts.append("")
-        
-        # Título do produto
-        title = template.title_format.format(**data)
-        message_parts.append(title)
-        message_parts.append("")
-        
-        # Preço atual
-        if data['current_price']:
+        """Constrói mensagem usando template e dados"""
+        try:
+            # Aplicar formatação
+            title = template.title_format.format(**data)
             price = template.price_format.format(**data)
-            message_parts.append(price)
-        
-        # Preço original (se diferente)
-        if data['original_price'] and data['original_price'] > data['current_price']:
-            original = f"~~R$ {data['original_price']:.2f}~~"
-            message_parts.append(original)
-        
-        # Desconto
-        if data['discount_percentage']:
-            discount = template.discount_format.format(**data)
-            message_parts.append(discount)
-        
-        # Cupom
-        if data['coupon']:
-            coupon = template.coupon_format.format(**data)
-            message_parts.append(coupon)
-        
-        # Badge de menor preço
-        if data['is_lowest_price']:
-            badge = template.badge_format.format(**data)
-            message_parts.append(badge)
-        
-        message_parts.append("")
-        
-        # Informações da loja
-        store_info = template.store_format.format(**data)
-        message_parts.append(store_info)
-        
-        # Categoria
-        if data['category']:
-            category_info = template.category_format.format(**data)
-            message_parts.append(category_info)
-        
-        message_parts.append("")
-        
-        # Link da oferta
-        if data['affiliate_url']:
+            store = template.store_format.format(**data)
+            category = template.category_format.format(**data)
+            
+            # Desconto (só mostrar se houver)
+            discount = ""
+            if data.get('discount_percentage', 0) > 0:
+                discount = template.discount_format.format(**data)
+            
+            # Cupom (só mostrar se houver)
+            coupon = ""
+            if data.get('coupon'):
+                coupon = template.coupon_format.format(**data)
+            
+            # Badge (só mostrar se for menor preço)
+            badge = ""
+            if data.get('is_lowest_price'):
+                badge = template.badge_format.format(**data)
+            
+            # Footer
             footer = template.footer_format.format(**data)
+            
+            # Montar mensagem
+            message_parts = [
+                f"{template.emoji_prefix} {title}",
+                price
+            ]
+            
+            if discount:
+                message_parts.append(discount)
+            
+            if store:
+                message_parts.append(store)
+            
+            if category:
+                message_parts.append(category)
+            
+            if coupon:
+                message_parts.append(coupon)
+            
+            if badge:
+                message_parts.append(badge)
+            
             message_parts.append(footer)
-        
-        return "\n".join(message_parts)
+            
+            return "\n".join(message_parts)
+            
+        except Exception as e:
+            # Fallback para mensagem simples
+            return f"🛒 {data.get('title', 'Produto')}\n💰 R$ {data.get('current_price', 0):.2f}\n🔗 [Ver oferta]({data.get('affiliate_url', '')})"
     
     def _format_simple_message(self, offer: Offer) -> str:
         """Formatação simples de fallback"""
-        title = getattr(offer, 'title', 'Produto')
-        price = getattr(offer, 'price', getattr(offer, 'current_price', 0))
-        store = getattr(offer, 'store', 'Loja')
-        url = getattr(offer, 'url', getattr(offer, 'affiliate_url', ''))
-        
-        message = f"🛒 **{title}**\n"
-        message += f"💰 **R$ {price:.2f}**\n"
-        message += f"🏪 {store}\n"
-        
-        if url:
-            message += f"🔗 [Ver oferta]({url})"
-        
-        return message
-    
-    def validate_message(self, message: str) -> Dict[str, Any]:
-        """
-        Valida uma mensagem formatada
-        
-        Args:
-            message: Mensagem a ser validada
-            
-        Returns:
-            Resultado da validação
-        """
-        validation_result = {
-            'is_valid': True,
-            'errors': [],
-            'warnings': [],
-            'stats': {}
-        }
-        
         try:
-            # Verificar campos obrigatórios
-            required_fields = ['**', '💰', '🔗']
-            for field in required_fields:
-                if field not in message:
-                    validation_result['errors'].append(f"Campo obrigatório ausente: {field}")
-                    validation_result['is_valid'] = False
+            title = getattr(offer, 'title', 'Produto')
+            price = getattr(offer, 'price', 0)
+            url = getattr(offer, 'affiliate_url', getattr(offer, 'url', ''))
             
-            # Verificar comprimento
-            if len(message) < 50:
-                validation_result['warnings'].append("Mensagem muito curta")
+            return f"🛒 **{title}**\n💰 **R$ {price:.2f}**\n🔗 [Ver oferta]({url})"
             
-            if len(message) > 2000:
-                validation_result['errors'].append("Mensagem muito longa")
-                validation_result['is_valid'] = False
-            
-            # Estatísticas
-            validation_result['stats'] = {
-                'length': len(message),
-                'lines': len(message.split('\n')),
-                'emojis': len(re.findall(r'[🛒🛍️🌏🔄🎁💰🎯🏪📂🎫🔥🔗]', message))
-            }
-            
-        except Exception as e:
-            validation_result['errors'].append(f"Erro na validação: {str(e)}")
-            validation_result['is_valid'] = False
-        
-        return validation_result
+        except Exception:
+            return "🛒 Oferta disponível\n🔗 Ver detalhes no link"
     
-    def format_batch_offers(self, offers: List[Offer]) -> List[str]:
+    def format_batch_offers(self, offers: List[Offer], platform: Optional[str] = None) -> List[str]:
         """
-        Formata um lote de ofertas
+        Formata múltiplas ofertas
         
         Args:
             offers: Lista de ofertas
+            platform: Plataforma específica (opcional)
             
         Returns:
             Lista de mensagens formatadas
         """
         messages = []
-        
         for offer in offers:
             try:
-                message = self.format_offer_message(offer)
+                message = self.format_offer_message(offer, platform)
                 messages.append(message)
             except Exception as e:
-                # Log do erro e mensagem de fallback
-                fallback_message = f"❌ Erro ao formatar oferta: {str(e)}"
-                messages.append(fallback_message)
+                # Log do erro e continuar com próxima oferta
+                print(f"Erro ao formatar oferta {offer.title}: {e}")
+                continue
         
         return messages
+    
+    def get_platform_templates(self) -> List[str]:
+        """Retorna lista de plataformas com templates disponíveis"""
+        return list(self.templates.keys())
+    
+    def add_custom_template(self, platform: str, template: MessageTemplate) -> None:
+        """Adiciona template personalizado para uma plataforma"""
+        self.templates[platform.lower()] = template
+    
+    def remove_template(self, platform: str) -> None:
+        """Remove template de uma plataforma"""
+        if platform.lower() in self.templates:
+            del self.templates[platform.lower()]
 
 
-# Instância global para uso em outros módulos
+# Instância global
 message_formatter = MessageFormatter()
 

@@ -79,7 +79,7 @@ SHOPEE_API_CONFIG = {
 
 # Awin Publisher API
 AWIN_API_CONFIG = {
-    "publisher_id": "",  # Preencher quando disponível
+    "publisher_id": "2370719",  # Publisher ID principal
     "oauth2_token": "f647c7b9-e8de-44a4-80fe-e9572ef35c10",
     "enabled": True,
     "api_type": "OAuth2"

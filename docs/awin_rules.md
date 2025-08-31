@@ -29,6 +29,7 @@ https://tidd.ly/XXXXXXX
 | **Trocafy** | 51277 | Gaming | 5-10% |
 | **LG** | 33061 | Eletrônicos | 3-6% |
 | **KaBuM** | 17729 | Tecnologia | 4-7% |
+| **Gigantec BR** | 115463 | Tecnologia | 4-7% |
 
 ## 💰 **Regras de Payout**
 
@@ -36,7 +37,7 @@ https://tidd.ly/XXXXXXX
 - **Móveis**: 4-8% (Comfy)
 - **Gaming**: 5-10% (Trocafy)
 - **Eletrônicos**: 3-6% (LG)
-- **Tecnologia**: 4-7% (KaBuM)
+- **Tecnologia**: 4-7% (KaBuM, KaBuM, Gigantec BR)
 
 ### **Condições de Payout**
 - ✅ **Mínimo**: R$ 50,00 por transação
