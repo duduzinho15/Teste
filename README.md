@@ -443,6 +443,14 @@ Acesse o dashboard em tempo real para monitorar:
 - **Gráficos**: Distribuição de tipos de link e taxa de conversão
 - **Alertas**: Notificações para qualidade < 70% e conversão < 80%
 
+#### **🔧 Aba Moderação ML - Sistema Completo de Workflow**
+- **Scraping Automático**: Coleta ofertas das melhores categorias (smartphones, notebooks, smart-tvs, consoles)
+- **Filtros de Qualidade**: Desconto mínimo 10%, preço máximo R$ 5.000, avaliação mínima 4.0
+- **Moderação Manual**: Interface para converter links para afiliados via dashboard
+- **Validação Automática**: Verificação de URLs de afiliado (shortlinks e links sociais)
+- **Pipeline Integrado**: Fluxo completo desde scraping até postagem no Telegram
+- **Controle de Status**: Acompanhamento de tarefas pendentes, aprovadas e prontas para postagem
+
 ### Métricas Disponíveis
 - **Conversões**: Total, sucesso, falha por plataforma
 - **Performance**: Tempo de resposta, cache hits/misses
@@ -551,6 +559,7 @@ Para suporte e dúvidas:
 - [x] **Tokens Shopee implementados** (App ID + Secret)
 - [x] **APIs Rakuten e Shopee habilitadas e funcionais**
 - [x] **🛒 Aba Mercado Livre implementada no Dashboard** (Métricas específicas, qualidade de links, performance e receita)
+- [x] **🔧 Sistema Completo de Moderação Manual do Mercado Livre** (Scraping automático, conversão manual via dashboard, postagem automática)
 
 ### 📋 Planejado
 - [ ] Machine Learning para scoring

@@ -100,6 +100,10 @@ class GarimpeiroDashboard:
                     content=self._build_mercadolivre_tab()
                 ),
                 ft.Tab(
+                    text="🔧 Moderação ML",
+                    content=self._build_mercadolivre_moderation_tab()
+                ),
+                ft.Tab(
                     text="🔗 Afiliação",
                     content=self._build_affiliation_tab()
                 ),
@@ -490,6 +494,21 @@ class GarimpeiroDashboard:
         ], spacing=20)
         
         return ft.Container(content=content, padding=20)
+    
+    def _build_mercadolivre_moderation_tab(self) -> ft.Container:
+        """Tab de moderação manual do Mercado Livre"""
+        try:
+            from .mercadolivre_moderation_tab import get_mercadolivre_moderation_tab
+            
+            moderation_tab = get_mercadolivre_moderation_tab()
+            return moderation_tab.build()
+            
+        except ImportError as e:
+            self.logger.error(f"Erro ao importar tab de moderação: {e}")
+            return ft.Container(
+                content=ft.Text("❌ Erro ao carregar moderação do Mercado Livre", color=ft.Colors.RED_400),
+                padding=20
+            )
     
     def _build_affiliation_tab(self) -> ft.Container:
         """Tab para métricas de afiliação"""
