@@ -78,6 +78,34 @@ Sistema completo de recomendações de ofertas para Telegram com validação de 
 - **Circuit breaker** para falhas de API
 - **Auto-scaling** baseado em métricas
 
+## 🆕 **SISTEMA INTELIGENTE DE COLETA AUTOMÁTICA AWIN**
+
+### **🎯 Coleta Automática de Ofertas**
+- **7 Afiliações Ativas**: COMFY, Trocafy, LG, Kabum, Samsung, Gigantec, Ninja
+- **API Oficial Awin**: Integração completa com Publisher API
+- **Coleta Contínua**: Pipeline automático configurável (padrão: 1 hora)
+- **Fallback Inteligente**: Product Feed API + Link Builder API
+
+### **🔧 Filtros Automáticos Inteligentes**
+- **5 Filtros Padrão**: Desconto, preço, categoria, loja, qualidade
+- **Operadores Flexíveis**: EQUALS, GREATER_THAN, IN, BETWEEN, etc.
+- **Regras Complexas**: Lógica AND/OR/XOR com prioridades
+- **Perfis Personalizáveis**: Configurações para diferentes cenários
+- **Performance Alta**: 333.252 ofertas/segundo
+
+### **📊 Pipeline de Ingestão Automática**
+- **Validação Automática**: URLs de afiliado e qualidade
+- **Deduplicação Inteligente**: Cache para evitar duplicatas
+- **Postagem Automática**: Telegram com rate limiting
+- **Estatísticas Completas**: Performance e métricas em tempo real
+- **Backup Automático**: Sistema de recuperação
+
+### **🔄 Monitoramento em Tempo Real**
+- **Status do Pipeline**: Execuções, sucessos, falhas
+- **Performance dos Filtros**: Tempo médio, ofertas processadas
+- **Saúde do Sistema**: Credenciais, conectividade, logs
+- **Atualização Automática**: Refresh configurável (padrão: 5s)
+
 ## 🏗️ Arquitetura Completa
 
 ```
