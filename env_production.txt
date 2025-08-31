@@ -1,0 +1,134 @@
+# Configurações do Garimpeiro Geek - PRODUÇÃO
+# Arquivo de configuração para scraping real e afiliados
+
+# ==========================================
+# CONFIGURAÇÕES DO TELEGRAM
+# ==========================================
+TELEGRAM_BOT_TOKEN=8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ
+TELEGRAM_CHANNEL_ID=-1002853967960
+TELEGRAM_ADMIN_USER_ID=123456789
+
+# ==========================================
+# CONFIGURAÇÕES DE SCRAPING
+# ==========================================
+SCRAPER_DELAY=3.0
+SCRAPER_TIMEOUT=30
+SCRAPER_USER_AGENT=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+# Rate limiting para evitar bloqueios
+SCRAPER_RATE_LIMIT=2
+SCRAPER_MAX_RETRIES=3
+SCRAPER_RETRY_DELAY=5
+
+# ==========================================
+# CONFIGURAÇÕES DE AFILIADOS
+# ==========================================
+# Amazon - Tag de afiliado
+AMAZON_AFFILIATE_TAG=garimpeirogee-20
+
+# Magazine Luiza - ID de afiliado
+MAGAZINELUIZA_AFFILIATE_ID=magazinegarimpeirogeek
+
+# Awin - AFFIDs permitidos
+AWIN_AFFIDS=2370719,2510157
+
+# Awin - MIDs por loja
+AWIN_COMFY_MID=23377
+AWIN_TROCAFY_MID=51277
+AWIN_LG_MID=33061
+AWIN_KABUM_MID=17729
+AWIN_NINJA_MID=106765
+AWIN_SAMSUNG_MID=25539
+AWIN_GIGANTEC_MID=115463
+
+# Mercado Livre - Etiqueta de afiliado
+MERCADO_LIVRE_AFFILIATE_TAG=garimpeirogeek
+
+# AliExpress - Tracking ID
+ALIEXPRESS_TRACKING_ID=telegram
+
+# ==========================================
+# CONFIGURAÇÕES DAS APIS OFICIAIS
+# ==========================================
+# AliExpress Open Platform
+ALI_APP_KEY=517956
+ALI_APP_SECRET=okv8nzEGIvWqV0XxONcN9loPNrYwWDsm
+ALI_ACCESS_TOKEN=
+ALI_REFRESH_TOKEN=
+USE_API_ALIEXPRESS=true
+
+# Rakuten Advertising API
+RKTN_CLIENT_ID=
+RKTN_CLIENT_SECRET=
+RKTN_ACCESS_TOKEN=
+USE_API_RAKUTEN=false
+
+# Rakuten Tokens (Web Service + Security)
+RAKUTEN_WEBSERVICE_TOKEN=b64c55b9b35ee0e881a8f7bafeb77a374b11e62e439ec63cd4470dbbefef4409
+RAKUTEN_SECURITY_TOKEN=65d854a458c9a1e4be4e7c93e0631c704fe842c37022a82d398d4390ca2f596d
+RAKUTEN_ENABLED=true
+
+# Shopee Affiliate Open API
+SHOPEE_APP_ID=18330800803
+SHOPEE_SECRET=IOMXMSUM5KDOLSYKXQERKCU42SNMJERR
+SHOPEE_ACCESS_TOKEN=
+USE_API_SHOPEE=true
+
+# Awin Publisher API
+AWIN_PUBLISHER_ID=
+AWIN_ACCESS_TOKEN=
+USE_API_AWIN=false
+
+# ==========================================
+# CONFIGURAÇÕES DO SISTEMA
+# ==========================================
+DEBUG_MODE=False
+LOG_LEVEL=INFO
+DATA_DIR=.data
+LOG_DIR=logs
+
+# ==========================================
+# CONFIGURAÇÕES DE NOTIFICAÇÕES
+# ==========================================
+NOTIFICATION_INTERVAL=30
+MIN_DISCOUNT_PERCENT=10
+MAX_PRICE_THRESHOLD=1000.00
+
+# ==========================================
+# CONFIGURAÇÕES DE BACKUP
+# ==========================================
+AUTO_BACKUP=True
+BACKUP_INTERVAL=24
+BACKUP_RETENTION_DAYS=7
+
+# ==========================================
+# CONFIGURAÇÕES DE PLAYWRIGHT
+# ==========================================
+PLAYWRIGHT_HEADLESS=true
+PLAYWRIGHT_TIMEOUT=30000
+PLAYWRIGHT_VIEWPORT_WIDTH=1920
+PLAYWRIGHT_VIEWPORT_HEIGHT=1080
+
+# ==========================================
+# CONFIGURAÇÕES DE PRODUÇÃO
+# ==========================================
+# Modo de produção (True = scraping real)
+PRODUCTION_MODE=true
+
+# Habilitar scraping real
+ENABLE_REAL_SCRAPING=true
+
+# Habilitar postagem automática
+ENABLE_AUTO_POSTING=true
+
+# Intervalo de postagem (minutos)
+POSTING_INTERVAL=15
+
+# Máximo de ofertas por postagem
+MAX_OFFERS_PER_POST=5
+
+# Filtrar ofertas por preço máximo
+MAX_OFFER_PRICE=3000.00
+
+# Filtrar ofertas por desconto mínimo
+MIN_OFFER_DISCOUNT=15

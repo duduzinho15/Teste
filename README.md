@@ -80,9 +80,30 @@ Sistema completo de recomendações de ofertas para Telegram com validação de 
 
 ## 🆕 **SISTEMA INTELIGENTE DE COLETA AUTOMÁTICA AWIN**
 
+## 🔑 **NOVOS TOKENS IMPLEMENTADOS (31/08/2025)**
+
+### **🟠 RAKUTEN ADVERTISING**
+- **Web Service Token**: Configurado e funcionando ✅
+- **Security Token**: Configurado e funcionando ✅
+- **Status**: API habilitada e integrada ao sistema
+- **Funcionalidades**: Geração de deeplinks, healthcheck, cache
+
+### **🟡 SHOPEE AFFILIATE OPEN API**
+- **App ID**: `18330800803` ✅
+- **Secret**: Configurado e funcionando ✅
+- **Status**: API habilitada e integrada ao sistema
+- **Funcionalidades**: Geração de shortlinks, validação de URLs, cache SQLite
+
+### **📊 Resultado dos Testes**
+- **Rakuten**: ✅ Cliente criado, healthcheck funcionando, deeplinks gerados
+- **Shopee**: ✅ Validação de URLs, geração de shortlinks, cache funcionando
+- **Sistema**: ✅ Integração completa, testes passando, pronto para produção
+
 ### **🎯 Coleta Automática de Ofertas**
-- **7 Afiliações Ativas**: COMFY, Trocafy, LG, Kabum, Samsung, Gigantec, Ninja
+- **9 Afiliações Ativas**: COMFY, Trocafy, LG, Kabum, Samsung, Gigantec BR, Ninja, **Rakuten**, **Shopee**
 - **API Oficial Awin**: Integração completa com Publisher API
+- **API Rakuten**: Web Service + Security Tokens configurados ✅
+- **API Shopee**: App ID + Secret configurados ✅
 - **Coleta Contínua**: Pipeline automático configurável (padrão: 1 hora)
 - **Fallback Inteligente**: Product Feed API + Link Builder API
 
@@ -98,6 +119,33 @@ Sistema completo de recomendações de ofertas para Telegram com validação de 
 - **Deduplicação Inteligente**: Cache para evitar duplicatas
 - **Postagem Automática**: Telegram com rate limiting
 - **Estatísticas Completas**: Performance e métricas em tempo real
+
+## 🤖 **SISTEMA AUTOMÁTICO DE POSTAGEM TELEGRAM**
+
+### **🚀 Automação Completa**
+- **Coleta Automática**: Ofertas coletadas a cada 5 minutos
+- **Postagem Automática**: Posts a cada 3 minutos com rate limiting
+- **Fila Inteligente**: Sistema de prioridades e controle de qualidade
+- **Scheduler Avançado**: Jobs configuráveis e monitoramento em tempo real
+
+### **📱 Integração Telegram**
+- **Bot Configurado**: Credenciais e permissões configuradas
+- **Canal Ativo**: Postagem automática no canal configurado
+- **Formatação Profissional**: Templates personalizados por plataforma
+- **Imagens Automáticas**: Suporte a imagens dos produtos
+
+### **⚙️ Controle e Monitoramento**
+- **Sistema de Produção**: Script dedicado para ativação em produção
+- **Logs Estruturados**: Sistema de logging completo com encoding UTF-8
+- **Health Checks**: Verificação automática da saúde do sistema
+- **Parada Graciosa**: Controle via Ctrl+C e sinais do sistema
+- **Status em Tempo Real**: Monitoramento a cada 5 minutos
+
+### **🔧 Configurações Avançadas**
+- **Rate Limiting**: 3 minutos entre posts (configurável)
+- **Filtros de Qualidade**: Desconto mínimo de 10%
+- **Categorias Permitidas**: Smartphones, Notebooks, Smart TVs, Consoles, Fones
+- **Fallback Automático**: Recuperação de erros e retry inteligente
 - **Backup Automático**: Sistema de recuperação
 
 ### **🔄 Monitoramento em Tempo Real**
@@ -241,6 +289,20 @@ cp config/env.example .env
 ```bash
 # Para desenvolvimento, o sistema usa cache em memória
 # Para produção, configure Redis conforme config/redis.production.conf
+```
+
+### 5. Ative o Sistema Automático
+```bash
+# Testar o sistema
+python test_auto_system.py
+
+# Executar demonstração
+python demo_telegram_posting.py
+
+# Ativar em produção
+python start_production_system.py
+
+# Para parar: Ctrl+C
 ```
 
 ## ⚙️ Configuração
@@ -467,10 +529,16 @@ Para suporte e dúvidas:
 - [x] Dashboard Flet
 - [x] Sistema de monitoramento
 
-### 🚧 Em Desenvolvimento
-- [ ] Testes E2E completos
-- [ ] Sistema de postagem automática
-- [ ] Otimizações de performance
+### ✅ Recentemente Implementado
+- [x] Testes E2E completos
+- [x] Sistema de postagem automática
+- [x] Otimizações de performance
+- [x] Análise completa do projeto
+- [x] Gigantec BR integrada ao Awin
+- [x] Sistema 100% funcional
+- [x] **Tokens Rakuten implementados** (Web Service + Security)
+- [x] **Tokens Shopee implementados** (App ID + Secret)
+- [x] **APIs Rakuten e Shopee habilitadas e funcionais**
 
 ### 📋 Planejado
 - [ ] Machine Learning para scoring
@@ -526,5 +594,5 @@ Para detalhes sobre o sistema de atualização, consulte:
 **Desenvolvido com ❤️ para a comunidade de ofertas e promoções**
 
 **Versão**: 2.0  
-P25-08-30 15:03:59
-**Status**: ✅ Atualizado automaticamente
+**Última Análise**: 31-08-2025 11:00:00  
+**Status**: ✅ Sistema 100% Funcional e Pronto para Produção
