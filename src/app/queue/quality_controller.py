@@ -173,6 +173,32 @@ class QualityController:
                     "pc",
                 ],
                 "category_boost": 0.1,  # Boost para categorias tech
+                
+                # Configurações GEEK/GAMER (Garimpeiro Geek)
+                "geek_categories": {
+                    "enabled": True,
+                    "priority_boost": 0.3,  # Boost maior para categorias geek
+                    "min_geek_score": 0.7,
+                    "geek_boost_multiplier": 1.5,
+                    
+                    # Categorias primárias (foco principal)
+                    "primary": [
+                        "gaming", "tech_geek", "pc_gaming", "anime_otaku", "collectibles"
+                    ],
+                    
+                    # Categorias secundárias
+                    "secondary": [
+                        "home_tech", "fitness_tech", "general_electronics"
+                    ],
+                    
+                    # Subcategorias específicas
+                    "subcategories": {
+                        "gaming": ["consoles", "notebooks_gamer", "pcs_gamer", "acessorios_gaming"],
+                        "pc_gaming": ["processadores", "placas_video", "memorias_ram", "ssds_nvme"],
+                        "tech_geek": ["smartphones_premium", "tablets_tech", "smartwatches"],
+                        "anime_otaku": ["figuras_action", "mangas", "cosplay", "merchandise_anime"]
+                    }
+                }
             },
             "coupon": {
                 "min_discount": 5,
@@ -462,6 +488,32 @@ class QualityController:
                 self._add_analysis_detail(
                     offer, "category_analysis", "tech", "Categoria tech"
                 )
+
+            # Verificar se é categoria geek/gamer
+            if criteria["geek_categories"]["enabled"]:
+                for primary_cat in criteria["geek_categories"]["primary"]:
+                    if primary_cat in category:
+                        score += criteria["geek_categories"]["priority_boost"]
+                        self._add_analysis_detail(
+                            offer, "category_analysis", "geek_primary", "Categoria geek/gamer primária"
+                        )
+                        break
+                for secondary_cat in criteria["geek_categories"]["secondary"]:
+                    if secondary_cat in category:
+                        score += 0.1 # Boost menor para secundárias
+                        self._add_analysis_detail(
+                            offer, "category_analysis", "geek_secondary", "Categoria geek/gamer secundária"
+                        )
+                        break
+
+                # Verificar subcategorias específicas
+                for sub_cat_name, sub_cats in criteria["geek_categories"]["subcategories"].items():
+                    if any(sub_cat in category for sub_cat in sub_cats):
+                        score += 0.05 # Boost menor para subcategorias
+                        self._add_analysis_detail(
+                            offer, "category_analysis", "geek_subcategory", f"Subcategoria {sub_cat_name}"
+                        )
+                        break
 
             return max(0.0, min(1.0, score))
 

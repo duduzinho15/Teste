@@ -120,6 +120,126 @@ RAKUTEN_API_CONFIG = {
 }
 
 # ==========================================
+# CONFIGURAÇÕES DE CATEGORIAS GEEK/GAMER
+# ==========================================
+GEEK_CATEGORIES_CONFIG = {
+    "enabled": True,
+    "priority_boost": 0.3,  # Boost maior para categorias geek (vs 0.1 para tech geral)
+    
+    # Categorias PRIMÁRIAS (foco principal do Garimpeiro Geek)
+    "primary_categories": {
+        "gaming": {
+            "name": "Gaming",
+            "keywords": ["gaming", "game", "jogo", "gamer", "esports"],
+            "subcategories": [
+                "consoles", "notebooks_gamer", "pcs_gamer", "acessorios_gaming",
+                "perifericos_gaming", "jogos", "streaming_gaming"
+            ],
+            "priority_score": 1.0,
+            "emoji": "🎮"
+        },
+        "tech_geek": {
+            "name": "Tech Geek",
+            "keywords": ["tech", "tecnologia", "geek", "nerd", "otaku"],
+            "subcategories": [
+                "smartphones_premium", "tablets_tech", "smartwatches", "smart_tvs",
+                "audio_premium", "cameras_tech", "drones"
+            ],
+            "priority_score": 0.9,
+            "emoji": "⚡"
+        },
+        "pc_gaming": {
+            "name": "PC Gaming",
+            "keywords": ["pc gamer", "desktop gaming", "workstation", "custom pc"],
+            "subcategories": [
+                "processadores", "placas_video", "memorias_ram", "ssds_nvme",
+                "gabinetes_gaming", "fontes_gaming", "coolers_gaming"
+            ],
+            "priority_score": 0.95,
+            "emoji": "🖥️"
+        },
+        "anime_otaku": {
+            "name": "Anime & Otaku",
+            "keywords": ["anime", "otaku", "manga", "cosplay", "figuras"],
+            "subcategories": [
+                "figuras_action", "mangas", "cosplay", "merchandise_anime",
+                "posters_anime", "acessorios_otaku"
+            ],
+            "priority_score": 0.85,
+            "emoji": "🌸"
+        },
+        "collectibles": {
+            "name": "Collectibles & Hobbies",
+            "keywords": ["collectible", "hobby", "colecionavel", "edicao limitada"],
+            "subcategories": [
+                "action_figures", "statues", "vinyl_toys", "trading_cards",
+                "model_kits", "dioramas"
+            ],
+            "priority_score": 0.8,
+            "emoji": "🏆"
+        }
+    },
+    
+    # Categorias SECUNDÁRIAS (importantes mas não prioritárias)
+    "secondary_categories": {
+        "home_tech": {
+            "name": "Home Tech",
+            "keywords": ["smart home", "iot", "automacao", "casa inteligente"],
+            "priority_score": 0.6,
+            "emoji": "🏠"
+        },
+        "fitness_tech": {
+            "name": "Fitness Tech",
+            "keywords": ["fitness", "saude", "wearable", "smartwatch"],
+            "priority_score": 0.5,
+            "emoji": "💪"
+        },
+        "general_electronics": {
+            "name": "Eletrônicos Gerais",
+            "keywords": ["eletronico", "gadget", "acessorio"],
+            "priority_score": 0.4,
+            "emoji": "📱"
+        }
+    },
+    
+    # Configurações de priorização
+    "prioritization": {
+        "min_geek_score": 0.7,  # Score mínimo para ser considerado "geek"
+        "geek_boost_multiplier": 1.5,  # Multiplicador para ofertas geek
+        "category_matching_weight": 0.4,  # Peso da categoria no score final
+        "keyword_matching_weight": 0.3,  # Peso das palavras-chave
+        "price_quality_weight": 0.3,  # Peso da qualidade/preço
+    },
+    
+    # Palavras-chave específicas para detectar produtos geek
+    "geek_keywords": [
+        # Gaming
+        "gaming", "gamer", "esports", "competitive", "pro gaming", "streaming",
+        "rgb", "mechanical", "wireless", "bluetooth", "noise cancelling",
+        
+        # Tech Geek
+        "premium", "flagship", "latest", "newest", "cutting edge", "innovative",
+        "high-end", "professional", "enthusiast", "overclock", "custom",
+        
+        # Anime/Otaku
+        "anime", "otaku", "manga", "cosplay", "kawaii", "kawaii", "moe",
+        "limited edition", "collector", "exclusive", "rare",
+        
+        # Collectibles
+        "collectible", "limited", "exclusive", "numbered", "signed", "autographed",
+        "variant", "chase", "rare", "vintage", "retro"
+    ],
+    
+    # Produtos que SEMPRE devem ser priorizados
+    "always_priority": [
+        "playstation", "xbox", "nintendo", "switch", "steam deck",
+        "rtx", "gtx", "ryzen", "intel i9", "i7", "ssd nvme",
+        "mechanical keyboard", "gaming mouse", "gaming headset",
+        "gaming monitor", "gaming chair", "streaming setup"
+    ]
+}
+
+# ==========================================
 # CONFIGURAÇÕES DO SISTEMA
 # ==========================================
 SYSTEM_CONFIG = {
