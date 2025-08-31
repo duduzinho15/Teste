@@ -118,6 +118,10 @@ class GarimpeiroDashboard:
                 ft.Tab(
                     text="⚙️ Controles",
                     content=self._build_controls_tab()
+                ),
+                ft.Tab(
+                    text="🎛️ Controles Avançados",
+                    content=self._build_advanced_controls_tab()
                 )
             ],
             expand=True
@@ -862,6 +866,21 @@ class GarimpeiroDashboard:
         ], spacing=20)
         
         return ft.Container(content=content, padding=20)
+    
+    def _build_advanced_controls_tab(self) -> ft.Container:
+        """Tab de controles avançados"""
+        try:
+            from apps.flet_dashboard.advanced_controls_tab import AdvancedControlsTab
+            
+            advanced_tab = AdvancedControlsTab()
+            return advanced_tab.build()
+            
+        except ImportError as e:
+            print(f"Erro ao importar tab de controles avançados: {e}")
+            return ft.Container(
+                content=ft.Text("❌ Erro ao carregar controles avançados", color=ft.Colors.RED_400),
+                padding=20
+            )
     
     def _on_period_change(self, e):
         """Callback para mudança de período"""
