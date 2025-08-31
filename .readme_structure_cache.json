@@ -34,6 +34,7 @@
       "core\\deduplication.py",
       "core\\enhanced_metrics.py",
       "core\\failure_alerts.py",
+      "core\\geek_alerts.py",
       "core\\geek_prioritizer.py",
       "core\\live_logs.py",
       "core\\logging_setup.py",
@@ -71,6 +72,7 @@
       "scrapers\\__init__.py",
       "telegram_bot\\bot.py",
       "telegram_bot\\bot_manager.py",
+      "telegram_bot\\geek_commands.py",
       "telegram_bot\\manual_posting_handler.py",
       "telegram_bot\\message_builder.py",
       "telegram_bot\\notification_manager.py",
@@ -128,6 +130,7 @@
     "apps": [
       "__init__.py",
       "flet_dashboard\\advanced_controls_tab.py",
+      "flet_dashboard\\geek_metrics_tab.py",
       "flet_dashboard\\main.py",
       "flet_dashboard\\mercadolivre_moderation_tab.py",
       "flet_dashboard\\run_dashboard.py",
@@ -175,6 +178,7 @@
       "tests\\unit\\test_aff_ml.py",
       "tests\\unit\\test_aff_shopee.py",
       "tests\\unit\\test_debug.py",
+      "tests\\unit\\test_geek_system.py",
       "tests\\unit\\test_message_builder.py",
       "tests\\unit\\test_message_builder_enhanced.py",
       "tests\\unit\\test_production_system.py",
@@ -212,6 +216,7 @@
       "tests\\unit\\__pycache__\\test_aff_shopee.cpython-310-pytest-7.4.3.pyc",
       "tests\\unit\\__pycache__\\test_aff_shopee.cpython-313-pytest-8.4.1.pyc",
       "tests\\unit\\__pycache__\\test_debug.cpython-313-pytest-8.4.1.pyc",
+      "tests\\unit\\__pycache__\\test_geek_system.cpython-313-pytest-8.4.1.pyc",
       "tests\\unit\\__pycache__\\test_message_builder.cpython-313-pytest-8.4.1.pyc",
       "tests\\unit\\__pycache__\\test_message_builder_enhanced.cpython-313-pytest-8.4.1.pyc",
       "tests\\unit\\__pycache__\\test_production_system.cpython-313-pytest-8.4.1.pyc",
@@ -297,6 +302,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "5a08e913c8a0da37c1ed7a3337527b96",
-  "timestamp": "2025-08-31T17:25:31.971524"
+  "hash": "3f69931fc7957af4524a8c8c307f9ca9",
+  "timestamp": "2025-08-31T18:50:37.183404"
 }
