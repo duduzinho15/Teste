@@ -13,7 +13,7 @@ from typing import Any, Iterable
 logger = logging.getLogger(__name__)
 
 # Caminho do banco analytics
-DB_PATH = Path("analytics")
+DB_PATH = Path("src/db/analytics.sqlite")
 
 
 def q(sql: str, params: Iterable[Any] | None = None) -> list[dict[str, Any]]:
@@ -401,8 +401,7 @@ def get_recent_blocked_posts(limit: int = 10) -> list[dict[str, Any]]:
             """
             SELECT component AS platform,
                    metric AS reason,
-                   occurred_at,
-                   meta_json
+                   occurred_at
             FROM perf
             WHERE metric IN ('affiliate_format_invalid','amazon_asin_missing')
             ORDER BY occurred_at DESC

@@ -498,13 +498,13 @@ class GarimpeiroDashboard:
     def _build_mercadolivre_moderation_tab(self) -> ft.Container:
         """Tab de moderação manual do Mercado Livre"""
         try:
-            from .mercadolivre_moderation_tab import get_mercadolivre_moderation_tab
+            from apps.flet_dashboard.mercadolivre_moderation_tab import MercadoLivreModerationTab
             
-            moderation_tab = get_mercadolivre_moderation_tab()
+            moderation_tab = MercadoLivreModerationTab()
             return moderation_tab.build()
             
         except ImportError as e:
-            self.logger.error(f"Erro ao importar tab de moderação: {e}")
+            print(f"Erro ao importar tab de moderação: {e}")
             return ft.Container(
                 content=ft.Text("❌ Erro ao carregar moderação do Mercado Livre", color=ft.Colors.RED_400),
                 padding=20
