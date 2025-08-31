@@ -415,6 +415,190 @@ def get_recent_blocked_posts(limit: int = 10) -> list[dict[str, Any]]:
         return []
 
 
+def mercadolivre_metrics_7d() -> dict[str, Any]:
+    """
+    Métricas específicas do Mercado Livre nos últimos 7 dias
+
+    Returns:
+        Dict com métricas de qualidade e performance
+    """
+    try:
+        # Métricas de qualidade de links
+        quality_metrics = q("""
+            SELECT 
+                COUNT(*) as total_offers,
+                SUM(CASE WHEN affiliate_url LIKE '%mercadolivre.com/sec/%' THEN 1 ELSE 0 END) as shortlinks,
+                SUM(CASE WHEN affiliate_url LIKE '%social/garimpeirogeek%' THEN 1 ELSE 0 END) as social_links,
+                SUM(CASE WHEN affiliate_url LIKE '%mercadolivre.com.br%' AND affiliate_url NOT LIKE '%sec/%' AND affiliate_url NOT LIKE '%social/%' THEN 1 ELSE 0 END) as direct_links
+            FROM offers_posted 
+            WHERE platform = 'mercadolivre' 
+            AND posted_at >= DATE('now','-7 day')
+        """)
+        
+        if not quality_metrics:
+            return {
+                "total_offers": 0,
+                "shortlinks": 0,
+                "social_links": 0,
+                "direct_links": 0,
+                "shortlink_pct": 0.0,
+                "social_pct": 0.0,
+                "quality_score": 0.0
+            }
+        
+        row = quality_metrics[0]
+        total = row["total_offers"] or 0
+        
+        if total == 0:
+            return {
+                "total_offers": 0,
+                "shortlinks": 0,
+                "social_links": 0,
+                "direct_links": 0,
+                "shortlink_pct": 0.0,
+                "social_pct": 0.0,
+                "quality_score": 0.0
+            }
+        
+        shortlinks = row["shortlinks"] or 0
+        social_links = row["social_links"] or 0
+        direct_links = row["direct_links"] or 0
+        
+        # Calcular percentuais
+        shortlink_pct = (shortlinks / total * 100.0) if total > 0 else 0.0
+        social_pct = (social_links / total * 100.0) if total > 0 else 0.0
+        
+        # Score de qualidade (shortlinks têm peso maior)
+        quality_score = ((shortlinks * 0.8) + (social_links * 0.2)) / total * 100.0 if total > 0 else 0.0
+        
+        return {
+            "total_offers": total,
+            "shortlinks": shortlinks,
+            "social_links": social_links,
+            "direct_links": direct_links,
+            "shortlink_pct": round(shortlink_pct, 1),
+            "social_pct": round(social_pct, 1),
+            "quality_score": round(quality_score, 1)
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter métricas Mercado Livre: {e}")
+        return {
+            "total_offers": 0,
+            "shortlinks": 0,
+            "social_links": 0,
+            "direct_links": 0,
+            "shortlink_pct": 0.0,
+            "social_pct": 0.0,
+            "quality_score": 0.0
+        }
+
+
+def mercadolivre_performance_7d() -> dict[str, Any]:
+    """
+    Performance do Mercado Livre nos últimos 7 dias
+
+    Returns:
+        Dict com métricas de performance
+    """
+    try:
+        # Performance de conversão
+        perf_metrics = q("""
+            SELECT 
+                AVG(CASE WHEN metric = 'deeplink_latency_ms' THEN value ELSE NULL END) as avg_latency,
+                COUNT(CASE WHEN metric = 'deeplink_latency_ms' THEN 1 ELSE NULL END) as latency_samples,
+                SUM(CASE WHEN metric = 'affiliate_conversion_success' THEN 1 ELSE 0 END) as successful_conversions,
+                SUM(CASE WHEN metric = 'affiliate_conversion_failed' THEN 1 ELSE 0 END) as failed_conversions
+            FROM perf 
+            WHERE component = 'mercadolivre' 
+            AND occurred_at >= DATE('now','-7 day')
+        """)
+        
+        if not perf_metrics:
+            return {
+                "avg_latency": 0,
+                "latency_samples": 0,
+                "successful_conversions": 0,
+                "failed_conversions": 0,
+                "conversion_rate": 0.0,
+                "avg_latency_formatted": "0ms"
+            }
+        
+        row = perf_metrics[0]
+        successful = row["successful_conversions"] or 0
+        failed = row["failed_conversions"] or 0
+        total_conversions = successful + failed
+        
+        conversion_rate = (successful / total_conversions * 100.0) if total_conversions > 0 else 0.0
+        avg_latency = row["avg_latency"] or 0
+        
+        return {
+            "avg_latency": round(avg_latency, 0),
+            "latency_samples": row["latency_samples"] or 0,
+            "successful_conversions": successful,
+            "failed_conversions": failed,
+            "conversion_rate": round(conversion_rate, 1),
+            "avg_latency_formatted": f"{round(avg_latency, 0)}ms" if avg_latency > 0 else "0ms"
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter performance Mercado Livre: {e}")
+        return {
+            "avg_latency": 0,
+            "latency_samples": 0,
+            "successful_conversions": 0,
+            "failed_conversions": 0,
+            "conversion_rate": 0.0,
+            "avg_latency_formatted": "0ms"
+        }
+
+
+def mercadolivre_revenue_7d() -> dict[str, Any]:
+    """
+    Receita do Mercado Livre nos últimos 7 dias
+
+    Returns:
+        Dict com métricas de receita
+    """
+    try:
+        revenue_data = q("""
+            SELECT 
+                COALESCE(SUM(amount_cents)/100.0, 0) as total_revenue,
+                COUNT(*) as transactions,
+                AVG(amount_cents)/100.0 as avg_transaction
+            FROM revenue 
+            WHERE platform = 'mercadolivre' 
+            AND occurred_on >= DATE('now','-7 day')
+        """)
+        
+        if not revenue_data:
+            return {
+                "total_revenue": 0.0,
+                "transactions": 0,
+                "avg_transaction": 0.0,
+                "formatted_revenue": "R$ 0,00"
+            }
+        
+        row = revenue_data[0]
+        total_revenue = row["total_revenue"] or 0.0
+        
+        return {
+            "total_revenue": total_revenue,
+            "transactions": row["transactions"] or 0,
+            "avg_transaction": row["avg_transaction"] or 0.0,
+            "formatted_revenue": f"R$ {total_revenue:.2f}".replace(".", ",")
+        }
+        
+    except Exception as e:
+        logger.error(f"Erro ao obter receita Mercado Livre: {e}")
+        return {
+            "total_revenue": 0.0,
+            "transactions": 0,
+            "avg_transaction": 0.0,
+            "formatted_revenue": "R$ 0,00"
+        }
+
+
 def health_check() -> dict[str, Any]:
     """
     Verificação de saúde do sistema de métricas

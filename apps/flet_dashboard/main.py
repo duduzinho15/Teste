@@ -96,6 +96,10 @@ class GarimpeiroDashboard:
                     content=self._build_amazon_tab()
                 ),
                 ft.Tab(
+                    text="🛒 Mercado Livre",
+                    content=self._build_mercadolivre_tab()
+                ),
+                ft.Tab(
                     text="🔗 Afiliação",
                     content=self._build_affiliation_tab()
                 ),
@@ -332,6 +336,157 @@ class GarimpeiroDashboard:
             quality_cards,
             ft.Divider(height=20),
             strategy_chart
+        ], spacing=20)
+        
+        return ft.Container(content=content, padding=20)
+    
+    def _build_mercadolivre_tab(self) -> ft.Container:
+        """Tab específica para métricas do Mercado Livre"""
+        # Importar as funções específicas do Mercado Livre
+        try:
+            from src.core.analytics_queries import (
+                mercadolivre_metrics_7d, 
+                mercadolivre_performance_7d, 
+                mercadolivre_revenue_7d
+            )
+            
+            metrics = mercadolivre_metrics_7d()
+            performance = mercadolivre_performance_7d()
+            revenue = mercadolivre_revenue_7d()
+            
+        except ImportError:
+            # Fallback se as funções não estiverem disponíveis
+            metrics = {
+                "total_offers": 0, "shortlinks": 0, "social_links": 0,
+                "direct_links": 0, "shortlink_pct": 0.0, "social_pct": 0.0, "quality_score": 0.0
+            }
+            performance = {
+                "avg_latency": 0, "conversion_rate": 0.0, "successful_conversions": 0,
+                "failed_conversions": 0, "avg_latency_formatted": "0ms"
+            }
+            revenue = {
+                "total_revenue": 0.0, "transactions": 0, "avg_transaction": 0.0,
+                "formatted_revenue": "R$ 0,00"
+            }
+        
+        # Cards de qualidade de links
+        quality_cards = ft.Row([
+            MetricCard(
+                "Shortlinks",
+                str(metrics["shortlinks"]),
+                f"{metrics['shortlink_pct']:.1f}% do total",
+                ft.Colors.GREEN_400,
+                metrics["shortlink_pct"] < 80.0  # Alerta se < 80%
+            ).build(),
+            
+            MetricCard(
+                "Links Sociais",
+                str(metrics["social_links"]),
+                f"{metrics['social_pct']:.1f}% do total",
+                ft.Colors.BLUE_400
+            ).build(),
+            
+            MetricCard(
+                "Score Qualidade",
+                f"{metrics['quality_score']:.1f}%",
+                "Baseado em tipos de link",
+                ft.Colors.ORANGE_400 if metrics["quality_score"] < 70.0 else ft.Colors.GREEN_400,
+                metrics["quality_score"] < 70.0
+            ).build()
+        ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
+        
+        # Cards de performance
+        performance_cards = ft.Row([
+            MetricCard(
+                "Taxa Conversão",
+                f"{performance['conversion_rate']:.1f}%",
+                f"{performance['successful_conversions']} sucessos",
+                ft.Colors.GREEN_400 if performance['conversion_rate'] > 80.0 else ft.Colors.ORANGE_400,
+                performance['conversion_rate'] < 80.0
+            ).build(),
+            
+            MetricCard(
+                "Latência Média",
+                performance['avg_latency_formatted'],
+                f"{performance['latency_samples']} amostras",
+                ft.Colors.BLUE_400 if performance['avg_latency'] < 1000 else ft.Colors.ORANGE_400
+            ).build(),
+            
+            MetricCard(
+                "Total Ofertas",
+                str(metrics["total_offers"]),
+                "Últimos 7 dias",
+                ft.Colors.PURPLE_400
+            ).build()
+        ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
+        
+        # Card de receita
+        revenue_card = ft.Row([
+            MetricCard(
+                "Receita Total",
+                revenue['formatted_revenue'],
+                f"{revenue['transactions']} transações",
+                ft.Colors.GREEN_400,
+                revenue['total_revenue'] == 0.0
+            ).build(),
+            
+            MetricCard(
+                "Ticket Médio",
+                f"R$ {revenue['avg_transaction']:.2f}".replace(".", ","),
+                "Por transação",
+                ft.Colors.BLUE_400
+            ).build()
+        ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
+        
+        # Gráfico de distribuição de tipos de link
+        link_distribution = [
+            {"label": "Shortlinks", "value": metrics["shortlinks"]},
+            {"label": "Links Sociais", "value": metrics["social_links"]},
+            {"label": "Links Diretos", "value": metrics["direct_links"]}
+        ]
+        
+        link_chart = PieChart(
+            "Distribuição de Tipos de Link",
+            link_distribution,
+            "value",
+            "label"
+        ).build()
+        
+        # Gráfico de performance de conversão
+        conversion_data = [
+            {"label": "Sucessos", "value": performance["successful_conversions"]},
+            {"label": "Falhas", "value": performance["failed_conversions"]}
+        ]
+        
+        conversion_chart = BarChart(
+            "Taxa de Conversão",
+            conversion_data,
+            "label",
+            "value",
+            ft.Colors.GREEN_400
+        ).build()
+        
+        content = ft.Column([
+            ft.Text("🛒 Mercado Livre - Métricas Específicas", size=24, weight=ft.FontWeight.BOLD),
+            ft.Text("Qualidade de links, performance e receita", size=14, color=ft.Colors.GREY_400),
+            ft.Divider(height=20),
+            
+            ft.Text("📊 Qualidade dos Links", size=18, weight=ft.FontWeight.BOLD),
+            quality_cards,
+            ft.Divider(height=20),
+            
+            ft.Text("⚡ Performance e Conversão", size=18, weight=ft.FontWeight.BOLD),
+            performance_cards,
+            ft.Divider(height=20),
+            
+            ft.Text("💰 Receita e Transações", size=18, weight=ft.FontWeight.BOLD),
+            revenue_card,
+            ft.Divider(height=20),
+            
+            ft.Row([
+                link_chart,
+                conversion_chart
+            ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
         ], spacing=20)
         
         return ft.Container(content=content, padding=20)

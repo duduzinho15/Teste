@@ -425,12 +425,23 @@ python -m src.pipelines.enrich_offers_api
 
 ### Dashboard Flet
 Acesse o dashboard em tempo real para monitorar:
-- Taxa de conversão por plataforma
-- Performance dos conversores
-- Estatísticas de cache
-- Alertas de falhas
-- Métricas de postagem
-- Status dos scrapers
+
+#### **📊 Tabs Disponíveis**
+- **Visão Geral**: KPIs principais e alertas do sistema
+- **Amazon ASIN**: Qualidade de normalização e estratégias de extração
+- **🛒 Mercado Livre**: Métricas específicas de qualidade, performance e receita
+- **Afiliação**: Monitoramento de links afiliados e receita
+- **Performance**: Latência de deeplinks e freshness de preços
+- **Alertas**: Sistema de notificações e problemas detectados
+- **Controles**: Gerenciamento de plataformas e configurações
+
+#### **🛒 Aba Mercado Livre - Funcionalidades**
+- **Qualidade dos Links**: Shortlinks, links sociais e diretos
+- **Score de Qualidade**: Baseado em tipos de link (shortlinks têm peso maior)
+- **Performance**: Taxa de conversão e latência média
+- **Receita**: Total de receita e ticket médio por transação
+- **Gráficos**: Distribuição de tipos de link e taxa de conversão
+- **Alertas**: Notificações para qualidade < 70% e conversão < 80%
 
 ### Métricas Disponíveis
 - **Conversões**: Total, sucesso, falha por plataforma
@@ -539,6 +550,7 @@ Para suporte e dúvidas:
 - [x] **Tokens Rakuten implementados** (Web Service + Security)
 - [x] **Tokens Shopee implementados** (App ID + Secret)
 - [x] **APIs Rakuten e Shopee habilitadas e funcionais**
+- [x] **🛒 Aba Mercado Livre implementada no Dashboard** (Métricas específicas, qualidade de links, performance e receita)
 
 ### 📋 Planejado
 - [ ] Machine Learning para scoring
@@ -594,5 +606,5 @@ Para detalhes sobre o sistema de atualização, consulte:
 **Desenvolvido com ❤️ para a comunidade de ofertas e promoções**
 
 **Versão**: 2.0  
-**Última Análise**: 31-08-2025 11:00:00  
+**Última Análise**: 31-08-2025 12:30:00  
 **Status**: ✅ Sistema 100% Funcional e Pronto para Produção
