@@ -19,11 +19,13 @@
       "affiliate\\__init__.py",
       "app\\__init__.py",
       "bot\\telegram_bot.py",
+      "core\\advanced_metrics.py",
       "core\\affiliate_cache.py",
       "core\\affiliate_converter.py",
       "core\\affiliate_validator.py",
       "core\\alert_system.py",
       "core\\analytics_queries.py",
+      "core\\bot_controller.py",
       "core\\cache_config.py",
       "core\\config.py",
       "core\\conversion_metrics.py",
@@ -124,6 +126,7 @@
     ],
     "apps": [
       "__init__.py",
+      "flet_dashboard\\advanced_controls_tab.py",
       "flet_dashboard\\main.py",
       "flet_dashboard\\mercadolivre_moderation_tab.py",
       "flet_dashboard\\run_dashboard.py",
@@ -292,6 +295,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "440eeb0c60979ca9eb6690de9e4e69a7",
-  "timestamp": "2025-08-31T12:02:54.897444"
+  "hash": "d436bbbd5a71f0c160294c68081fef3e",
+  "timestamp": "2025-08-31T16:10:11.587428"
 }
