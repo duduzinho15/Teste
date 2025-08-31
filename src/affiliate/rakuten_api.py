@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class RakutenAPIClient(BaseAPI):
     """Cliente para API oficial do Rakuten Advertising"""
 
-    def __init__(self, client_id: str, client_secret: str, access_token: str = None):
+    def __init__(self, client_id: str, client_secret: str, access_token: Optional[str] = None):
         """
         Inicializa cliente Rakuten API
 
@@ -34,6 +34,22 @@ class RakutenAPIClient(BaseAPI):
         # Configurações específicas
         self.api_version = "v2"
         self.base_url = f"https://api.rakutenmarketing.com/{self.api_version}"
+        
+        # Configuração das lojas específicas
+        self.stores = {
+            "hype_games": {
+                "name": "Hype Games",
+                "mid": "53304",
+                "category": "games",
+                "enabled": True
+            },
+            "nuuvem": {
+                "name": "Nuuvem", 
+                "mid": "46796",
+                "category": "games",
+                "enabled": True
+            }
+        }
 
         # Headers específicos
         self.headers.update(
@@ -110,6 +126,104 @@ class RakutenAPIClient(BaseAPI):
         except Exception as e:
             logger.error(f"Erro ao renovar token: {e}")
             return False
+
+    async def get_product_details(self, product_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Obtém detalhes de um produto específico
+        
+        Args:
+            product_id: ID do produto na Rakuten
+            
+        Returns:
+            Detalhes do produto ou None se não encontrado
+        """
+        try:
+            # Verificar se temos token válido
+            if not await self.refresh_token():
+                logger.error("Não foi possível obter token de acesso")
+                return None
+            
+            # Endpoint para detalhes do produto
+            endpoint = f"/products/{product_id}"
+            
+            async with self.session.get(
+                f"{self.base_url}{endpoint}",
+                headers=self.headers
+            ) as response:
+                if response.status == 200:
+                    product_data = await response.json()
+                    logger.info(f"Detalhes do produto {product_id} obtidos com sucesso")
+                    return product_data
+                else:
+                    logger.error(f"Erro ao obter produto {product_id}: {response.status}")
+                    return None
+                    
+        except Exception as e:
+            logger.error(f"Erro ao obter detalhes do produto {product_id}: {e}")
+            return None
+    
+    def get_available_stores(self) -> Dict[str, Dict[str, Any]]:
+        """
+        Retorna lista de lojas disponíveis configuradas
+        
+        Returns:
+            Dict com informações das lojas
+        """
+        return {
+            store_id: store_info 
+            for store_id, store_info in self.stores.items() 
+            if store_info.get("enabled", False)
+        }
+    
+    def get_store_info(self, store_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Obtém informações de uma loja específica
+        
+        Args:
+            store_id: ID da loja (hype_games, nuuvem)
+            
+        Returns:
+            Dict com informações da loja ou None se não encontrada
+        """
+        return self.stores.get(store_id)
+    
+    def get_store_mid(self, store_id: str) -> Optional[str]:
+        """
+        Obtém o MID de uma loja específica
+        
+        Args:
+            store_id: ID da loja (hype_games, nuuvem)
+            
+        Returns:
+            MID da loja ou None se não encontrada
+        """
+        store_info = self.get_store_info(store_id)
+        return store_info.get("mid") if store_info else None
+    
+    async def build_store_deeplink(
+        self, 
+        store_id: str, 
+        target_url: str, 
+        sub_id: str = "telegram"
+    ) -> Optional[str]:
+        """
+        Gera deeplink para uma loja específica
+        
+        Args:
+            store_id: ID da loja (hype_games, nuuvem)
+            target_url: URL de destino
+            sub_id: Sub-identificador (padrão: telegram)
+            
+        Returns:
+            Deeplink da loja ou None se erro
+        """
+        store_info = self.get_store_info(store_id)
+        if not store_info or not store_info.get("enabled"):
+            logger.error(f"Loja {store_id} não encontrada ou desabilitada")
+            return None
+        
+        mid = store_info["mid"]
+        return await self.build_deeplink(mid, target_url, sub_id)
 
     async def build_deeplink(
         self, advertiser_id: str, url: str, sub_id: Optional[str] = None

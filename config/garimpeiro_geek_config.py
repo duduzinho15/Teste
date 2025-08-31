@@ -99,7 +99,24 @@ RAKUTEN_API_CONFIG = {
         "Events",
         "Link Locator",
         "Product Search"
-    ]
+    ],
+    # Lojas específicas com seus MIDs
+    "stores": {
+        "hype_games": {
+            "name": "Hype Games",
+            "mid": "53304",
+            "category": "games",
+            "enabled": True,
+            "description": "Loja especializada em jogos e acessórios gaming"
+        },
+        "nuuvem": {
+            "name": "Nuuvem",
+            "mid": "46796", 
+            "category": "games",
+            "enabled": True,
+            "description": "Plataforma digital de jogos e software"
+        }
+    }
 }
 
 # ==========================================
