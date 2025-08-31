@@ -158,6 +158,26 @@ GEEK_CATEGORIES_CONFIG = {
             "priority_score": 0.95,
             "emoji": "🖥️"
         },
+        "smart_home_tech": {
+            "name": "Smart Home & IoT",
+            "keywords": ["smart home", "iot", "automacao", "casa inteligente", "smart tv", "smart speaker"],
+            "subcategories": [
+                "smart_tvs", "smart_speakers", "smart_lights", "smart_plugs",
+                "smart_thermostats", "smart_security", "smart_appliances"
+            ],
+            "priority_score": 0.85,
+            "emoji": "🏠"
+        },
+        "audio_tech": {
+            "name": "Audio & Som Premium",
+            "keywords": ["audio", "som", "headphone", "headset", "bluetooth", "wireless", "noise cancelling"],
+            "subcategories": [
+                "headphones_premium", "headsets_gaming", "bluetooth_speakers", "soundbars",
+                "microphones", "audio_interfaces", "wireless_audio"
+            ],
+            "priority_score": 0.8,
+            "emoji": "🎧"
+        },
         "anime_otaku": {
             "name": "Anime & Otaku",
             "keywords": ["anime", "otaku", "manga", "cosplay", "figuras"],
@@ -182,21 +202,43 @@ GEEK_CATEGORIES_CONFIG = {
     
     # Categorias SECUNDÁRIAS (importantes mas não prioritárias)
     "secondary_categories": {
-        "home_tech": {
-            "name": "Home Tech",
-            "keywords": ["smart home", "iot", "automacao", "casa inteligente"],
+        "home_appliances": {
+            "name": "Eletrodomésticos Tech",
+            "keywords": ["eletrodomestico", "microondas", "geladeira", "maquina de lavar", "smart appliance"],
+            "subcategories": [
+                "microondas", "geladeiras", "maquinas_lavar", "fornos_eletricos",
+                "aspiradores_robot", "cafeteiras_espresso", "liquidificadores"
+            ],
             "priority_score": 0.6,
-            "emoji": "🏠"
+            "emoji": "🔌"
+        },
+        "mobile_tech": {
+            "name": "Mobile & Wearables",
+            "keywords": ["mobile", "smartphone", "tablet", "smartwatch", "fitness tracker"],
+            "subcategories": [
+                "smartphones", "tablets", "smartwatches", "fitness_trackers",
+                "power_banks", "carregadores", "cases_protetores"
+            ],
+            "priority_score": 0.7,
+            "emoji": "📱"
         },
         "fitness_tech": {
-            "name": "Fitness Tech",
-            "keywords": ["fitness", "saude", "wearable", "smartwatch"],
+            "name": "Fitness & Saúde Tech",
+            "keywords": ["fitness", "saude", "wearable", "smartwatch", "health"],
+            "subcategories": [
+                "smartwatches", "fitness_trackers", "smart_scales", "blood_pressure_monitors",
+                "sleep_trackers", "meditation_apps", "workout_equipment"
+            ],
             "priority_score": 0.5,
             "emoji": "💪"
         },
         "general_electronics": {
             "name": "Eletrônicos Gerais",
-            "keywords": ["eletronico", "gadget", "acessorio"],
+            "keywords": ["eletronico", "gadget", "acessorio", "tech"],
+            "subcategories": [
+                "cables", "adapters", "chargers", "power_supplies",
+                "storage_devices", "networking", "gaming_accessories"
+            ],
             "priority_score": 0.4,
             "emoji": "📱"
         }
@@ -221,6 +263,22 @@ GEEK_CATEGORIES_CONFIG = {
         "premium", "flagship", "latest", "newest", "cutting edge", "innovative",
         "high-end", "professional", "enthusiast", "overclock", "custom",
         
+        # Smart Home & IoT
+        "smart tv", "smart speaker", "smart home", "iot", "automacao", "casa inteligente",
+        "smart appliance", "smart light", "smart plug", "smart thermostat",
+        
+        # Audio & Som
+        "headphone", "headset", "bluetooth", "wireless", "noise cancelling",
+        "soundbar", "speaker", "microphone", "audio interface", "wireless audio",
+        
+        # Mobile & Wearables
+        "smartphone", "tablet", "smartwatch", "fitness tracker", "wearable",
+        "mobile", "premium mobile", "flagship phone",
+        
+        # Eletrodomésticos Tech
+        "eletrodomestico", "microondas", "geladeira", "maquina de lavar",
+        "smart appliance", "aspirador robot", "cafeteira espresso",
+        
         # Anime/Otaku
         "anime", "otaku", "manga", "cosplay", "kawaii", "kawaii", "moe",
         "limited edition", "collector", "exclusive", "rare",
@@ -232,10 +290,27 @@ GEEK_CATEGORIES_CONFIG = {
     
     # Produtos que SEMPRE devem ser priorizados
     "always_priority": [
+        # Gaming
         "playstation", "xbox", "nintendo", "switch", "steam deck",
         "rtx", "gtx", "ryzen", "intel i9", "i7", "ssd nvme",
         "mechanical keyboard", "gaming mouse", "gaming headset",
-        "gaming monitor", "gaming chair", "streaming setup"
+        "gaming monitor", "gaming chair", "streaming setup",
+        
+        # Smart Home & IoT
+        "smart tv", "smart speaker", "smart home", "iot", "automacao",
+        "smart appliance", "smart light", "smart plug", "smart thermostat",
+        
+        # Audio Premium
+        "headphone", "headset", "bluetooth", "wireless", "noise cancelling",
+        "soundbar", "speaker", "microphone", "audio interface",
+        
+        # Mobile Premium
+        "smartphone", "tablet", "smartwatch", "fitness tracker", "wearable",
+        "premium mobile", "flagship phone",
+        
+        # Eletrodomésticos Tech
+        "eletrodomestico", "microondas", "geladeira", "maquina de lavar",
+        "smart appliance", "aspirador robot", "cafeteira espresso"
     ]
 }
 
