@@ -1,0 +1,8 @@
+RELATÓRIO DO SCRAPER - 2025-08-31 15:10:07.630716
+==================================================
+
+Total de requisições: 4
+Sucessos: 4
+Falhas: 0
+Taxa de sucesso: 100.0%
+Total de ofertas: 12

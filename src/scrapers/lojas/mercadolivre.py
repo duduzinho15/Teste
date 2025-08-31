@@ -206,6 +206,14 @@ class MercadoLivreScraper(BaseScraper):
         offers = []
         
         try:
+            # Garantir que a sessão HTTP esteja inicializada
+            if not self.session:
+                self.session = aiohttp.ClientSession(
+                    headers=self.headers,
+                    timeout=aiohttp.ClientTimeout(total=30)
+                )
+                self.logger.info("Sessão HTTP inicializada em _scrape_url_offers")
+            
             async with self.session.get(url) as response:
                 if response.status == 200:
                     html = await response.text()
