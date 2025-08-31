@@ -34,6 +34,7 @@
       "core\\deduplication.py",
       "core\\enhanced_metrics.py",
       "core\\failure_alerts.py",
+      "core\\geek_prioritizer.py",
       "core\\live_logs.py",
       "core\\logging_setup.py",
       "core\\matchers.py",
@@ -141,7 +142,8 @@
       "config\\redis.production.conf",
       "config\\SETUP_GITHUB.md",
       "config\\temp_env.txt",
-      "config\\__pycache__\\awin_test_config.cpython-313.pyc"
+      "config\\__pycache__\\awin_test_config.cpython-313.pyc",
+      "config\\__pycache__\\garimpeiro_geek_config.cpython-313.pyc"
     ],
     "tests": [
       "tests\\test_affiliates_magalu.py",
@@ -295,6 +297,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "d436bbbd5a71f0c160294c68081fef3e",
-  "timestamp": "2025-08-31T16:10:11.587428"
+  "hash": "5a08e913c8a0da37c1ed7a3337527b96",
+  "timestamp": "2025-08-31T17:25:31.971524"
 }
