@@ -110,11 +110,32 @@
       "scrapers\\precos\\zoom.py",
       "scrapers\\promobit\\promobit_scraper.py",
       "core\\monitoring\\system_monitor.py",
+      "app\\ai_optimization\\ai_optimizer.py",
+      "app\\ai_optimization\\data_collector.py",
+      "app\\ai_optimization\\model_trainer.py",
+      "app\\ai_optimization\\optimization_dashboard.py",
+      "app\\ai_optimization\\prediction_engine.py",
+      "app\\ai_optimization\\__init__.py",
       "app\\bot\\telegram_bot.py",
       "app\\bot\\__init__.py",
+      "app\\category_expansion\\category_analyzer.py",
+      "app\\category_expansion\\category_expander.py",
+      "app\\category_expansion\\category_optimizer.py",
+      "app\\category_expansion\\market_researcher.py",
+      "app\\category_expansion\\__init__.py",
+      "app\\conversion_monitoring\\conversion_analyzer.py",
+      "app\\conversion_monitoring\\conversion_dashboard.py",
+      "app\\conversion_monitoring\\conversion_reporter.py",
+      "app\\conversion_monitoring\\conversion_tracker.py",
+      "app\\conversion_monitoring\\__init__.py",
       "app\\dashboard\\charts.py",
       "app\\dashboard\\dashboard.py",
       "app\\dashboard\\__init__.py",
+      "app\\production_testing\\geek_validation.py",
+      "app\\production_testing\\performance_monitor.py",
+      "app\\production_testing\\production_test_runner.py",
+      "app\\production_testing\\real_data_pipeline.py",
+      "app\\production_testing\\__init__.py",
       "app\\queue\\mercadolivre_moderation.py",
       "app\\queue\\moderation_system.py",
       "app\\queue\\offer_queue.py",
@@ -125,7 +146,12 @@
       "app\\scheduler\\job_scheduler.py",
       "app\\scheduler\\post_scheduler.py",
       "app\\scheduler\\task_runner.py",
-      "app\\scheduler\\__init__.py"
+      "app\\scheduler\\__init__.py",
+      "app\\user_feedback\\feedback_analyzer.py",
+      "app\\user_feedback\\feedback_collector.py",
+      "app\\user_feedback\\feedback_dashboard.py",
+      "app\\user_feedback\\score_adjuster.py",
+      "app\\user_feedback\\__init__.py"
     ],
     "apps": [
       "__init__.py",
@@ -302,6 +328,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "3f69931fc7957af4524a8c8c307f9ca9",
-  "timestamp": "2025-08-31T18:50:37.183404"
+  "hash": "af86a604617b718855b2a1c054c64d0c",
+  "timestamp": "2025-08-31T20:40:51.083751"
 }
