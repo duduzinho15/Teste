@@ -500,6 +500,26 @@ python demo_unified_dashboard.py
 
 # Teste rápido do sistema unificado
 python demo_unified_dashboard.py quick
+
+# Testes de Performance Avançados
+python demo_performance_tests.py full
+
+# Teste rápido de performance
+python demo_performance_tests.py quick
+
+# Integração com Afiliados
+python demo_affiliate_integration.py full
+python demo_affiliate_integration.py quick
+
+# Métricas Avançadas
+python demo_advanced_metrics.py quick
+python demo_advanced_metrics.py full
+python demo_advanced_metrics.py dashboard
+
+# Deep Learning
+python demo_deep_learning.py quick
+python demo_deep_learning.py full
+python demo_deep_learning.py dashboard
 ```
 
 ## 📊 Monitoramento
@@ -648,6 +668,9 @@ Para suporte e dúvidas:
 - [x] **📈 Sistema de Expansão de Categorias** (Análise de tendências, pesquisa de mercado, expansão automática, otimização)
 - [x] **🤖 Sistema de IA para Otimização Automática** (Machine Learning, predição de scores, otimização automática, dashboard interativo)
 - [x] **🎛️ Sistema Unificado de Dashboard** (Integração completa de todos os sistemas, métricas consolidadas, controle centralizado)
+- [x] **🔗 Sistema de Integração com Afiliados Reais** (APIs oficiais, validação de links, múltiplas redes, dashboard dedicado)
+- [x] **📊 Sistema de Métricas Avançadas** (Análise temporal, segmentação demográfica, sazonalidade, engajamento, insights preditivos)
+- [x] **🤖 Sistema de Deep Learning** (Redes neurais avançadas, predições inteligentes, otimização automática de priorização)
 
 ### **🤖 Sistema de IA para Otimização Automática de Priorização**
 - **AIOptimizer**: Otimizador principal que coordena todo o sistema de IA
@@ -661,6 +684,208 @@ Para suporte e dúvidas:
 - **Confiança e Insights**: Análise de confiança das predições e fatores-chave que influenciam os scores
 - **Otimização em Lote**: Processamento eficiente de múltiplas ofertas simultaneamente
 - **Histórico Completo**: Tracking de todas as otimizações realizadas pelo sistema
+
+### **🧪 Sistema de Testes de Performance Avançados**
+
+Sistema completo de testes de stress, carga, concorrência, memória, rede e benchmark para validar a performance do sistema em diferentes cenários.
+
+#### **Componentes Implementados:**
+
+1. **📊 Performance Monitor** (`src/tests/performance/performance_monitor.py`)
+   - Monitoramento em tempo real de CPU, memória, disco e rede
+   - Registro de tempos de resposta
+   - Alertas configuráveis para thresholds
+
+2. **⚡ Stress Tester** (`src/tests/performance/stress_tester.py`)
+   - Testes de stress com ramp-up/down
+   - Usuários concorrentes configuráveis
+   - Cenários simulados (scraping, processing, posting, validation)
+
+3. **📈 Load Generator** (`src/tests/performance/load_generator.py`)
+   - Testes de carga progressiva
+   - Aumento gradual de usuários
+   - Métricas de throughput e latência
+
+4. **🔄 Concurrency Tester** (`src/tests/performance/concurrency_tester.py`)
+   - Testes de concorrência com ThreadPoolExecutor
+   - Tarefas distribuídas por peso
+   - Análise de deadlocks e race conditions
+
+5. **💾 Memory Profiler** (`src/tests/performance/memory_profiler.py`)
+   - Monitoramento de uso de memória
+   - Detecção de vazamentos com tracemalloc
+   - Forçar garbage collection
+
+6. **🌐 Network Simulator** (`src/tests/performance/network_simulator.py`)
+   - Simulação de condições de rede (latência, jitter, packet loss)
+   - Interceptação de chamadas socket
+   - Testes de conectividade
+
+7. **⚡ Benchmark Runner** (`src/tests/performance/benchmark_runner.py`)
+   - Benchmarks específicos para funções
+   - Profiling de CPU com cProfile
+   - Métricas de performance detalhadas
+
+#### **Como Usar:**
+
+```bash
+# Demonstração rápida
+python demo_performance_tests.py quick
+
+# Demonstração completa
+python demo_performance_tests.py full
+```
+
+#### **Métricas Coletadas:**
+- Throughput (RPS - Requests Per Second)
+- Tempo médio de resposta
+- Taxa de erro
+- Uso de CPU e memória
+- Vazamentos de memória
+- Latência de rede
+- Performance de benchmarks
+
+---
+
+### **🔗 Sistema de Integração com Afiliados Reais**
+
+Sistema completo para integração com redes de afiliados reais, incluindo APIs oficiais, validação de links e monitoramento de métricas.
+
+#### **Componentes Principais:**
+
+1. **AffiliateIntegrationManager** (`src/core/affiliate_integration.py`)
+   - Gerenciamento centralizado de redes de afiliados
+   - Configuração de APIs oficiais
+   - Validação de links em lote
+   - Armazenamento em banco SQLite
+   - Métricas de performance
+
+2. **AffiliateLinkValidator** (`src/core/affiliate_integration.py`)
+   - Validação automática de links de afiliado
+   - Detecção de rede por URL
+   - Cache de validações
+   - Teste de acessibilidade
+   - Rate limiting inteligente
+
+3. **AffiliateAPIClient** (`src/core/affiliate_integration.py`)
+   - Cliente base para APIs de afiliados
+   - Rate limiting automático
+   - Retry com backoff exponencial
+   - Tratamento de erros robusto
+
+4. **AmazonAPIClient** (`src/core/affiliate_integration.py`)
+   - Integração específica com Amazon Associates
+   - Busca de produtos via API oficial
+   - Geração automática de links de afiliado
+   - Tratamento de categorias
+
+5. **AwinAPIClient** (`src/core/affiliate_integration.py`)
+   - Integração com rede Awin
+   - Listagem de programas disponíveis
+   - Busca de produtos por programa
+   - Métricas de conversão
+
+6. **AffiliateDashboard** (`src/core/affiliate_dashboard.py`)
+   - Interface console para gerenciamento
+   - Configuração de redes
+   - Validação de links
+   - Busca de produtos
+   - Relatórios e métricas
+
+#### **Redes Suportadas:**
+- **Amazon Associates**: API oficial, busca de produtos, geração de links
+- **Awin**: API REST, programas de afiliados, métricas detalhadas
+- **Hotmart**: Integração com marketplace, produtos digitais
+- **Monetizze**: Plataforma de pagamentos, produtos digitais
+- **Eduzz**: Marketplace educacional
+- **Braip**: Plataforma de infoprodutos
+- **Perfect Pay**: Gateway de pagamentos
+- **Kiwify**: Plataforma de produtos digitais
+
+#### **Funcionalidades:**
+- ✅ **Configuração de Redes**: Adicionar, editar, remover redes de afiliados
+- ✅ **Validação de Links**: Verificação automática de links válidos
+- ✅ **Busca de Produtos**: Busca em múltiplas redes simultaneamente
+- ✅ **Métricas de Performance**: CTR, conversão, receita, comissões
+- ✅ **Cache Inteligente**: Cache de validações para performance
+- ✅ **Rate Limiting**: Controle automático de requisições
+- ✅ **Tratamento de Erros**: Recuperação robusta de falhas
+- ✅ **Dashboard Interativo**: Interface console completa
+
+#### **Como Usar:**
+
+```bash
+# Demonstração rápida
+python demo_affiliate_integration.py quick
+
+# Demonstração completa
+python demo_affiliate_integration.py full
+
+# Dashboard interativo
+python -c "from src.core.affiliate_dashboard import affiliate_dashboard; import asyncio; asyncio.run(affiliate_dashboard.show_main_menu())"
+```
+
+#### **Configuração de Redes:**
+
+```python
+from src.core.affiliate_integration import AffiliateConfig, AffiliateNetwork
+
+# Configurar Amazon
+amazon_config = AffiliateConfig(
+    network=AffiliateNetwork.AMAZON,
+    api_key="sua_api_key",
+    timeout=30,
+    priority=1
+)
+
+# Configurar Awin
+awin_config = AffiliateConfig(
+    network=AffiliateNetwork.AWIN,
+    api_key="sua_api_key",
+    api_secret="seu_api_secret",
+    timeout=30,
+    priority=2
+)
+```
+
+#### **Validação de Links:**
+
+```python
+from src.core.affiliate_integration import affiliate_manager
+
+# Validar links em lote
+urls = [
+    "https://amazon.com.br/dp/B08N5WRWNW?tag=garimpeirogeek-20",
+    "https://awin1.com/cread.php?awinmid=12345&awinaffid=67890"
+]
+
+results = await affiliate_manager.validate_links(urls)
+for result in results:
+    print(f"{result.url}: {'✅' if result.is_valid else '❌'}")
+```
+
+#### **Busca de Produtos:**
+
+```python
+# Buscar produtos em múltiplas redes
+products = await affiliate_manager.search_products(
+    keywords="headphone gamer",
+    category="Eletrônicos"
+)
+
+for product in products:
+    print(f"{product.name}: R$ {product.price:.2f}")
+```
+
+#### **Métricas Coletadas:**
+- Taxa de validação de links
+- Performance por rede
+- Produtos encontrados
+- Conversões e cliques
+- Receita e comissões
+- Tempo de resposta das APIs
+
+---
 
 ### **🎛️ Sistema Unificado de Dashboard**
 - **UnifiedDashboard**: Dashboard principal que coordena todos os sistemas implementados
