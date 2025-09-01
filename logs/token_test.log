@@ -1,0 +1,3 @@
+2025-08-31 11:00:43,287 - src.affiliate.rakuten - INFO - Deeplink Rakuten API gerado: https://click.linksynergy.com/deeplink?id=b64c55b9&mid=65d854a4&murl=https%3A%2F%2Fwww.amazon.com.br%2Fdp%2FB08N5WRWNW&u1=383f2426&token=efef4409
+2025-08-31 11:00:43,300 - src.affiliate.shopee - WARNING - URL de categoria Shopee bloqueada: https://shopee.com.br/oficial/Celulares-e-Dispositivos-cat.11059988
+2025-08-31 11:00:43,306 - src.affiliate.shopee - INFO - Shortlink Shopee encontrado em cache: https://s.shopee.com.br/1a74f3a36100

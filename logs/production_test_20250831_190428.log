@@ -1,0 +1,17 @@
+2025-08-31 19:04:28,860 - src.app.production_testing.production_test_runner - INFO - Logging configurado - arquivo: production_test_20250831_190428.log
+2025-08-31 19:04:28,861 - src.app.production_testing.production_test_runner - INFO - 🚀 Executando teste rápido de 5 minutos...
+2025-08-31 19:04:28,861 - src.app.production_testing.production_test_runner - INFO - 🚀 INICIANDO TESTE COMPLETO DE PRODUÇÃO DO SISTEMA GEEK
+2025-08-31 19:04:28,861 - src.app.production_testing.production_test_runner - INFO - ================================================================================
+2025-08-31 19:04:28,862 - src.app.production_testing.production_test_runner - INFO - 📊 FASE 1: Executando pipeline de dados reais...
+2025-08-31 19:04:28,862 - src.app.production_testing.production_test_runner - INFO - Executando pipeline de dados reais...
+2025-08-31 19:04:28,862 - src.app.production_testing.real_data_pipeline - INFO - Iniciando teste completo de produção...
+2025-08-31 19:04:28,863 - src.app.production_testing.real_data_pipeline - INFO - Gerando dados de teste realistas para sistema geek...
+2025-08-31 19:04:28,863 - src.app.production_testing.production_test_runner - ERROR - Erro no pipeline de dados: Offer.__init__() got an unexpected keyword argument 'store_name'. Did you mean 'store_data'?
+2025-08-31 19:04:28,863 - src.app.production_testing.production_test_runner - ERROR - ❌ Erro durante teste de produção: Offer.__init__() got an unexpected keyword argument 'store_name'. Did you mean 'store_data'?
+2025-08-31 19:04:28,863 - src.app.production_testing.production_test_runner - ERROR - Erro no teste rápido: Offer.__init__() got an unexpected keyword argument 'store_name'. Did you mean 'store_data'?
+2025-08-31 19:04:28,864 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 19:04:28,864 - queue.quality_controller - INFO - QualityController inicializado
+2025-08-31 19:04:28,864 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 19:04:28,865 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 19:04:28,865 - src.core.geek_alerts - INFO - GeekAlertManager inicializado
+2025-08-31 19:04:28,865 - queue.quality_controller - INFO - QualityController inicializado

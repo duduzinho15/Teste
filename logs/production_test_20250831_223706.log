@@ -1,0 +1,20 @@
+2025-08-31 22:37:06,884 - src.app.production_testing.production_test_runner - INFO - Logging configurado - arquivo: production_test_20250831_223706.log
+2025-08-31 22:37:06,884 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 22:37:06,885 - src.app.conversion_monitoring.conversion_tracker - INFO - Carregados 11 eventos e 11 métricas
+2025-08-31 22:37:06,885 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 22:37:06,886 - src.app.user_feedback.feedback_collector - INFO - Banco de dados de feedback inicializado com sucesso
+2025-08-31 22:37:06,887 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 22:37:06,888 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 22:37:06,888 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-08-31 22:37:06,889 - src.app.ai_optimization.data_collector - INFO - Banco de dados inicializado com sucesso
+2025-08-31 22:37:06,889 - src.app.ai_optimization.model_trainer - INFO - Banco de métricas inicializado
+2025-08-31 22:37:06,890 - src.app.ai_optimization.ai_optimizer - INFO - Banco de dados do otimizador inicializado
+2025-08-31 22:37:06,890 - src.app.unified_dashboard - INFO - Sistema production_testing inicializado com sucesso
+2025-08-31 22:37:06,890 - src.app.unified_dashboard - INFO - Sistema conversion_monitoring inicializado com sucesso
+2025-08-31 22:37:06,891 - src.app.unified_dashboard - INFO - Sistema user_feedback inicializado com sucesso
+2025-08-31 22:37:06,891 - src.app.unified_dashboard - INFO - Sistema category_expansion inicializado com sucesso
+2025-08-31 22:37:06,891 - src.app.unified_dashboard - INFO - Sistema ai_optimization inicializado com sucesso
+2025-08-31 22:37:06,892 - src.app.unified_dashboard - ERROR - Erro ao obter métricas de conversão: 'ConversionAnalyzer' object has no attribute 'get_conversion_statistics'
+2025-08-31 22:37:06,892 - src.app.unified_dashboard - ERROR - Erro ao obter métricas de feedback: FeedbackAnalyzer.__init__() missing 1 required positional argument: 'feedback_collector'
+2025-08-31 22:37:06,892 - src.app.unified_dashboard - ERROR - Erro ao obter métricas de categorias: 'CategoryAnalyzer' object has no attribute 'get_statistics'
+2025-08-31 22:37:06,892 - src.app.unified_dashboard - ERROR - Erro ao obter métricas de IA: 'AIOptimizer' object has no attribute 'get_optimization_statistics'

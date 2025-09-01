@@ -1,0 +1,18 @@
+2025-08-31 15:09:59,132 - scraper.mercadolivre_scraper - INFO - Scraper Mercado Livre inicializado
+2025-08-31 15:09:59,132 - scraper.mercadolivre_scraper - INFO - Sessão HTTP inicializada em _scrape_url_offers
+2025-08-31 15:10:00,371 - scraper.mercadolivre_scraper - INFO - Encontrados 54 produtos para parsear
+2025-08-31 15:10:00,374 - __main__ - INFO - Oferta 1: Jogo Panelas 12 Peças Antiaderente Alumínio Turim ... - R$ 299.0 - Desconto: 26.0%
+2025-08-31 15:10:00,374 - __main__ - INFO - Oferta 2: 800mlgarrafa Térmica Água Squeeze Inox Academiaque... - R$ 37.73 - Desconto: 37.0%
+2025-08-31 15:10:00,375 - __main__ - INFO - Oferta 3: Kit 2 Tênis Academia Masculino Wave Creation 20 Pr... - R$ 157.95 - Desconto: 11.0%
+2025-08-31 15:10:02,474 - scraper.mercadolivre_scraper - INFO - Encontrados 6 produtos para parsear
+2025-08-31 15:10:02,476 - __main__ - INFO - Oferta 1: Smartphone Honor X5b Plus 256gb 8gb Ram (4+4) Tela... - R$ 691.0 - Desconto: 50.0%
+2025-08-31 15:10:02,476 - __main__ - INFO - Oferta 2: Smartphone Honor X5b Plus 256GB - 8GB RAM (4+4)... - R$ 691.0 - Desconto: 50.0%
+2025-08-31 15:10:02,477 - __main__ - INFO - Oferta 3: Motorola Edge 40 Neo 5G Dual SIM 256 GB Peach Fuzz... - R$ 1.895 - Desconto: 36.0%
+2025-08-31 15:10:04,699 - scraper.mercadolivre_scraper - INFO - Encontrados 15 produtos para parsear
+2025-08-31 15:10:04,701 - __main__ - INFO - Oferta 1: Tv Smart 32 12v Caminhão Onibus Van Motorhome Trai... - R$ 2.016 - Desconto: 25.0%
+2025-08-31 15:10:04,702 - __main__ - INFO - Oferta 2: Smart TV Tronos TRS32SFA11 LED Android HD 32"... - R$ 799.0 - Desconto: None%
+2025-08-31 15:10:04,702 - __main__ - INFO - Oferta 3: Smart Tv 55pug8808/78 55 4k The One Ambilight Phil... - R$ 3.322 - Desconto: 29.0%
+2025-08-31 15:10:06,625 - scraper.mercadolivre_scraper - INFO - Encontrados 54 produtos para parsear
+2025-08-31 15:10:06,628 - __main__ - INFO - Oferta 1: Monitor Acer Nitro Qg241y Ebii Ips 23.8 100hz Pret... - R$ 609.0 - Desconto: 49.0%
+2025-08-31 15:10:06,628 - __main__ - INFO - Oferta 2: Notebook Lenovo Ideapad 3i Celeron 4gb 128gb Ssd W... - R$ 1.754 - Desconto: 52.0%
+2025-08-31 15:10:06,628 - __main__ - INFO - Oferta 3: Carregador Portátil Por Indução 10.000mah Com Supo... - R$ 139.24 - Desconto: 39.0%

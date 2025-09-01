@@ -1,0 +1,120 @@
+2025-08-31 02:44:25,043 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 02:44:25,043 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:27,161 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:35,497 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 02:44:35,498 - AmazonMLPipeline - INFO - Testando pipeline...
+2025-08-31 02:44:35,498 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 02:44:35,498 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 02:44:35,498 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:38,513 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 02:44:38,514 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:38,514 - AmazonMLPipeline - INFO - Coleta concluída: 1 ofertas válidas
+2025-08-31 02:44:38,514 - AmazonMLPipeline - INFO - Pipeline funcionando: 1 ofertas coletadas
+2025-08-31 02:44:38,515 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 02:44:38,515 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 02:44:38,515 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:41,520 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 02:44:41,520 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 02:44:41,520 - AmazonMLPipeline - INFO - Coleta concluída: 1 ofertas válidas
+2025-08-31 10:44:08,188 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 10:44:08,189 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:10,083 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:18,439 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 10:44:18,440 - AmazonMLPipeline - INFO - Testando pipeline...
+2025-08-31 10:44:18,440 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 10:44:18,440 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 10:44:18,441 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:21,446 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 10:44:21,446 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:21,447 - AmazonMLPipeline - INFO - Coleta concluída: 1 ofertas válidas
+2025-08-31 10:44:21,447 - AmazonMLPipeline - INFO - Pipeline funcionando: 1 ofertas coletadas
+2025-08-31 10:44:21,447 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 10:44:21,447 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 10:44:21,448 - AmazonASINScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:24,451 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 10:44:24,452 - MagazineLuizaScraper - INFO - Scraping real desabilitado, retornando ofertas simuladas
+2025-08-31 10:44:24,452 - AmazonMLPipeline - INFO - Coleta concluída: 1 ofertas válidas
+2025-08-31 10:44:52,576 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 10:44:52,576 - MagazineLuizaScraper - INFO - Iniciando scraping da Magazine Luiza - Termo: smartphone, Preço max: R$ 2000
+2025-08-31 10:44:53,220 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/busca/smartphone/
+2025-08-31 10:45:08,994 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/busca/smartphone/
+2025-08-31 10:45:08,994 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:45:19,443 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:45:19,444 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:45:29,689 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:45:29,801 - MagazineLuizaScraper - INFO - Scraping concluído: 0 ofertas coletadas
+2025-08-31 10:45:31,824 - AmazonASINScraper - INFO - Iniciando scraping da Amazon - Termo: smartphone, Preço max: R$ 2000
+2025-08-31 10:45:32,541 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=smartphone
+2025-08-31 10:45:38,862 - AmazonASINScraper - INFO - Encontrados 67 produtos em https://www.amazon.com.br/s?k=smartphone
+2025-08-31 10:45:51,249 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:46:00,035 - AmazonASINScraper - INFO - Encontrados 6 produtos em https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:46:03,106 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:46:12,566 - AmazonASINScraper - INFO - Encontrados 82 produtos em https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:46:25,345 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:46:35,044 - AmazonASINScraper - INFO - Encontrados 67 produtos em https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:46:47,849 - AmazonASINScraper - INFO - Scraping concluído: 28 ofertas coletadas
+2025-08-31 10:46:56,493 - MagazineLuizaScraper - ERROR - Health check falhou: Page.wait_for_selector: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid=\"product-card\"], .product-card") to be visible
+
+2025-08-31 10:46:56,493 - AmazonMLPipeline - INFO - Testando pipeline...
+2025-08-31 10:46:56,494 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 10:46:56,494 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 10:46:56,494 - AmazonASINScraper - INFO - Iniciando scraping da Amazon - Termo: teste, Preço max: R$ 3000.0
+2025-08-31 10:46:57,069 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=teste
+2025-08-31 10:47:02,261 - AmazonASINScraper - INFO - Encontrados 0 produtos em https://www.amazon.com.br/s?k=teste
+2025-08-31 10:47:02,261 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:47:08,412 - AmazonASINScraper - INFO - Encontrados 6 produtos em https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:47:11,470 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:47:17,992 - AmazonASINScraper - INFO - Encontrados 82 produtos em https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:47:30,652 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:47:40,329 - AmazonASINScraper - INFO - Encontrados 67 produtos em https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:47:53,152 - AmazonASINScraper - INFO - Scraping concluído: 25 ofertas coletadas
+2025-08-31 10:47:56,163 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 10:47:56,164 - MagazineLuizaScraper - INFO - Iniciando scraping da Magazine Luiza - Termo: teste, Preço max: R$ 3000.0
+2025-08-31 10:47:56,830 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/busca/teste/
+2025-08-31 10:48:07,782 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/busca/teste/
+2025-08-31 10:48:07,782 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:48:18,024 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:48:18,025 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:48:28,267 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:48:28,337 - MagazineLuizaScraper - INFO - Scraping concluído: 0 ofertas coletadas
+2025-08-31 10:48:28,337 - AmazonMLPipeline - INFO - Coleta concluída: 5 ofertas válidas
+2025-08-31 10:48:28,337 - AmazonMLPipeline - INFO - Pipeline funcionando: 5 ofertas coletadas
+2025-08-31 10:48:28,337 - AmazonMLPipeline - INFO - Iniciando coleta de ofertas unificada
+2025-08-31 10:48:28,338 - AmazonMLPipeline - INFO - Coletando ofertas da Amazon...
+2025-08-31 10:48:28,338 - AmazonASINScraper - INFO - Iniciando scraping da Amazon - Termo: smartphone, Preço max: R$ 3000.0
+2025-08-31 10:48:28,989 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=smartphone
+2025-08-31 10:48:34,232 - AmazonASINScraper - INFO - Encontrados 0 produtos em https://www.amazon.com.br/s?k=smartphone
+2025-08-31 10:48:34,233 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:48:40,366 - AmazonASINScraper - INFO - Encontrados 6 produtos em https://www.amazon.com.br/gp/goldbox
+2025-08-31 10:48:43,436 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:48:49,716 - AmazonASINScraper - INFO - Encontrados 74 produtos em https://www.amazon.com.br/s?k=ofertas
+2025-08-31 10:49:02,360 - AmazonASINScraper - INFO - Acessando: https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:49:12,112 - AmazonASINScraper - INFO - Encontrados 67 produtos em https://www.amazon.com.br/s?k=promocoes
+2025-08-31 10:49:24,953 - AmazonASINScraper - INFO - Scraping concluído: 24 ofertas coletadas
+2025-08-31 10:49:27,965 - AmazonMLPipeline - INFO - Coletando ofertas da Magazine Luiza...
+2025-08-31 10:49:27,966 - MagazineLuizaScraper - INFO - Iniciando scraping da Magazine Luiza - Termo: smartphone, Preço max: R$ 3000.0
+2025-08-31 10:49:28,688 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/busca/smartphone/
+2025-08-31 10:49:39,430 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/busca/smartphone/
+2025-08-31 10:49:39,430 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:49:49,679 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas/
+2025-08-31 10:49:49,679 - MagazineLuizaScraper - INFO - Acessando: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:49:59,937 - MagazineLuizaScraper - WARNING - Timeout aguardando produtos em: https://www.magazineluiza.com.br/ofertas-do-dia/
+2025-08-31 10:50:00,002 - MagazineLuizaScraper - INFO - Scraping concluído: 0 ofertas coletadas
+2025-08-31 10:50:00,003 - AmazonMLPipeline - INFO - Coleta concluída: 5 ofertas válidas
