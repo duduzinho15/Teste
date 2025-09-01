@@ -21,8 +21,11 @@
       "app\\__init__.py",
       "bot\\telegram_bot.py",
       "core\\advanced_metrics.py",
+      "core\\advanced_metrics_dashboard.py",
       "core\\affiliate_cache.py",
       "core\\affiliate_converter.py",
+      "core\\affiliate_dashboard.py",
+      "core\\affiliate_integration.py",
       "core\\affiliate_validator.py",
       "core\\alert_system.py",
       "core\\analytics_queries.py",
@@ -33,6 +36,8 @@
       "core\\database.py",
       "core\\db_init.py",
       "core\\deduplication.py",
+      "core\\deep_learning.py",
+      "core\\deep_learning_dashboard.py",
       "core\\enhanced_metrics.py",
       "core\\failure_alerts.py",
       "core\\geek_alerts.py",
@@ -98,6 +103,15 @@
       "utils\\sqlite_helpers.py",
       "utils\\url_utils.py",
       "tests\\integration\\__init__.py",
+      "tests\\performance\\benchmark_runner.py",
+      "tests\\performance\\concurrency_tester.py",
+      "tests\\performance\\load_generator.py",
+      "tests\\performance\\memory_profiler.py",
+      "tests\\performance\\models.py",
+      "tests\\performance\\network_simulator.py",
+      "tests\\performance\\performance_monitor.py",
+      "tests\\performance\\stress_tester.py",
+      "tests\\performance\\__init__.py",
       "tests\\unit\\test_core.py",
       "tests\\unit\\__init__.py",
       "scrapers\\comunidades\\meupc.py",
@@ -329,6 +343,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "3088124192e4b3f05270dc42b83f927c",
-  "timestamp": "2025-08-31T22:43:25.303924"
+  "hash": "aaf390887a151def9725b1a6d4bde920",
+  "timestamp": "2025-09-01T00:33:18.864283"
 }
