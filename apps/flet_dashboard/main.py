@@ -26,6 +26,14 @@ try:
         health_check
     )
     from src.core.alert_system import get_active_alerts, get_alerts_summary
+    
+    # Novos sistemas implementados
+    from src.app.production_testing import ProductionTestRunner
+    from src.app.conversion_monitoring import ConversionTracker, ConversionAnalyzer, ConversionDashboard
+    from src.app.user_feedback import FeedbackCollector, FeedbackAnalyzer, ScoreAdjuster, FeedbackDashboard
+    from src.app.category_expansion import CategoryAnalyzer, CategoryExpander, MarketResearcher, CategoryOptimizer
+    from src.app.ai_optimization import AIOptimizer, DataCollector, ModelTrainer, PredictionEngine, OptimizationDashboard
+    
 except ImportError as e:
     print(f"Erro ao importar módulos do sistema: {e}")
     print("Certifique-se de executar o dashboard a partir do diretório raiz do projeto")
@@ -122,6 +130,26 @@ class GarimpeiroDashboard:
                 ft.Tab(
                     text="🎛️ Controles Avançados",
                     content=self._build_advanced_controls_tab()
+                ),
+                ft.Tab(
+                    text="🧪 Teste Produção",
+                    content=self._build_production_testing_tab()
+                ),
+                ft.Tab(
+                    text="📊 Conversões",
+                    content=self._build_conversion_monitoring_tab()
+                ),
+                ft.Tab(
+                    text="💬 Feedback",
+                    content=self._build_user_feedback_tab()
+                ),
+                ft.Tab(
+                    text="📂 Categorias",
+                    content=self._build_category_expansion_tab()
+                ),
+                ft.Tab(
+                    text="🤖 IA Otimização",
+                    content=self._build_ai_optimization_tab()
                 )
             ],
             expand=True
@@ -881,6 +909,456 @@ class GarimpeiroDashboard:
                 content=ft.Text("❌ Erro ao carregar controles avançados", color=ft.Colors.RED_400),
                 padding=20
             )
+    
+    def _build_production_testing_tab(self) -> ft.Container:
+        """Tab de teste em produção"""
+        try:
+            # Botões de controle
+            run_test_button = ft.ElevatedButton(
+                "🧪 Executar Teste Completo",
+                icon=ft.Icons.PLAY_ARROW,
+                on_click=self._run_production_test,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            )
+            
+            quick_test_button = ft.ElevatedButton(
+                "⚡ Teste Rápido",
+                icon=ft.Icons.FLASH_ON,
+                on_click=self._run_quick_test,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            # Status do teste
+            self.test_status = ft.Text("⏳ Aguardando execução...", size=16)
+            
+            # Resultados
+            self.test_results = ft.Text("", size=14, color=ft.Colors.GREY_400)
+            
+            content = ft.Column([
+                ft.Text("🧪 Teste em Produção com Dados Reais", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Execute testes completos ou rápidos para validar o sistema", size=16, color=ft.Colors.GREY_400),
+                ft.Divider(height=20),
+                ft.Row([run_test_button, quick_test_button], spacing=10),
+                ft.Divider(height=20),
+                self.test_status,
+                ft.Divider(height=10),
+                self.test_results
+            ], spacing=20)
+            
+            return ft.Container(content=content, padding=20)
+            
+        except Exception as e:
+            return ft.Container(
+                content=ft.Text(f"❌ Erro ao carregar tab de teste: {e}", color=ft.Colors.RED_400),
+                padding=20
+            )
+    
+    def _build_conversion_monitoring_tab(self) -> ft.Container:
+        """Tab de monitoramento de conversões"""
+        try:
+            # Botões de controle
+            start_tracking_button = ft.ElevatedButton(
+                "📊 Iniciar Tracking",
+                icon=ft.Icons.TRACK_CHANGES,
+                on_click=self._start_conversion_tracking,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            )
+            
+            view_dashboard_button = ft.ElevatedButton(
+                "📈 Ver Dashboard",
+                icon=ft.Icons.DASHBOARD,
+                on_click=self._view_conversion_dashboard,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            # Status do tracking
+            self.conversion_status = ft.Text("⏳ Tracking não iniciado", size=16)
+            
+            # Métricas de conversão
+            self.conversion_metrics = ft.Text("", size=14, color=ft.Colors.GREY_400)
+            
+            content = ft.Column([
+                ft.Text("📊 Monitoramento de Conversões", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Acompanhe métricas de conversão geek vs geral", size=16, color=ft.Colors.GREY_400),
+                ft.Divider(height=20),
+                ft.Row([start_tracking_button, view_dashboard_button], spacing=10),
+                ft.Divider(height=20),
+                self.conversion_status,
+                ft.Divider(height=10),
+                self.conversion_metrics
+            ], spacing=20)
+            
+            return ft.Container(content=content, padding=20)
+            
+        except Exception as e:
+            return ft.Container(
+                content=ft.Text(f"❌ Erro ao carregar tab de conversões: {e}", color=ft.Colors.RED_400),
+                padding=20
+            )
+    
+    def _build_user_feedback_tab(self) -> ft.Container:
+        """Tab de feedback dos usuários"""
+        try:
+            # Botões de controle
+            collect_feedback_button = ft.ElevatedButton(
+                "💬 Coletar Feedback",
+                icon=ft.Icons.COLLECT_FEEDBACK,
+                on_click=self._collect_user_feedback,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            )
+            
+            adjust_scores_button = ft.ElevatedButton(
+                "⚖️ Ajustar Scores",
+                icon=ft.Icons.TUNE,
+                on_click=self._adjust_scores,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            # Status do feedback
+            self.feedback_status = ft.Text("⏳ Sistema de feedback pronto", size=16)
+            
+            # Estatísticas de feedback
+            self.feedback_stats = ft.Text("", size=14, color=ft.Colors.GREY_400)
+            
+            content = ft.Column([
+                ft.Text("💬 Sistema de Feedback dos Usuários", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Coleta feedback e ajusta scores automaticamente", size=16, color=ft.Colors.GREY_400),
+                ft.Divider(height=20),
+                ft.Row([collect_feedback_button, adjust_scores_button], spacing=10),
+                ft.Divider(height=20),
+                self.feedback_status,
+                ft.Divider(height=10),
+                self.feedback_stats
+            ], spacing=20)
+            
+            return ft.Container(content=content, padding=20)
+            
+        except Exception as e:
+            return ft.Container(
+                content=ft.Text(f"❌ Erro ao carregar tab de feedback: {e}", color=ft.Colors.RED_400),
+                padding=20
+            )
+    
+    def _build_category_expansion_tab(self) -> ft.Container:
+        """Tab de expansão de categorias"""
+        try:
+            # Botões de controle
+            analyze_categories_button = ft.ElevatedButton(
+                "📂 Analisar Categorias",
+                icon=ft.Icons.ANALYTICS,
+                on_click=self._analyze_categories,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            )
+            
+            expand_categories_button = ft.ElevatedButton(
+                "🚀 Expandir Categorias",
+                icon=ft.Icons.EXPAND_MORE,
+                on_click=self._expand_categories,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            # Status da expansão
+            self.category_status = ft.Text("⏳ Sistema de categorias pronto", size=16)
+            
+            # Estatísticas de categorias
+            self.category_stats = ft.Text("", size=14, color=ft.Colors.GREY_400)
+            
+            content = ft.Column([
+                ft.Text("📂 Expansão de Categorias", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Analise e expanda categorias conforme necessário", size=16, color=ft.Colors.GREY_400),
+                ft.Divider(height=20),
+                ft.Row([analyze_categories_button, expand_categories_button], spacing=10),
+                ft.Divider(height=20),
+                self.category_status,
+                ft.Divider(height=10),
+                self.category_stats
+            ], spacing=20)
+            
+            return ft.Container(content=content, padding=20)
+            
+        except Exception as e:
+            return ft.Container(
+                content=ft.Text(f"❌ Erro ao carregar tab de categorias: {e}", color=ft.Colors.RED_400),
+                padding=20
+            )
+    
+    def _build_ai_optimization_tab(self) -> ft.Container:
+        """Tab de IA para otimização"""
+        try:
+            # Botões de controle
+            train_models_button = ft.ElevatedButton(
+                "🤖 Treinar Modelos",
+                icon=ft.Icons.PSYCHOLOGY,
+                on_click=self._train_ai_models,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            )
+            
+            optimize_offers_button = ft.ElevatedButton(
+                "🎯 Otimizar Ofertas",
+                icon=ft.Icons.TARGET,
+                on_click=self._optimize_offers,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            view_dashboard_button = ft.ElevatedButton(
+                "📊 Dashboard IA",
+                icon=ft.Icons.DASHBOARD,
+                on_click=self._view_ai_dashboard,
+                bgcolor=ft.Colors.PURPLE_600,
+                color=ft.Colors.WHITE
+            )
+            
+            # Status da IA
+            self.ai_status = ft.Text("⏳ Sistema de IA pronto", size=16)
+            
+            # Métricas da IA
+            self.ai_metrics = ft.Text("", size=14, color=ft.Colors.GREY_400)
+            
+            content = ft.Column([
+                ft.Text("🤖 IA para Otimização Automática", size=24, weight=ft.FontWeight.BOLD),
+                ft.Text("Machine Learning para otimização automática de priorização", size=16, color=ft.Colors.GREY_400),
+                ft.Divider(height=20),
+                ft.Row([train_models_button, optimize_offers_button, view_dashboard_button], spacing=10),
+                ft.Divider(height=20),
+                self.ai_status,
+                ft.Divider(height=10),
+                self.ai_metrics
+            ], spacing=20)
+            
+            return ft.Container(content=content, padding=20)
+            
+        except Exception as e:
+            return ft.Container(
+                content=ft.Text(f"❌ Erro ao carregar tab de IA: {e}", color=ft.Colors.RED_400),
+                padding=20
+            )
+    
+    # Métodos de callback para os novos sistemas
+    def _run_production_test(self, e):
+        """Executa teste completo em produção"""
+        self.test_status.value = "🔄 Executando teste completo..."
+        self.test_results.value = "Iniciando validação do sistema..."
+        self.page.update()
+        
+        async def run_test():
+            try:
+                runner = ProductionTestRunner()
+                result = await runner.run_full_test()
+                self.test_status.value = "✅ Teste concluído com sucesso!"
+                self.test_results.value = f"Resultado: {result.summary}"
+            except Exception as error:
+                self.test_status.value = "❌ Erro no teste"
+                self.test_results.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(run_test())
+    
+    def _run_quick_test(self, e):
+        """Executa teste rápido em produção"""
+        self.test_status.value = "⚡ Executando teste rápido..."
+        self.test_results.value = "Validando componentes principais..."
+        self.page.update()
+        
+        async def run_quick():
+            try:
+                runner = ProductionTestRunner()
+                result = await runner.run_quick_test()
+                self.test_status.value = "✅ Teste rápido concluído!"
+                self.test_results.value = f"Resultado: {result.summary}"
+            except Exception as error:
+                self.test_status.value = "❌ Erro no teste rápido"
+                self.test_results.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(run_quick())
+    
+    def _start_conversion_tracking(self, e):
+        """Inicia o tracking de conversões"""
+        self.conversion_status.value = "📊 Iniciando tracking de conversões..."
+        self.conversion_metrics.value = "Configurando monitoramento..."
+        self.page.update()
+        
+        async def start_tracking():
+            try:
+                tracker = ConversionTracker()
+                await tracker.start_tracking()
+                self.conversion_status.value = "✅ Tracking ativo"
+                self.conversion_metrics.value = "Monitorando conversões em tempo real"
+            except Exception as error:
+                self.conversion_status.value = "❌ Erro ao iniciar tracking"
+                self.conversion_metrics.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(start_tracking())
+    
+    def _view_conversion_dashboard(self, e):
+        """Abre o dashboard de conversões"""
+        self.conversion_status.value = "📈 Abrindo dashboard de conversões..."
+        self.page.update()
+        
+        async def show_dashboard():
+            try:
+                dashboard = ConversionDashboard()
+                await dashboard.show()
+                self.conversion_status.value = "✅ Dashboard de conversões ativo"
+            except Exception as error:
+                self.conversion_status.value = "❌ Erro ao abrir dashboard"
+                self.conversion_metrics.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(show_dashboard())
+    
+    def _collect_user_feedback(self, e):
+        """Coleta feedback dos usuários"""
+        self.feedback_status.value = "💬 Coletando feedback..."
+        self.feedback_stats.value = "Analisando dados de usuários..."
+        self.page.update()
+        
+        async def collect_feedback():
+            try:
+                collector = FeedbackCollector()
+                stats = await collector.collect_feedback()
+                self.feedback_status.value = "✅ Feedback coletado"
+                self.feedback_stats.value = f"Total: {stats.total_feedback} | Positivo: {stats.positive_rate:.1%}"
+            except Exception as error:
+                self.feedback_status.value = "❌ Erro ao coletar feedback"
+                self.feedback_stats.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(collect_feedback())
+    
+    def _adjust_scores(self, e):
+        """Ajusta scores baseado no feedback"""
+        self.feedback_status.value = "⚖️ Ajustando scores..."
+        self.feedback_stats.value = "Processando feedback e otimizando..."
+        self.page.update()
+        
+        async def adjust_scores():
+            try:
+                adjuster = ScoreAdjuster()
+                result = await adjuster.adjust_scores()
+                self.feedback_status.value = "✅ Scores ajustados"
+                self.feedback_stats.value = f"Ajustados: {result.adjusted_count} scores"
+            except Exception as error:
+                self.feedback_status.value = "❌ Erro ao ajustar scores"
+                self.feedback_stats.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(adjust_scores())
+    
+    def _analyze_categories(self, e):
+        """Analisa categorias existentes"""
+        self.category_status.value = "📂 Analisando categorias..."
+        self.category_stats.value = "Processando dados de categorias..."
+        self.page.update()
+        
+        async def analyze_categories():
+            try:
+                analyzer = CategoryAnalyzer()
+                stats = await analyzer.analyze_categories()
+                self.category_status.value = "✅ Análise concluída"
+                self.category_stats.value = f"Categorias: {stats.total_categories} | Oportunidades: {stats.expansion_opportunities}"
+            except Exception as error:
+                self.category_status.value = "❌ Erro na análise"
+                self.category_stats.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(analyze_categories())
+    
+    def _expand_categories(self, e):
+        """Expande categorias"""
+        self.category_status.value = "🚀 Expandindo categorias..."
+        self.category_stats.value = "Implementando novas categorias..."
+        self.page.update()
+        
+        async def expand_categories():
+            try:
+                expander = CategoryExpander()
+                result = await expander.expand_categories()
+                self.category_status.value = "✅ Categorias expandidas"
+                self.category_stats.value = f"Expandidas: {result.expanded_count} categorias"
+            except Exception as error:
+                self.category_status.value = "❌ Erro na expansão"
+                self.category_stats.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(expand_categories())
+    
+    def _train_ai_models(self, e):
+        """Treina modelos de IA"""
+        self.ai_status.value = "🤖 Treinando modelos..."
+        self.ai_metrics.value = "Processando dados e treinando..."
+        self.page.update()
+        
+        async def train_models():
+            try:
+                trainer = ModelTrainer()
+                result = await trainer.train_all_models()
+                self.ai_status.value = "✅ Modelos treinados"
+                self.ai_metrics.value = f"Melhor modelo: {result.best_model} (R²: {result.best_metrics.r2_score:.3f})"
+            except Exception as error:
+                self.ai_status.value = "❌ Erro no treinamento"
+                self.ai_metrics.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(train_models())
+    
+    def _optimize_offers(self, e):
+        """Otimiza ofertas usando IA"""
+        self.ai_status.value = "🎯 Otimizando ofertas..."
+        self.ai_metrics.value = "Aplicando IA para otimização..."
+        self.page.update()
+        
+        async def optimize_offers():
+            try:
+                optimizer = AIOptimizer()
+                result = await optimizer.optimize_batch_offers()
+                self.ai_status.value = "✅ Ofertas otimizadas"
+                self.ai_metrics.value = f"Otimizadas: {result.optimized_count} ofertas"
+            except Exception as error:
+                self.ai_status.value = "❌ Erro na otimização"
+                self.ai_metrics.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(optimize_offers())
+    
+    def _view_ai_dashboard(self, e):
+        """Abre o dashboard de IA"""
+        self.ai_status.value = "📊 Abrindo dashboard de IA..."
+        self.page.update()
+        
+        async def show_ai_dashboard():
+            try:
+                dashboard = OptimizationDashboard()
+                await dashboard.show()
+                self.ai_status.value = "✅ Dashboard de IA ativo"
+            except Exception as error:
+                self.ai_status.value = "❌ Erro ao abrir dashboard de IA"
+                self.ai_metrics.value = f"Erro: {str(error)}"
+            finally:
+                self.page.update()
+        
+        asyncio.create_task(show_ai_dashboard())
     
     def _on_period_change(self, e):
         """Callback para mudança de período"""

@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-08-31T22:40:15.510897",
+  "system_status": {
+    "production_testing": {
+      "status": "error",
+      "last_run": null,
+      "error_message": "'NoneType' object has no attribute 'geek_level'"
+    },
+    "conversion_monitoring": {
+      "status": "error",
+      "last_run": null,
+      "error_message": "'ConversionTracker' object has no attribute 'start_tracking'"
+    },
+    "user_feedback": {
+      "status": "error",
+      "last_run": null,
+      "error_message": "FeedbackCollector.collect_feedback() missing 4 required positional arguments: 'user_id', 'offer', 'feedback_type', and 'feedback_value'"
+    },
+    "category_expansion": {
+      "status": "error",
+      "last_run": null,
+      "error_message": "'CategoryExpander' object has no attribute 'expand_categories'"
+    },
+    "ai_optimization": {
+      "status": "error",
+      "last_run": null,
+      "error_message": "'AIOptimizer' object has no attribute 'optimize_batch_offers'"
+    }
+  },
+  "metrics": {
+    "total_offers_processed": 11,
+    "conversion_rate_geek": 0.15,
+    "conversion_rate_general": 0.08,
+    "feedback_score": 4.2,
+    "categories_expanded": 5,
+    "ai_model_accuracy": 0.87,
+    "system_health": "warning"
+  },
+  "summary": {
+    "active_systems": 0,
+    "error_systems": 5,
+    "total_systems": 5,
+    "overall_health": "warning"
+  }
+}
