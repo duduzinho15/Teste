@@ -1,0 +1,46 @@
+2025-09-01 21:26:41,146 - src.app.production_testing.production_test_runner - INFO - Logging configurado - arquivo: production_test_20250901_212641.log
+2025-09-01 21:26:41,146 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-09-01 21:26:41,147 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-09-01 21:26:41,148 - src.app.user_feedback.feedback_collector - INFO - Banco de dados de feedback inicializado com sucesso
+2025-09-01 21:26:41,148 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-09-01 21:26:41,149 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-09-01 21:26:41,149 - src.core.geek_prioritizer - INFO - GeekPrioritizer inicializado
+2025-09-01 21:26:41,150 - src.app.ai_optimization.data_collector - INFO - Banco de dados inicializado com sucesso
+2025-09-01 21:26:41,151 - src.app.ai_optimization.model_trainer - INFO - Banco de métricas inicializado
+2025-09-01 21:26:41,152 - src.app.ai_optimization.ai_optimizer - INFO - Banco de dados do otimizador inicializado
+2025-09-01 21:26:41,155 - src.app.unified_dashboard - INFO - Sistema production_testing inicializado com sucesso
+2025-09-01 21:26:41,155 - src.app.unified_dashboard - INFO - Sistema conversion_monitoring inicializado com sucesso
+2025-09-01 21:26:41,155 - src.app.unified_dashboard - INFO - Sistema user_feedback inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema category_expansion inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema ai_optimization inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema affiliate_integration inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema affiliate_dashboard inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema advanced_metrics inicializado com sucesso
+2025-09-01 21:26:41,156 - src.app.unified_dashboard - INFO - Sistema advanced_metrics_dashboard inicializado com sucesso
+2025-09-01 21:26:41,157 - src.app.unified_dashboard - INFO - Sistema deep_learning inicializado com sucesso
+2025-09-01 21:26:41,157 - src.app.unified_dashboard - INFO - Sistema deep_learning_dashboard inicializado com sucesso
+2025-09-01 21:26:41,159 - flet - INFO - Assets path configured: C:\Users\Eduardo Vitorino\CascadeProjects\Sistema de Recomendações de Ofertas Telegram2.0\apps\flet_dashboard\assets
+2025-09-01 21:26:41,573 - flet - INFO - Starting Flet web server on port 8080...
+2025-09-01 21:26:41,574 - flet_web.fastapi - INFO - Web renderer configured: WebRenderer.CANVAS_KIT
+2025-09-01 21:26:41,574 - flet_web.fastapi - INFO - Use color emoji: False
+2025-09-01 21:26:41,574 - flet_web.fastapi - INFO - Route URL strategy configured: path
+2025-09-01 21:26:41,604 - flet_web.fastapi - INFO - Starting up Flet App Manager
+2025-09-01 21:26:41,604 - flet - INFO - App URL: http://127.0.0.1:8080
+2025-09-01 21:26:41,750 - flet_web.fastapi - INFO - Temp dir created for patched index and manifest: C:\Users\EDUARD~1\AppData\Local\Temp\tmpyfivi_0n
+2025-09-01 21:26:41,751 - flet_web.fastapi - INFO - Web root: C:\Users\Eduardo Vitorino\AppData\Roaming\Python\Python313\site-packages\flet_web\web
+2025-09-01 21:26:41,751 - flet_web.fastapi - INFO - assets_dir does not exist: C:\Users\Eduardo Vitorino\CascadeProjects\Sistema de Recomendações de Ofertas Telegram2.0\apps\flet_dashboard\assets
+2025-09-01 21:26:41,752 - flet_web.fastapi - INFO - Assets dir: None
+2025-09-01 21:26:42,677 - flet_web.fastapi - INFO - New FletApp: 5ZzbGbj4
+2025-09-01 21:26:42,818 - flet_web.fastapi - INFO - New session created (1 total): _15xufoygTkLyCWuk_5ecf28f2d667ea56975a7a09c8f750e6b5e9d066
+2025-09-01 21:26:42,819 - flet_web.fastapi - INFO - Start session: 15xufoygTkLyCWuk
+2025-09-01 21:26:42,851 - src.core.analytics_queries - ERROR - Erro ao executar query: no such column: pd.date
+2025-09-01 21:26:42,861 - src.core.analytics_queries - ERROR - Erro ao executar query: no such column: pd.date
+2025-09-01 21:26:42,978 - moderation.mercadolivre - INFO - Sistema de moderação Mercado Livre inicializado
+2025-09-01 21:26:42,990 - src.core.analytics_queries - ERROR - Erro ao executar query: no such column: pd.date
+2025-09-01 21:26:42,998 - src.core.analytics_queries - ERROR - Erro ao executar query: no such column: pd.date
+2025-09-01 21:26:43,001 - flet_web.fastapi - INFO - Session disconnected: _15xufoygTkLyCWuk_5ecf28f2d667ea56975a7a09c8f750e6b5e9d066
+2025-09-01 21:26:43,008 - src.core.analytics_queries - ERROR - Erro ao executar query: no such column: pd.date
+2025-09-01 21:26:43,109 - flet_web.fastapi - INFO - Shutting down Flet App Manager
+2025-09-01 21:26:43,110 - flet_web.fastapi - INFO - Deleting temp dir: C:\Users\EDUARD~1\AppData\Local\Temp\tmpyfivi_0n
+2025-09-01 21:26:43,111 - flet - INFO - Flet app has started...
+2025-09-01 21:26:43,111 - flet_web.fastapi - INFO - Closing Flet web server...

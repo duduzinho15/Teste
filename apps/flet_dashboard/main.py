@@ -34,11 +34,11 @@ try:
     from src.app.category_expansion import CategoryAnalyzer, CategoryExpander, MarketResearcher, CategoryOptimizer
     from src.app.ai_optimization import AIOptimizer, DataCollector, ModelTrainer, PredictionEngine, OptimizationDashboard
     from src.core.affiliate_integration import AffiliateIntegrationManager
-from src.core.affiliate_dashboard import AffiliateDashboard
-from src.core.advanced_metrics import AdvancedMetricsManager
-from src.core.advanced_metrics_dashboard import AdvancedMetricsDashboard
-from src.core.deep_learning import DeepLearningManager
-from src.core.deep_learning_dashboard import DeepLearningDashboard
+    from src.core.affiliate_dashboard import AffiliateDashboard
+    from src.core.advanced_metrics import AdvancedMetricsManager
+    from src.core.advanced_metrics_dashboard import AdvancedMetricsDashboard
+    from src.core.deep_learning import DeepLearningManager
+    from src.core.deep_learning_dashboard import DeepLearningDashboard
     
 except ImportError as e:
     print(f"Erro ao importar módulos do sistema: {e}")
@@ -1453,10 +1453,11 @@ class GarimpeiroDashboard:
                         ft.Text("Redes Suportadas:", size=18, weight=ft.FontWeight.BOLD),
                         ft.Text("• Amazon Associates", size=14),
                         ft.Text("• Awin", size=14),
-                        ft.Text("• Hotmart", size=14),
-                        ft.Text("• Monetizze", size=14),
-                        ft.Text("• Eduzz", size=14),
-                        ft.Text("• Braip", size=14),
+                        ft.Text("• Rakuten", size=14),
+                        ft.Text("• Shopee", size=14),
+                        ft.Text("• AliExpress", size=14),
+                        ft.Text("• Mercado Livre", size=14),
+                        ft.Text("• Magazine Luiza", size=14),
                         ft.Text("• Perfect Pay", size=14),
                         ft.Text("• Kiwify", size=14)
                     ]),
@@ -1479,7 +1480,7 @@ class GarimpeiroDashboard:
                 # Simular configuração
                 await asyncio.sleep(2)
                 self.affiliate_status.value = "✅ Redes configuradas"
-                self.affiliate_metrics.value = "3 redes ativas (Amazon, Awin, Hotmart)"
+                self.affiliate_metrics.value = "7 redes ativas (Amazon, Awin, Rakuten, Shopee, AliExpress, Mercado Livre, Magazine Luiza)"
             except Exception as error:
                 self.affiliate_status.value = "❌ Erro na configuração"
                 self.affiliate_metrics.value = f"Erro: {str(error)}"
@@ -1649,15 +1650,18 @@ class GarimpeiroDashboard:
                 ),
                 
                         # Área de resultados
-        ft.Container(
-            content=ft.Column([
-                ft.Text("📊 Resultados", size=20, weight=ft.FontWeight.BOLD),
-                ft.Divider(),
-                ft.Text("Clique em uma ação acima para ver os resultados aqui", size=16, color=ft.Colors.GREY_400)
+                ft.Container(
+                    content=ft.Column([
+                        ft.Text("📊 Resultados", size=20, weight=ft.FontWeight.BOLD),
+                        ft.Divider(),
+                        ft.Text("Clique em uma ação acima para ver os resultados aqui", size=16, color=ft.Colors.GREY_400)
+                    ]),
+                    padding=20,
+                    bgcolor=ft.Colors.GREY_900,
+                    border_radius=12
+                )
             ]),
-            padding=20,
-            bgcolor=ft.Colors.GREY_900,
-            border_radius=12
+            padding=20
         )
 
     def _build_deep_learning_tab(self) -> ft.Container:
@@ -1763,9 +1767,6 @@ class GarimpeiroDashboard:
                     bgcolor=ft.Colors.GREY_900,
                     border_radius=12
                 )
-            ]),
-            padding=20
-        )
             ]),
             padding=20
         )

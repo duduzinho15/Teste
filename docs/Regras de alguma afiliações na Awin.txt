@@ -45,7 +45,6 @@ A dedução é feita antes do credito efetivo na conta do afiliado. A mesma situ
 As comissões ganhas e registradas em Reais, serão pagas em Euro. Para realizar a conversão, será utilizada a taxa do Banco Central do Brasil, incluindo uma dedução de 5% para cobrir a flutuação de moeda e os gastos por transferências eletrônicas.
 Aos afiliados que são brasileiros mas ainda não possuem conta da Awin registrada no Brasil, obtenha mais informações aqui: [https://ui.awin.com/publisher-signup/br/step1]
 
-
 Important only for Non-Brazilian Publishers who do not have an agreement with Awin Brazil:
 Taxes on importing advertising space to Brazil, currency fluctuations and international wire transfer fees will be borne by the Non-Brazilian Publisher. The operational taxes are 25% of the commission earned. The defined commissions in the Brazilian program includes all applicable taxes.
 By the time the commission are credited to your publisher account the deduction will already have taken place. Same is true for the reporting. Please, be aware we cannot offer individual documents for publishers (e.g. DARF statements).

@@ -13,12 +13,12 @@ from dataclasses import dataclass
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 
-from core.models import Offer
-from core.affiliate_validator import AffiliateValidator
-from posting.message_formatter import MessageFormatter
-from posting.posting_manager import PostingManager
-from core.price_history import PriceHistoryTracker
-from utils.image_downloader import ProductImageDownloader
+from src.core.models import Offer
+from src.core.affiliate_validator import AffiliateValidator
+from src.posting.message_formatter import MessageFormatter
+from src.posting.posting_manager import PostingManager
+from src.core.price_history import PriceHistoryTracker
+from src.utils.image_downloader import ProductImageDownloader
 
 logger = logging.getLogger(__name__)
 

@@ -795,7 +795,7 @@ Sistema completo para integração com redes de afiliados reais, incluindo APIs 
 #### **Redes Suportadas:**
 - **Amazon Associates**: API oficial, busca de produtos, geração de links
 - **Awin**: API REST, programas de afiliados, métricas detalhadas
-- **Hotmart**: Integração com marketplace, produtos digitais
+- ****: Integração com marketplace, produtos digitais
 - **Monetizze**: Plataforma de pagamentos, produtos digitais
 - **Eduzz**: Marketplace educacional
 - **Braip**: Plataforma de infoprodutos

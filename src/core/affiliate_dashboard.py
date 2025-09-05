@@ -30,12 +30,11 @@ class AffiliateDashboard:
         self.networks = {
             "Amazon": AffiliateNetwork.AMAZON,
             "Awin": AffiliateNetwork.AWIN,
-            "Hotmart": AffiliateNetwork.HOTMART,
-            "Monetizze": AffiliateNetwork.MONETIZZE,
-            "Eduzz": AffiliateNetwork.EDUZZ,
-            "Braip": AffiliateNetwork.BRAIP,
-            "Perfect Pay": AffiliateNetwork.PERFECT_PAY,
-            "Kiwify": AffiliateNetwork.KIWIFY
+            "Rakuten": AffiliateNetwork.RAKUTEN,
+            "Shopee": AffiliateNetwork.SHOPEE,
+            "AliExpress": AffiliateNetwork.ALIEXPRESS,
+            "Mercado Livre": AffiliateNetwork.MERCADO_LIVRE,
+            "Magazine Luiza": AffiliateNetwork.MAGAZINE_LUIZA
         }
     
     async def show_main_menu(self):

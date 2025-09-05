@@ -87,14 +87,14 @@ class AdvancedControlsTab:
         
         self.export_button = ft.ElevatedButton(
             "📊 Exportar CSV",
-            icon=ft.icons.DOWNLOAD,
+            icon=ft.Icons.DOWNLOAD,
             on_click=self._export_csv
         )
         
         return ft.Container(
             content=ft.Row([
                 ft.Text("🎛️ Controles Avançados", size=24, weight=ft.FontWeight.BOLD),
-                ft.Spacer(),
+                ft.Container(expand=True),  # Substitui ft.Spacer()
                 self.period_dropdown,
                 self.export_button,
             ]),

@@ -30,14 +30,11 @@ class AffiliateNetwork(Enum):
     """Redes de afiliados suportadas"""
     AMAZON = "amazon"
     AWIN = "awin"
-    HOTMART = "hotmart"
-    MONETIZZE = "monetizze"
-    EDUZZ = "eduzz"
-    BRAIP = "braip"
-    PERFECT_PAY = "perfect_pay"
-    KIWIFY = "kiwify"
-    HOTMART_PLUS = "hotmart_plus"
-    DIGITAL_PRODUCTS = "digital_products"
+    RAKUTEN = "rakuten"
+    SHOPEE = "shopee"
+    ALIEXPRESS = "aliexpress"
+    MERCADO_LIVRE = "mercado_livre"
+    MAGAZINE_LUIZA = "magazine_luiza"
 
 
 class LinkStatus(Enum):
@@ -144,23 +141,20 @@ class AffiliateLinkValidator:
             AffiliateNetwork.AWIN: [
                 "awin1.com", "awin.com", "awin.net"
             ],
-            AffiliateNetwork.HOTMART: [
-                "hotmart.com", "hotm.art", "pay.hotmart.com"
+            AffiliateNetwork.RAKUTEN: [
+                "rakuten.com.br", "rakuten-advertising.com"
             ],
-            AffiliateNetwork.MONETIZZE: [
-                "monetizze.com.br", "pay.monetizze.com.br"
+            AffiliateNetwork.SHOPEE: [
+                "shopee.com.br", "shope.ee"
             ],
-            AffiliateNetwork.EDUZZ: [
-                "eduzz.com", "pay.eduzz.com"
+            AffiliateNetwork.ALIEXPRESS: [
+                "aliexpress.com", "alixepress.com"
             ],
-            AffiliateNetwork.BRAIP: [
-                "braip.com", "pay.braip.com"
+            AffiliateNetwork.MERCADO_LIVRE: [
+                "mercadolivre.com.br", "mercadolivre.com"
             ],
-            AffiliateNetwork.PERFECT_PAY: [
-                "perfectpay.com.br", "pay.perfectpay.com.br"
-            ],
-            AffiliateNetwork.KIWIFY: [
-                "kiwify.com.br", "pay.kiwify.com.br"
+            AffiliateNetwork.MAGAZINE_LUIZA: [
+                "magazineluiza.com.br", "magazinevoce.com.br"
             ]
         }
         
@@ -193,16 +187,15 @@ class AffiliateLinkValidator:
         
         return any(re.search(pattern, url, re.IGNORECASE) for pattern in awin_patterns)
     
-    def _validate_hotmart_link(self, url: str) -> bool:
-        """Valida link da Hotmart"""
-        # Padrões específicos da Hotmart
-        hotmart_patterns = [
-            r'hotmart\.com/.*?ref=',
-            r'hotm\.art/.*?ref=',
-            r'pay\.hotmart\.com/.*?ref='
+    def _validate_shopee_link(self, url: str) -> bool:
+        """Valida link da Shopee"""
+        # Padrões específicos da Shopee
+        shopee_patterns = [
+            r'shopee\.com\.br/.*?affiliate_id=',
+            r'shope\.ee/.*?affiliate_id='
         ]
         
-        return any(re.search(pattern, url, re.IGNORECASE) for pattern in hotmart_patterns)
+        return any(re.search(pattern, url, re.IGNORECASE) for pattern in shopee_patterns)
     
     async def validate_link(self, url: str) -> LinkValidationResult:
         """Valida um link de afiliado"""
@@ -234,8 +227,8 @@ class AffiliateLinkValidator:
             is_valid_format = self._validate_amazon_link(url)
         elif network == AffiliateNetwork.AWIN:
             is_valid_format = self._validate_awin_link(url)
-        elif network == AffiliateNetwork.HOTMART:
-            is_valid_format = self._validate_hotmart_link(url)
+        elif network == AffiliateNetwork.SHOPEE:
+            is_valid_format = self._validate_shopee_link(url)
         else:
             # Para outras redes, verificar se tem parâmetros de afiliado
             parsed = urlparse(url)

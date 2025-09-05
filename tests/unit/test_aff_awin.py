@@ -18,10 +18,10 @@ def test_awin_deeplink_comfy_home():
     assert parsed.path.endswith("/cread.php")
     assert qs.get("awinmid") == "23377"
     assert qs.get("awinaffid") == "2370719"
-    assert (
-        qs.get("ued") == up.quote("https://www.comfy.com.br/".rstrip("/"), safe="")
-        or qs.get("ued") == "https%3A%2F%2Fwww.comfy.com.br%2F"
-    )
+    # Verificar se a URL está codificada corretamente
+    expected_url = "https://www.comfy.com.br/"
+    decoded_ued = up.unquote(qs.get("ued", ""))
+    assert decoded_ued == expected_url
 
 
 def test_awin_deeplink_lg_product():

@@ -7,6 +7,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Removed
+- Removida a integração com a Hotmart, que estava fora do escopo do projeto
+- Removidas referências a redes não utilizadas (PerfectPay, Kiwify)
+
 ### Added
 - Sistema completo de validação de conversores de afiliados
 - Formatação dinâmica de mensagens para Telegram

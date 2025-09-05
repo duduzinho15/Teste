@@ -4,6 +4,15 @@ Sistema completo de recomendações de ofertas para Telegram com validação de 
 
 ## ✨ Funcionalidades
 
+### 🚀 **APIs e Scrapers Reais Implementados**
+- **Scrapers Funcionais** - Amazon, Magazine Luiza, Mercado Livre com parsing real
+- **APIs de Afiliados** - Criação e validação de links reais (Amazon Associates, Awin, Rakuten, Shopee, AliExpress, Mercado Livre, Magazine Luiza)
+- **Bot Telegram Real** - Sistema completo de envio de ofertas com comandos
+- **Validação de Links** - Verificação automática de links de afiliados
+- **Relatórios Detalhados** - Estatísticas reais de performance e ganhos
+- **Backup Automático** - Sistema de backup completo do projeto
+- **Dashboard Funcional** - Interface Windows nativa com botões funcionais
+
 ### 🔗 Sistema de Afiliados
 - **Validação automática** de conversores para Amazon, Mercado Livre, Shopee, Magazine Luiza, AliExpress, Awin e Rakuten
 - **APIs oficiais** com fallback para scraping quando necessário
@@ -795,10 +804,11 @@ Sistema completo para integração com redes de afiliados reais, incluindo APIs 
 #### **Redes Suportadas:**
 - **Amazon Associates**: API oficial, busca de produtos, geração de links
 - **Awin**: API REST, programas de afiliados, métricas detalhadas
-- **Hotmart**: Integração com marketplace, produtos digitais
-- **Monetizze**: Plataforma de pagamentos, produtos digitais
-- **Eduzz**: Marketplace educacional
-- **Braip**: Plataforma de infoprodutos
+- **Rakuten**: Plataforma de afiliados globais, múltiplas categorias
+- **Shopee**: Marketplace com programa de afiliados
+- **AliExpress**: Plataforma global de e-commerce
+- **Mercado Livre**: Maior plataforma de e-commerce da América Latina
+- **Magazine Luiza**: Varejista brasileiro com programa de afiliados
 - **Perfect Pay**: Gateway de pagamentos
 - **Kiwify**: Plataforma de produtos digitais
 

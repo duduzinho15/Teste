@@ -111,7 +111,6 @@ Grupo para acompanhar ofertas da Samsung: https://t.me/+9cZo_YcTyHNiMmUx
 
 Essas loja que tenho conhecimento de afiliação, não sei tem mais alguma que eu tenha afiliação mas não aparece na aba de meu programas, talvez por ja considerar afiliado só de se cadastrar.
 
-
 O ChatGPT disse:
 Pensou por 35s
 
@@ -175,7 +174,6 @@ AWIN_MERCHANTS = {
     # awinaffid 2510157
     "samsung":   {"awinmid": 25539,  "awinaffid": 2510157},
 }
-
 
 .env sugerido:
 
@@ -263,7 +261,6 @@ def normalize_amazon_affiliate(url: str, tag: str = AMAZON_TAG) -> str:
     q_clean = {k: v for k, v in q.items() if k in keep}
     new_query = urlencode(q_clean, doseq=True)
     return urlunparse((u.scheme, u.netloc, u.path, u.params, new_query, u.fragment))
-
 
 Scraping Amazon (cuidados):
 
@@ -464,7 +461,6 @@ class Offer:
     extra: dict          # ex.: frete, variantes
 
 async def fetch_offer(url: str) -> Offer: ...
-
 
 Critérios de aceite:
 
@@ -785,7 +781,6 @@ def normalize_affiliate(url: str, tag: str = AMAZON_TAG) -> str:
     q_clean = {k: v for k, v in q.items() if k in keep}
     return urlunparse((u.scheme, u.netloc, u.path, u.params, urlencode(q_clean, doseq=True), u.fragment))
 
-
 ML/Shopee/AliExpress: criar affiliate/{mercadolivre,shopee,aliexpress}.py com automação Playwright + cache SQLite.
 
 🗂️ Organização de pastas (ajuste fino)
@@ -821,7 +816,6 @@ src/
     anti_bot.py
     cache.py
     currency.py
-
 
 Se quiser, já te mando o prompt do Cursor para implementar cada um desses módulos (com Playwright assíncrono, cache de short-links, e testes básicos). É só colar e rodar. Quer que eu gere agora?
 
@@ -1066,7 +1060,6 @@ test:
 run-bot:
 	PYTHONPATH=src $(PY) src/app/main_simples.py
 
-
 (Se preferir invoke/taskipy, dá para trocar.)
 
 5) CI no GitHub Actions
@@ -1193,7 +1186,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 Rode:
 python scripts/reorganize_project.py
@@ -1338,7 +1330,6 @@ Estrutura fixa de pastas
 ├── README.md
 └── CONTRIBUTING.md
 
-
 Locais obrigatórios para novos arquivos
 
 Scrapers de lojas → src/scrapers/lojas/
@@ -1389,7 +1380,6 @@ class Offer:
     images: List[str]
     available: bool
     extra: Dict[str, object]  # frete, variantes, rating, etc.
-
 
 Qualidade obrigatória
 
@@ -1479,7 +1469,6 @@ AWIN_MERCHANTS = {
     # awinaffid 2510157
     "samsung":  {"awinmid": 25539,  "awinaffid": 2510157},
 }
-
 
 amazon.py: normalizador garantindo tag=<AMAZON_TAG> nos params.
 
@@ -1980,7 +1969,6 @@ def main(page: ft.Page):
 
 ft.app(target=main)
 
-
 Notas de UX/Design aplicadas:
 
 Paleta contida, cor de destaque BLUE_400
@@ -2108,7 +2096,6 @@ Coloque em:
 
 docs/ESPECIFICACAO_GARIMPEIRO_GEEK.md
 
-
 No README.md adicione um link para este documento:
 “Guia do Projeto + Regras do Cursor”
 
@@ -2163,7 +2150,6 @@ Arquivo: src/affiliate/rakuten.py
 Função: construir deeplink no padrão LinkShare/Rakuten:
 
 https://click.linksynergy.com/deeplink?id=<PUBLISHER_ID>&mid=<MID>&murl=<URL_ENCODED>[&u1=<SUBID>]
-
 
 id = seu Publisher ID
 
@@ -2279,7 +2265,6 @@ Deeplink Rakuten (fora do dashboard)
 
 https://click.linksynergy.com/deeplink?id=<PUBLISHER_ID>&mid=<MID>&murl=<URL_ENCODED>&u1=<SUBID>
 
-
 id, mid, murl são obrigatórios; u1 é opcional (SubID). 
 pubhelp.rakutenadvertising.com
 
@@ -2325,7 +2310,6 @@ Onde salvar
 Coloque em:
 
 docs/ESPECIFICACAO_GARIMPEIRO_GEEK_COM_RAKUTEN.md
-
 
 E no README.md adicione o link:
 “Guia do Projeto (com Rakuten Advertising)”
@@ -2536,7 +2520,6 @@ src/affiliate/rakuten.py:
 Builder do deeplink:
 
 https://click.linksynergy.com/deeplink?id=<PUBLISHER_ID>&mid=<MID>&murl=<URL_ENCODED>&u1=<SUBID>
-
 
 Tabela/arquivo de mapeamento de MIDs por loja Rakuten (salvar doc em docs/integracao_rakuten.md).
 
@@ -2967,13 +2950,11 @@ Rodar simulação (não altera nada):
 
 python scripts/reorganize_project.py
 
-
 Conferir o plano impresso no terminal.
 
 Aplicar as mudanças:
 
 python scripts/reorganize_project.py --apply
-
 
 Depois:
 
@@ -3079,7 +3060,6 @@ Só após a aprovação você pode gerar deeplinks que funcionam para aquela loj
 Exemplo de deeplink válido:
 
 https://www.awin1.com/cread.php?awinmid=23377&awinaffid=2370719&ued=https%3A%2F%2Fwww.comfy.com.br
-
 
 Aqui:
 
@@ -3294,7 +3274,6 @@ make fmt
 make lint
 make type
 make test
-
 
 Verificar que nenhum arquivo novo está fora das pastas oficiais.
 
@@ -3570,7 +3549,6 @@ CREATE TABLE IF NOT EXISTS revenue (
 CREATE INDEX IF NOT EXISTS ix_revenue_date ON revenue(occurred_on);
 CREATE INDEX IF NOT EXISTS ix_revenue_platform ON revenue(platform);
 
-
 Awin usa deeplink com awinaffid + awinmid (cookie/atribuição 30 dias, “last click” em muitos programas); você já tem exemplos de deeplink e regras nos anexos.
 
 2.2 Performance técnica (scrapers e pipeline)
@@ -3680,7 +3658,6 @@ WHERE occurred_on >= date('now','-7 day')
 GROUP BY platform
 ORDER BY total DESC;
 
-
 Latência média por scraper (últimas 24h):
 
 SELECT component, AVG(value) AS avg_latency
@@ -3688,7 +3665,6 @@ FROM perf
 WHERE metric='latency_ms' AND occurred_at >= datetime('now','-1 day')
 GROUP BY component
 ORDER BY avg_latency ASC;
-
 
 Ofertas postadas hoje:
 
@@ -4417,13 +4393,11 @@ Rodar inicialização de schema:
 
 python -m src.core.db_init
 
-
 Rodar coletas (exemplos):
 
 python -m src.pipelines.price_collect      # coleta nativa (rodar junto do pipeline normal)
 python -m src.pipelines.price_enrich       # zoom/buscape
 python -m src.pipelines.price_aggregate    # agrega diários
-
 
 Qualidade:
 
@@ -4790,7 +4764,6 @@ python -m src.pipelines.price_collect
 python -m src.pipelines.price_enrich
 python -m src.pipelines.price_aggregate
 
-
 Verificar tabelas price_history, external_price_points, price_daily, external_price_daily com selects simples.
 
 Dashboard Flet lendo do lugar certo
@@ -4869,7 +4842,6 @@ python -m src.pipelines.price_aggregate
 
 # 5) Qualidade
 make fmt && make lint && make type && make test
-
 
 Se quiser, eu te escrevo um script único scripts/enforce_project_layout.py que:
 
@@ -5351,7 +5323,6 @@ class SourceType(Enum):
     SCRAPER = "scraper"
     COMMUNITY = "community"
 
-
 Em platforms.py, para cada loja: preferred_order = [FEED, API_LIKE, SCRAPER]
 
 Adicionar coletores de feed:
@@ -5423,7 +5394,6 @@ Saídas esperadas:
 - Publicações SEMPRE com deeplink válido.
 - Dashboard exibindo métricas por fonte e possibilidade de desligar scraping por loja.
 
-
 Se quiser, eu adapto esse prompt com os nomes exatos das lojas/IDs e os caminhos que você já usa no projeto.
 
 Você disse:
@@ -5485,7 +5455,6 @@ Normalização de link de afiliado
 Regra simples e estável para o seu conversor:
 
 https://www.amazon.com.br/dp/{ASIN}?tag=garimpeirogee-20
-
 
 Opcional (mas útil):
 
@@ -5584,7 +5553,6 @@ def build_offer(raw_url: str, title: str, price: float, html: str | None = None)
         "url": aff_url or raw_url,  # fallback: nunca publique sem tag em produção!
     }
 
-
 Dica: se aff_url for None, marque a oferta como “incompleta” e não publique; crie uma fila de revisão manual/log.
 
 Integração com o histórico de preços
@@ -5653,7 +5621,6 @@ TAREFA: Normalizar Amazon por ASIN
 5) Checklist de publicação:
    - Bloquear publicação de Amazon sem ASIN.
    - Logger com evento "amazon_asin_missing" para auditoria.
-
 
 Se quiser, eu também preparo os testes pytest para você já colar nos arquivos de tests/.
 
@@ -5919,7 +5886,6 @@ def test_normalize_dp_url():
     out = normalize_amazon_dp_url("B09T4WC9GN", {"tag":"garimpeirogee-20","th":"1"})
     assert out == "https://www.amazon.com.br/dp/B09T4WC9GN?tag=garimpeirogee-20&th=1"
 
-
 Os testes que dependem de HTML/Playwright podem ser marcados com @pytest.mark.integration e rodar apenas localmente.
 
 Observabilidade rápida
@@ -5984,7 +5950,6 @@ ENTREGÁVEIS:
 - Logs demonstrando criação/atualização dos arquivos e saída do make test.
 
 Não mover/renomear outros arquivos. Não alterar pipelines fora do escopo.
-
 
 Se quiser, eu já adapto o Flet Dashboard para exibir o % de conversões por método (url/html/playwright) e alertar quando “playwright” estiver alto. Quer?
 
@@ -6649,7 +6614,6 @@ Validar que a função build_awin_deeplink(url_bruta: str, loja: str) gera corre
 
 https://www.awin1.com/cread.php?awinmid={MID}&awinaffid={AFFID}&ued={url_encode}
 
-
 Confirmar que os testes cobrem todos os MIDs.
 
 Rakuten
@@ -6663,7 +6627,6 @@ Feature flag controlada via .env:
 RAKUTEN_ENABLED=true|false
 RAKUTEN_SECURITY_TOKEN=xxx
 RAKUTEN_WEBSERVICE_TOKEN=yyy
-
 
 Testes unitários cobrindo enabled/disabled.
 
@@ -6686,7 +6649,6 @@ Se ainda falhar, usar Playwright como fallback.
 Função canonicalize_amazon(asin, dominio) deve retornar:
 
 https://www.amazon.{dominio}/dp/{ASIN}?tag=garimpeirogee-20&language=pt_BR
-
 
 No modelo Offer, manter os campos:
 
@@ -6775,7 +6737,6 @@ Samsung (25539)
 
 https://www.awin1.com/cread.php?awinmid=<MID>&awinaffid=<AFFID>&ued=<url_encode>
 
-
  Checar se ued está realmente percent-encoded (sem caracteres crus como ?, &).
 
 2. Rakuten
@@ -6814,7 +6775,6 @@ https://www.awin1.com/cread.php?awinmid=<MID>&awinaffid=<AFFID>&ued=<url_encode>
  Verificar que o link final é sempre:
 
 https://www.amazon.com.br/dp/<ASIN>?tag=garimpeirogee-20&language=pt_BR
-
 
  Rodar pytest tests/unit/test_amazon_asin.py → todos passando.
 
@@ -6855,7 +6815,6 @@ Magalu: /magazinegarimpeirogeek/....
  Rodar:
 
 make fmt && make lint && make type && make test
-
 
  Confirmar:
 
@@ -7215,7 +7174,6 @@ FROM perf
 WHERE metric='source_type'
   AND occurred_at >= DATE('now','-7 day')
 GROUP BY platform, source_type;
-
 
 Se o seu SQLite não suportar PERCENTILE_CONT, calcule p95 em Python após buscar os valores (simples).
 
@@ -7581,7 +7539,6 @@ Sistema de Recomendações de Ofertas Telegram.z01
 Sistema de Recomendações de Ofertas Telegram.z02
 Sistema de Recomendações de Ofertas Telegram.zip   ← este é o “último” volume
 
-
 Todos devem estar na mesma pasta.
 
 Teste a integridade localmente (opcional, mas recomendado)
@@ -7591,18 +7548,15 @@ Ou PowerShell:
 
 & "C:\Program Files\7-Zip\7z.exe" t "Sistema de Recomendações de Ofertas Telegram.zip"
 
-
 macOS (Homebrew p7zip):
 
 brew install p7zip
 7z t "Sistema de Recomendações de Ofertas Telegram.zip"
 
-
 Linux (p7zip-full):
 
 sudo apt-get install p7zip-full
 7z t "Sistema de Recomendações de Ofertas Telegram.zip"
-
 
 Extraia e recompacte em um único .zip (recomendado para envio aqui)
 Se possível, extraia tudo localmente e compacte novamente em apenas um arquivo .zip (sem dividir). Isso evita o erro de leitura aqui no chat.
@@ -7612,7 +7566,6 @@ macOS/Linux:
 7z x "Sistema de Recomendações de Ofertas Telegram.zip" -o./saida
 cd saida
 zip -r ProjetoGarimpeiroGeek_UNICO.zip .
-
 
 Windows (7‑Zip GUI): selecione a pasta extraída → “Adicionar ao arquivo…” → Formato ZIP → sem segmentação.
 
@@ -7649,7 +7602,6 @@ Makefile
 src/
 tests/
 docs/
-
 
 Assim que você enviar os outros dois volumes (ou um único .zip completo), eu faço a análise detalhada dos arquivos do projeto aqui na conversa.
 
@@ -7940,11 +7892,9 @@ Dashboard
 
 make dashboard
 
-
 E2E
 
 make test-e2e
-
 
 Cache
 
@@ -8057,7 +8007,6 @@ Caso falhe:
 - Aumente robustez do fetch HTML (headers, timeout 6-8s, retries com jitter).
 - Amplie patterns de ASIN (URLs /dp/, /gp/product/, /gp/aw/d/, query param asin).
 - Ajuste regex de validação dos links de afiliado conforme doc de exemplos do repositório.
-
 
 Se quiser, eu te envio um prompt para criar um job de auditoria diária (pytest + relatório markdown) que varre exemplos de links (os que você já listou) e posta um resumo no Telegram Admin quando detectar problemas. Quer que eu gere?
 
@@ -8711,7 +8660,6 @@ ENTREGÁVEIS ESPERADOS:
 
 Ao finalizar, gere um resumo com: % de sucesso por plataforma, lista de URLs-caso cobertas, evidências (prints do dashboard) e próximos passos.
 
-
 Se quiser, eu já preparo uma lista de URLs reais (anonimizadas) para usar nos testes E2E e nos validadores. Quer?
 
 Você disse:
@@ -8811,7 +8759,6 @@ Link de exemplo:
 https://www.amazon.com.br/Apple-iPhone-13-256-GB-das-estrelas/dp/B09T4WC9GN/?_encoding=UTF8&ref_=pd_hp_d_btf_ci_mcx_mr_ca_id_hp_d
 
 https://www.amazon.com.br/Notebook-ASUS-Gaming-KeepOS-RTX3050/dp/B0D63QVQ9K?ref=dlx_deals_dg_dcl_B0D63QVQ9K_dt_sl14_5a_pi&pf_rd_r=MJ8PFDW08HWYB3B55CF6&pf_rd_p=6d1a2673-ec13-43fd-9918-176903f2e25a
-
 
 Link abreviado gerado:
 https://amzn.to/3HAIr8w
@@ -9376,21 +9323,17 @@ System Tool
 System Tool
 Active
 
-
 Standard API for Publishers
 Aliexpress Affiliates API(Default)
 Active
-
 
 Advanced API
 Aliexpress Affiliates API(Advanced), hot products query and smart match api included. Please provide your register email on portals when apply for this API.
 Active
 
-
 Get Xinghe Merchant License
 Get xinghe merchant license information for third party partners
 Active
-
 
 SKU Dimension API
 This API permission group only includes the SKU Dimension API. The SKU Product Detail Info API is designed to provide detailed information at the SKU level.
@@ -9940,7 +9883,6 @@ Se quiser, já deixo também um comando make de conveniência:
 
 make apis-smoke   # roda testes unitários de assinatura/links para AliX/Rakuten/Shopee/AWIN
 
-
 Se topar, mando um pacote de testes de contrato (mocks) para cada rede usando esses mesmos links que você listou.
 
 Você disse:
@@ -10324,12 +10266,10 @@ Se quiser integrar ao Makefile:
 
 test-affiliates:
 
-
 \tpytest -q tests/unit
 
 test-e2e:
 \tpytest -q tests/e2e
-
 
 Se quiser, eu adapto os testes E2E para **invocar suas funções reais** (`src/affiliate/*.py` e `src/posting/posting_manager.py`) em vez dos helpers inline — é só me dizer os nomes exatos das funções que você quer chamar em cada módulo.
 
@@ -10827,7 +10767,6 @@ Antes de ligar o bot em produção, rodar:
 make test-all
 make dashboard
 
-
 Verificar: % ASIN ≥95, bloqueios funcionando, shortlinks sendo gerados, e métricas aparecendo.
 
 👉 Em resumo: agora o foco deve ser fechar a bateria de testes com todos os links reais que você tem, garantir que os bloqueios estão funcionando exatamente como nas regras de afiliação, e atualizar a documentação para manter compliance.
@@ -10872,7 +10811,6 @@ Crie/ajuste src/posting/message_formatter.py para suportar templates por platafo
 {cupom_linha}
 {loja_emoji} {loja} · {categoria}
 {link_emoji} {affiliate_url}
-
 
 Exemplos de linhas opcionais:
 

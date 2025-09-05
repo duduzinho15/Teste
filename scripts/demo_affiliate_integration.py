@@ -8,8 +8,14 @@ com redes de afiliados reais para o Garimpeiro Geek.
 
 import asyncio
 import json
+import sys
 from datetime import datetime
 from typing import List, Dict
+from pathlib import Path
+
+# Adicionar o diretório raiz ao Python path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.core.affiliate_integration import (
     AffiliateIntegrationManager,
@@ -31,9 +37,9 @@ class AffiliateIntegrationDemo:
         self.demo_links = [
             "https://amazon.com.br/dp/B08N5WRWNW?tag=garimpeirogeek-20",
             "https://awin1.com/cread.php?awinmid=12345&awinaffid=67890",
-            "https://hotmart.com/pt-br/marketplace/produtos/curso-exemplo-ref=garimpeirogeek",
-            "https://monetizze.com.br/checkout/CPF123456789",
-            "https://invalid-link-example.com/not-affiliate"
+            "https://shopee.com.br/product/12345/67890?affiliate_id=garimpeirogeek",
+            "https://mercadolivre.com.br/items/MLB1234567890?af=garimpeirogeek",
+            "https://magazineluiza.com.br/produto/12345?partner_id=garimpeirogeek"
         ]
     
     async def run_full_demo(self):

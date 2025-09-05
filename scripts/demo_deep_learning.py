@@ -10,7 +10,14 @@ de priorização de produtos geek.
 import asyncio
 import sys
 import logging
+import numpy as np
 from datetime import datetime
+from pathlib import Path
+
+# Adicionar o diretório raiz ao Python path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 from src.core.deep_learning import DeepLearningManager
 from src.core.deep_learning_dashboard import DeepLearningDashboard
 
@@ -214,7 +221,4 @@ async def main():
         print("❌ Modo inválido. Use: quick, full ou dashboard")
 
 if __name__ == "__main__":
-    # Import necessário para numpy
-    import numpy as np
-    
     asyncio.run(main())

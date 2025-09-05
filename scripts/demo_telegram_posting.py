@@ -12,7 +12,7 @@ from decimal import Decimal
 import time
 
 # Adicionar src ao path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.core.models import Offer
 from src.posting.message_formatter import MessageFormatter

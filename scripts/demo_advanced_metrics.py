@@ -7,8 +7,14 @@ Script para demonstrar todas as funcionalidades do sistema de métricas avançad
 
 import asyncio
 import json
+import sys
 from datetime import datetime, timedelta
 from dataclasses import asdict
+from pathlib import Path
+
+# Adicionar o diretório raiz ao Python path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.core.advanced_metrics import (
     AdvancedMetricsManager,
