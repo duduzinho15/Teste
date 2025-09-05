@@ -14,6 +14,7 @@
       "affiliate\\mercadolivre.py",
       "affiliate\\rakuten.py",
       "affiliate\\rakuten_api.py",
+      "affiliate\\real_affiliate_apis.py",
       "affiliate\\shopee.py",
       "affiliate\\shopee_api.py",
       "affiliate\\__init__.py",
@@ -75,6 +76,7 @@
       "posting\\__init__.py",
       "recommender\\__init__.py",
       "scrapers\\base_scraper.py",
+      "scrapers\\real_scrapers.py",
       "scrapers\\__init__.py",
       "telegram_bot\\bot.py",
       "telegram_bot\\bot_manager.py",
@@ -82,6 +84,7 @@
       "telegram_bot\\manual_posting_handler.py",
       "telegram_bot\\message_builder.py",
       "telegram_bot\\notification_manager.py",
+      "telegram_bot\\real_telegram_bot.py",
       "telegram_bot\\__init__.py",
       "tests\\run_all_tests.py",
       "tests\\test_affiliate_converter.py",
@@ -212,6 +215,7 @@
       "tests\\test_e2e_integration.py",
       "tests\\test_final_validation.py",
       "tests\\test_monitoring_system.py",
+      "tests\\test_no_hotmart_references.py",
       "tests\\test_posting_system.py",
       "tests\\test_price_scrapers.py",
       "tests\\test_production_scrapers.py",
@@ -219,6 +223,7 @@
       "tests\\test_real_posting.py",
       "tests\\test_real_telegram_posting.py",
       "tests\\test_scrapers_magazine_amazon.py",
+      "tests\\test_smoke_hotmart.py",
       "tests\\test_system_validation.py",
       "tests\\test_telegram_posting.py",
       "tests\\__init__.py",
@@ -265,6 +270,8 @@
       "tests\\__pycache__\\test_amazon_scraper.cpython-313-pytest-8.4.1.pyc",
       "tests\\__pycache__\\test_e2e_integration.cpython-310-pytest-7.4.3.pyc",
       "tests\\__pycache__\\test_e2e_integration.cpython-313-pytest-8.4.1.pyc",
+      "tests\\__pycache__\\test_no_hotmart_references.cpython-313-pytest-8.4.1.pyc",
+      "tests\\__pycache__\\test_smoke_hotmart.cpython-313-pytest-8.4.1.pyc",
       "tests\\__pycache__\\__init__.cpython-310.pyc",
       "tests\\__pycache__\\__init__.cpython-313.pyc",
       "tests\\unit\\__pycache__\\test_affiliate_system.cpython-313-pytest-8.4.1.pyc",
@@ -327,6 +334,7 @@
       "docs\\CHANGELOG.md",
       "docs\\CHECKLIST_PRINCIPAL.md",
       "docs\\CONSISTENCY_REPORT.md",
+      "docs\\cursor_analise_do_arquivo_de_estrutura.md",
       "docs\\dados_historico_precos.md",
       "docs\\DEPLOY_INSTRUCTIONS.md",
       "docs\\DEPLOY_SYSTEM.md",
@@ -394,6 +402,7 @@
       "scripts\\publish_v2.ps1",
       "scripts\\quick_deploy.py",
       "scripts\\real_telegram_poster.py",
+      "scripts\\remove_hotmart_references.py",
       "scripts\\reorganize_project.py",
       "scripts\\run_production_tests.py",
       "scripts\\setup_env.py",
@@ -410,6 +419,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "1cfc5f7c223bf4ea281f1f0f893b34be",
-  "timestamp": "2025-09-01T19:44:02.342051"
+  "hash": "901b5ea608df8589f99ee94e35a4a174",
+  "timestamp": "2025-09-04T22:01:58.585770"
 }
