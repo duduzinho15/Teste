@@ -202,6 +202,7 @@
       "config\\__pycache__\\garimpeiro_geek_config.cpython-313.pyc"
     ],
     "tests": [
+      "tests\\conftest.py",
       "tests\\test_advanced_features.py",
       "tests\\test_advanced_scrapers.py",
       "tests\\test_affiliates_magalu.py",
@@ -235,7 +236,15 @@
       "tests\\data\\affiliate_examples.py",
       "tests\\data\\__init__.py",
       "tests\\e2e\\test_affiliates_e2e.py",
+      "tests\\e2e\\test_aliexpress_e2e.py",
+      "tests\\e2e\\test_amazon_e2e.py",
+      "tests\\e2e\\test_awin_e2e.py",
       "tests\\e2e\\test_complete_flow.py",
+      "tests\\e2e\\test_deduplication.py",
+      "tests\\e2e\\test_failures_resilience.py",
+      "tests\\e2e\\test_magalu_e2e.py",
+      "tests\\e2e\\test_mercadolivre_e2e.py",
+      "tests\\e2e\\test_shopee_e2e.py",
       "tests\\e2e\\__init__.py",
       "tests\\helpers\\asserts.py",
       "tests\\helpers\\patterns.py",
@@ -256,8 +265,10 @@
       "tests\\unit\\test_queue_system.py",
       "tests\\unit\\test_scheduler.py",
       "tests\\unit\\test_shopee_blocking.py",
+      "tests\\unit\\test_url_validation.py",
       "tests\\unit\\test_validacao_formato_conversores.py",
       "tests\\unit\\__init__.py",
+      "tests\\__pycache__\\conftest.cpython-310-pytest-7.4.3.pyc",
       "tests\\__pycache__\\test_affiliates_magalu.cpython-310-pytest-7.4.3.pyc",
       "tests\\__pycache__\\test_affiliates_magalu.cpython-313-pytest-8.4.1.pyc",
       "tests\\__pycache__\\test_affiliates_ml.cpython-310-pytest-7.4.3.pyc",
@@ -328,6 +339,7 @@
     "docs": [
       "docs\\.dockerignore",
       "docs\\affiliate_examples.md",
+      "docs\\affiliate_validation_rules.md",
       "docs\\APIs Doc Links.txt",
       "docs\\apis_integracao.md",
       "docs\\awin_rules.md",
@@ -418,6 +430,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "df0c46e6278ee6cb67c4f552840d68c7",
-  "timestamp": "2025-09-04T22:36:48.913008"
+  "hash": "f5ac5c516a74c4adeb4609ff2a397a77",
+  "timestamp": "2025-09-06T13:42:06.354274"
 }
