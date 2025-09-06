@@ -402,7 +402,6 @@
       "scripts\\publish_v2.ps1",
       "scripts\\quick_deploy.py",
       "scripts\\real_telegram_poster.py",
-      "scripts\\remove_hotmart_references.py",
       "scripts\\reorganize_project.py",
       "scripts\\run_production_tests.py",
       "scripts\\setup_env.py",
@@ -419,6 +418,6 @@
       "scripts\\__pycache__\\update_readme.cpython-313.pyc"
     ]
   },
-  "hash": "901b5ea608df8589f99ee94e35a4a174",
-  "timestamp": "2025-09-04T22:01:58.585770"
+  "hash": "df0c46e6278ee6cb67c4f552840d68c7",
+  "timestamp": "2025-09-04T22:36:48.913008"
 }

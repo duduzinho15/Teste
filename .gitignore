@@ -1,0 +1,26 @@
+# Python / venv
+.venv/
+__pycache__/
+*.pyc
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Project temp artifacts
+.tmp.driveupload/
+.tmp.drivedownload/
+ui_report.json
+analytics/
+aff_cache.sqlite
+garimpeiro_geek.db
+db/analytics.sqlite
+db/aff_cache.sqlite
+exports/
+backups/
+logs/
