@@ -446,6 +446,71 @@ pytest tests/unit/test_scheduler.py
 pytest tests/unit/test_scrapers/
 ```
 
+## 🧪 Testes e Validações
+
+### Executando Testes
+
+```bash
+# Rodar todos os testes
+make test-all
+
+# Apenas testes unitários
+make test-unit
+
+# Apenas testes E2E
+make test-e2e
+
+# Verificar formatação e estilo
+make lint
+
+# Verificar tipos
+make typecheck
+```
+
+### Regras de Validação por Plataforma
+
+#### Amazon
+- ✅ URLs devem conter ASIN válido (B seguido de 9 caracteres alfanuméricos)
+- ✅ Tag de afiliado obrigatória: `tag=garimpeirogee-20`
+- ❌ Bloquear URLs sem ASIN
+
+#### Awin
+- ✅ MID permitidos: 23377, 51277, 33061, 17729, 106765, 25539
+- ✅ AFFID permitidos: 2370719, 2510157
+- ❌ Bloquear URLs com parâmetros inválidos
+
+#### Shopee
+- ✅ Apenas shortlinks: `s.shopee.com.br`
+- ❌ Bloquear URLs completas
+- ❌ Bloquear categorias não permitidas
+
+#### AliExpress
+- ✅ Apenas shortlinks: `s.click.aliexpress.com/e/`
+- ✅ Exigir `tracking_id=telegram`
+- ❌ Bloquear URLs diretas
+
+#### Mercado Livre
+- ✅ Apenas URLs sociais e shortlinks
+- ❌ Bloquear URLs de produto diretas
+
+#### Magazine Luiza
+- ✅ Apenas vitrine: `magazinevoce.com.br/magazinegarimpeirogeek`
+- ❌ Bloquear `magazineluiza.com.br`
+
+### Modo DRY_RUN
+
+Para testar sem publicar ofertas, use a variável de ambiente:
+
+```bash
+# No Windows
+set DRY_RUN=1
+python -m src.app.main
+
+# No Linux/macOS
+export DRY_RUN=1
+python -m src.app.main
+```
+
 ## 🚀 Execução
 
 ### 1. Executar o sistema principal
