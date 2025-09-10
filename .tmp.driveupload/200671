@@ -1,0 +1,26 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+	autocrlf = input
+[branch "master"]
+	vscode-merge-base = origin/master
+[branch "chore/remove-digital-affiliates"]
+	github-pr-base-branch = "duduzinho15#Ainda-nao-funciona#master"
+	vscode-merge-base = origin/master
+	vscode-merge-base = origin/master
+[lfs]
+	repositoryformatversion = 0
+[lfs "https://github.com/duduzinho15/Ainda-nao-funciona.git/info/lfs"]
+	access = basic
+[lfs "https://github.com/duduzinho15/Teste.git/info/lfs"]
+	access = basic
+[remote "origin"]
+	url = https://github.com/duduzinho15/Teste.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "feat/fase1-tests-e2e-bloqueios"]
+	remote = origin
+	merge = refs/heads/feat/fase1-tests-e2e-bloqueios

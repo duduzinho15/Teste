@@ -1,4 +1,0 @@
-2025-08-31 01:22:58,933 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ/sendMessage "HTTP/1.1 200 OK"
-2025-08-31 01:23:00,263 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ/sendMessage "HTTP/1.1 200 OK"
-2025-08-31 10:50:08,923 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ/sendMessage "HTTP/1.1 200 OK"
-2025-08-31 10:50:10,316 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ/sendMessage "HTTP/1.1 200 OK"
