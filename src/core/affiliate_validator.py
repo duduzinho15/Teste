@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, unquote
 
 logger = logging.getLogger(__name__)
 
@@ -78,9 +78,9 @@ class AffiliateValidator:
                 "blocked_domains": ["magazineluiza.com.br"],
             },
             "aliexpress": {
-                "shortlink": r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+$",
-                "affiliate_url": r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+$",
-                "required_params": [],
+                "shortlink": r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+(\?.*)?$",
+                "affiliate_url": r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+(\?.*)?$",
+                "required_params": ["tracking_id"],
                 "blocked_domains": ["aliexpress.com", "pt.aliexpress.com"],
             },
             "awin": {
@@ -449,3 +449,126 @@ class AffiliateValidator:
             "average_score": avg_score,
             "platforms": {},
         }
+
+    def is_publishable_affiliate_url(self, url: str) -> (bool, str):
+        """
+        Guardrail principal: decide se uma URL pode ser publicada.
+
+        Retorna (True/False, motivo). Enforce:
+        - Awin: domain == www.awin1.com, path == /cread.php, params awinmid, awinaffid, ued
+        - AliExpress: somente shortlink s.click.aliexpress.com/e/... com tracking_id=telegram
+        - Shopee: somente shortlink s.shopee.com.br/{token}
+        - Magalu: somente www.magazinevoce.com.br/magazinegarimpeirogeek/.../p/{sku}
+        - Mercado Livre: somente /sec/... ou social/garimpeirogeek com matt_word=garimpeirogeek
+        - Amazon: ASIN-first; inválido se não houver ASIN válido
+        """
+        if not url:
+            self.logger.warning("URL vazia para publicação")
+            return False, "URL vazia"
+
+        try:
+            parsed = urlparse(url)
+            domain = parsed.netloc.lower()
+            path = parsed.path or ""
+            q = parse_qs(parsed.query)
+            q_lower = {k.lower(): v for k, v in q.items()}
+
+            # Awin
+            if "awin1.com" in domain or domain == "www.awin1.com":
+                if domain != "www.awin1.com":
+                    self.logger.warning(f"Awin inválido: domain deve ser www.awin1.com (got {domain})")
+                    return False, "Awin: domain deve ser www.awin1.com"
+                if path != "/cread.php":
+                    self.logger.warning(f"Awin inválido: path deve ser /cread.php (got {path})")
+                    return False, "Awin: path deve ser /cread.php"
+                required = ["awinmid", "awinaffid", "ued"]
+                for p in required:
+                    if p not in q_lower:
+                        self.logger.warning(f"Awin inválido: parâmetro obrigatório ausente: {p}")
+                        return False, f"Awin: parâmetro obrigatório ausente: {p}"
+                ued_val = q_lower.get("ued", [""])[0]
+                if not ued_val:
+                    self.logger.warning("Awin inválido: UED vazio")
+                    return False, "Awin: UED vazio"
+                try:
+                    ued_dec = unquote(ued_val)
+                    if not (ued_dec.startswith("http://") or ued_dec.startswith("https://")):
+                        self.logger.warning("Awin inválido: UED não parece uma URL válida")
+                        return False, "Awin: UED deve ser URL válida"
+                except Exception:
+                    self.logger.warning("Awin inválido: erro ao decodificar UED")
+                    return False, "Awin: erro ao decodificar UED"
+                return True, ""
+
+            # AliExpress
+            if "aliexpress" in domain:
+                if domain != "s.click.aliexpress.com" or not path.startswith("/e/"):
+                    self.logger.warning("AliExpress inválido: somente shortlinks s.click.aliexpress.com/e/...")
+                    return False, "AliExpress: somente shortlinks s.click.aliexpress.com/e/..."
+                tracking_values = None
+                for k, v in q.items():
+                    if k.lower() == "tracking_id":
+                        tracking_values = v
+                        break
+                if not tracking_values or (tracking_values[0] or "").lower() != "telegram":
+                    self.logger.warning("AliExpress inválido: tracking_id=telegram obrigatório")
+                    return False, "AliExpress: tracking_id=telegram obrigatório"
+                return True, ""
+
+            # Shopee
+            if "shopee" in domain:
+                if domain != "s.shopee.com.br":
+                    self.logger.warning("Shopee inválido: somente shortlinks s.shopee.com.br")
+                    return False, "Shopee: somente shortlinks s.shopee.com.br"
+                import re as _re
+                if not _re.match(r"^/[A-Za-z0-9]+$", path):
+                    self.logger.warning("Shopee inválido: token de shortlink inválido")
+                    return False, "Shopee: shortlink inválido"
+                return True, ""
+
+            # Magalu
+            if "magazinevoce.com.br" in domain or "magazineluiza" in domain:
+                if domain != "www.magazinevoce.com.br":
+                    self.logger.warning("Magalu inválido: somente www.magazinevoce.com.br")
+                    return False, "Magalu: use www.magazinevoce.com.br"
+                import re as _re
+                if not _re.match(r"^/magazinegarimpeirogeek/.*/p/\d+", path, _re.IGNORECASE):
+                    self.logger.warning("Magalu inválido: URL deve conter vitrine e SKU /p/{id}")
+                    return False, "Magalu: somente vitrine /magazinegarimpeirogeek/.../p/{sku}"
+                return True, ""
+
+            # Mercado Livre
+            if "mercadolivre.com" in domain:
+                if path.startswith("/sec/"):
+                    return True, ""
+                if path.startswith("/social/garimpeirogeek"):
+                    mw = (q_lower.get("matt_word", [""])[0] or "").lower()
+                    if mw == "garimpeirogeek":
+                        return True, ""
+                    self.logger.warning("ML social inválido: matt_word=garimpeirogeek obrigatório")
+                    return False, "Mercado Livre: matt_word=garimpeirogeek obrigatório"
+                self.logger.warning("ML inválido: somente /sec/... ou /social/garimpeirogeek")
+                return False, "Mercado Livre: somente /sec/... ou social/garimpeirogeek"
+
+            # Amazon
+            if "amazon" in domain or "amzn.to" in domain:
+                try:
+                    from src.affiliate.amazon import extract_asin_from_url as _asin
+                except Exception:
+                    _asin = None
+                asin = _asin(url) if _asin else None
+                if not asin:
+                    self.logger.warning("Amazon inválido: ASIN não encontrado")
+                    return False, "Amazon: ASIN inválido ou ausente"
+                return True, ""
+
+            # Plataforma não reconhecida: usar validação geral (provavelmente bloquear)
+            vr = self.validate_url(url)
+            if vr.status.value == "valid":
+                return True, ""
+            self.logger.warning(f"URL inválida: {vr.message}")
+            return False, vr.message
+
+        except Exception as e:
+            self.logger.error(f"Erro no guardrail publishable: {e}")
+            return False, f"Erro ao validar URL: {e}"

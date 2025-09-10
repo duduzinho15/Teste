@@ -4,6 +4,8 @@ Bot Telegram principal do Garimpeiro Geek
 
 import logging
 from typing import Any, Dict, Optional
+from src.core.settings import Settings
+from src.posting.posting_manager import posting_manager
 
 try:
     from telegram import Update
@@ -282,3 +284,4 @@ class TelegramBot:
             "token_configured": bool(self.token),
             "chat_id_configured": bool(self.chat_id),
         }
+

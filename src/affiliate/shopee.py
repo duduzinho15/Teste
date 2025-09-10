@@ -219,7 +219,7 @@ def _generate_api_shortlink(product_url: str) -> Optional[str]:
         from src.core.settings import Settings
         
         # Verificar se API está configurada
-        if not (Settings.USE_API_SHOPEE and Settings.SHOPEE_APP_ID and Settings.SHOPEE_SECRET):
+        if not ((Settings.USE_API_SHOPEE or getattr(Settings, "USE_API_FIRST_SHOPEE", False)) and Settings.SHOPEE_APP_ID and Settings.SHOPEE_SECRET):
             return None
             
         # Em produção, isso seria uma chamada real para a API do Shopee
@@ -380,11 +380,14 @@ def generate_shopee_shortlink(product_url: str) -> Tuple[bool, str, str]:
             METRICS["shortlink_success"] += 1
             return True, cached, ""
 
-        # Tentar usar API real do Shopee se configurada
+        # Tentar usar API real do Shopee se configurada (API-first)
         from src.core.settings import Settings
-        
-        if Settings.USE_API_SHOPEE and Settings.SHOPEE_APP_ID and Settings.SHOPEE_SECRET:
+
+        api_first = getattr(Settings, "USE_API_FIRST_SHOPEE", False) or Settings.USE_API_SHOPEE
+        if api_first and Settings.SHOPEE_APP_ID and Settings.SHOPEE_SECRET:
             try:
+                if getattr(Settings, "USE_API_FIRST_SHOPEE", False):
+                    logger.info("Shopee shortlink: api_first=on (tokens presentes)")
                 # Gerar shortlink via API real
                 shortlink = _generate_api_shortlink(normalized_url)
                 if shortlink:

@@ -159,8 +159,18 @@ class AwinAPI(BaseAffiliateAPI):
             # Simular criação de link de afiliado
             # Em implementação real, usar Awin API
             
-            # Gerar link de afiliado
-            affiliate_url = f"https://www.awin1.com/cread.php?awinmid={self.publisher_id}&awinaffid=garimpeirogeek&p={original_url}"
+            # Gerar link de afiliado no formato oficial (cread.php com UED)
+            try:
+                from src.affiliate.awin import get_allowed_affids
+                awinaffid = get_allowed_affids()[0]
+            except Exception:
+                awinaffid = ""
+            from urllib.parse import quote
+            ued = quote(original_url, safe="")
+            affiliate_url = (
+                f"https://www.awin1.com/cread.php?awinmid={self.publisher_id}"
+                f"&awinaffid={awinaffid}&ued={ued}"
+            )
             
             link = AffiliateLink(
                 original_url=original_url,

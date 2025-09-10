@@ -139,16 +139,16 @@ class AffiliateLinkValidator:
                 "amazon.com.br", "amzn.to", "amazon.com", "amazon.co.uk"
             ],
             AffiliateNetwork.AWIN: [
-                "awin1.com", "awin.com", "awin.net"
+                "awin1.com"
             ],
             AffiliateNetwork.RAKUTEN: [
                 "rakuten.com.br", "rakuten-advertising.com"
             ],
             AffiliateNetwork.SHOPEE: [
-                "shopee.com.br", "shope.ee"
+                "s.shopee.com.br"
             ],
             AffiliateNetwork.ALIEXPRESS: [
-                "aliexpress.com", "alixepress.com"
+                "s.click.aliexpress.com"
             ],
             AffiliateNetwork.MERCADO_LIVRE: [
                 "mercadolivre.com.br", "mercadolivre.com"

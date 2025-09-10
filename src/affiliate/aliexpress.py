@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 logger = logging.getLogger(__name__)
 
 # Padrão de validação baseado nos exemplos
-ALIEXPRESS_SHORTLINK_PATTERN = r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+$"
+ALIEXPRESS_SHORTLINK_PATTERN = r"^https?://s\.click\.aliexpress\.com/e/[A-Za-z0-9_-]+(?:\?.*)?$"
 ALIEXPRESS_PRODUCT_PATTERN = r"^https?://(?:pt\.)?aliexpress\.com/item/\d+\.html"
 
 # Cache local para shortlinks
@@ -60,7 +60,13 @@ def validate_aliexpress_url(url: str) -> Tuple[bool, str]:
 
     # Verificar se é shortlink válido
     if re.match(ALIEXPRESS_SHORTLINK_PATTERN, url):
-        return True, ""
+        parsed = urlparse(url)
+        from urllib.parse import parse_qs
+        params = parse_qs(parsed.query)
+        tracking = params.get("tracking_id", [None])[0]
+        if tracking == "telegram":
+            return True, ""
+        return False, "Shortlink AliExpress deve conter tracking_id=telegram"
 
     # Verificar se é URL de produto válida
     if re.match(ALIEXPRESS_PRODUCT_PATTERN, url):
@@ -207,7 +213,7 @@ def generate_aliexpress_shortlink(
         shortlink_id = f"{url_hash}{timestamp}"
 
         # Formato baseado nos exemplos: s.click.aliexpress.com/e/{id}
-        shortlink = f"https://s.click.aliexpress.com/e/{shortlink_id}"
+        shortlink = f"https://s.click.aliexpress.com/e/{shortlink_id}?tracking_id={tracking}"
 
         # Armazenar em cache
         cache_shortlink(product_url, shortlink, tracking)

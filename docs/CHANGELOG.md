@@ -7,6 +7,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Unreleased]
 
+### Changed
+- Reforço da validação de afiliados (Awin/AliExpress):
+  - AliExpress: shortlinks `s.click.aliexpress.com` agora exigem `tracking_id=telegram` (geração e validação).
+  - Awin (APIs reais): geração de deeplink atualizada para formato oficial `cread.php?awinmid=...&awinaffid=...&ued=...` usando AFFIDs permitidos do ambiente.
+- Ajuste de detecção de redes no integrador para priorizar domínios de shortlink (Shopee `s.shopee.com.br`, AliExpress `s.click.aliexpress.com`, Awin `awin1.com`).
+
 ## [1.0.0] - 2025-09-06
 
 ### Added

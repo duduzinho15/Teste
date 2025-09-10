@@ -17,8 +17,16 @@ def block_network():
         patch('aiohttp.ClientSession', side_effect=Exception("Network access blocked")),
         patch('requests.get', side_effect=Exception("Network access blocked")),
         patch('requests.post', side_effect=Exception("Network access blocked")),
-        patch('playwright.async_api.Playwright', side_effect=Exception("Playwright access blocked"))
     ]
+    # Playwright pode não estar instalado no ambiente de testes
+    try:
+        import importlib
+        importlib.import_module('playwright')
+        patches.append(
+            patch('playwright.async_api.Playwright', side_effect=Exception("Playwright access blocked"))
+        )
+    except Exception:
+        pass
     
     return patches
 

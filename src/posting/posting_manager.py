@@ -5,6 +5,7 @@ Gerencia o processo completo de postagem de ofertas
 
 import asyncio
 import logging
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ from enum import Enum
 
 from src.core.models import Offer
 from src.core.affiliate_validator import AffiliateValidator
+from src.core.settings import Settings
 from .message_formatter import message_formatter
 from .scheduler import job_scheduler
 
@@ -96,6 +98,10 @@ class PostingManager:
             "auto_approved": 0,
             "manual_approved": 0
         }
+        # Histórico curto para status do bot
+        self.last_block_reasons = []
+        self.last_post_attempts = []
+
     
     async def submit_offer(self, offer: Offer) -> str:
         """
@@ -108,11 +114,13 @@ class PostingManager:
             ID da requisiÃ§Ã£o de postagem
         """
         try:
-            # Validar oferta
-            validation_result = await self.validator.validate_url(offer.affiliate_url)
-            if validation_result.status.value != "valid":
-                self.logger.warning(f"Oferta rejeitada - URL invÃ¡lida: {offer.affiliate_url}")
+                        # Guardrail: validar URL publicável (affiliate_url preferencialmente)
+            to_validate = offer.affiliate_url or offer.url
+            ok, reason = self.validator.is_publishable_affiliate_url(to_validate)
+            if not ok:
+                self.logger.warning(f"event=enqueue_blocked publishable=false platform={getattr(offer,'store','')} reason={reason} url={to_validate}")
                 return None
+
             
             # Calcular score de qualidade
             quality_score = self._calculate_quality_score(offer)
@@ -221,7 +229,11 @@ class PostingManager:
             True se postagem bem-sucedida
         """
         try:
-            # Importar bot do Telegram
+                        # DRY_RUN: não enviar de fato
+            if Settings.is_dry_run():
+                self.logger.info(f"event=post_attempt dry_run=true publishable=true platform={offer.store}")
+                return True
+# Importar bot do Telegram
             from telegram_bot.bot import telegram_bot
             
             if not telegram_bot:
@@ -719,4 +731,68 @@ class PostingManager:
 
 
 # InstÃ¢ncia global para uso em outros mÃ³dulos
+
+    # --- Fase 2 helpers ---
+    def enqueue(self, offer_dict: Dict[str, Any]) -> bool:
+        """Enfileira uma oferta (aplica guardrail antes)."""
+        try:
+            offer = Offer.from_dict(offer_dict)
+            to_validate = offer.affiliate_url or offer.url
+            ok, reason = self.validator.is_publishable_affiliate_url(to_validate)
+            if not ok:
+                self.logger.warning(
+                    f"event=enqueued_reject publishable=false platform={getattr(offer,'store','')} reason={reason} url={to_validate}"
+                )
+                return False
+
+            request_id = f"post_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+            posting_request = PostingRequest(
+                id=request_id,
+                offer=offer,
+                status=PostingStatus.APPROVED,
+                quality_score=1.0,
+                quality_level=PostingQuality.GOOD,
+                auto_approved=True,
+            )
+            self.posting_queue.append(posting_request)
+            self.logger.info(
+                f"event=enqueued publishable=true platform={offer.store} id={request_id}"
+            )
+            return True
+        except Exception as e:
+            self.logger.error(f"Erro ao enfileirar oferta: {e}")
+            return False
+
+    async def dequeue_and_post(self) -> bool:
+        """Remove a próxima oferta aprovada e posta (respeita DRY_RUN)."""
+        if not self.posting_queue:
+            return False
+        idx = next((i for i, r in enumerate(self.posting_queue) if r.status in (PostingStatus.APPROVED, PostingStatus.PENDING)), None)
+        if idx is None:
+            return False
+        request = self.posting_queue[idx]
+        try:
+            message = message_formatter.format_offer_message(request.offer)
+        except Exception:
+            message = f"Oferta: {request.offer.title}\n{request.offer.affiliate_url or request.offer.url}"
+
+        self.logger.info(
+            f"event=post_attempt dry_run={Settings.is_dry_run()} publishable=true platform={request.offer.store}"
+        )
+        success = await self._post_to_telegram(request.offer, message)
+        if success and not Settings.is_dry_run():
+            request.status = PostingStatus.POSTED
+            request.posted_at = datetime.now()
+            self.posted_offers.append(request)
+            del self.posting_queue[idx]
+        return success
 posting_manager = PostingManager()
+
+
+
+
+
+
+
+
+

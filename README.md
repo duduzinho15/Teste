@@ -1,373 +1,402 @@
-# 🚀 Garimpeiro Geek
+# ðŸš€ Garimpeiro Geek
 
-Sistema completo de recomendações de ofertas para Telegram com validação de conversores de afiliados, agendamento automático, fila de ofertas, pipelines de processamento e controle de qualidade avançado.
+Sistema completo de recomendaÃ§Ãµes de ofertas para Telegram com validaÃ§Ã£o de conversores de afiliados, agendamento automÃ¡tico, fila de ofertas, pipelines de processamento e controle de qualidade avanÃ§ado.
 
-## ✨ Funcionalidades
+## âœ¨ Funcionalidades
 
-### 🚀 **APIs e Scrapers Reais Implementados**
+### ðŸš€ **APIs e Scrapers Reais Implementados**
 - **Scrapers Funcionais** - Amazon, Magazine Luiza, Mercado Livre com parsing real
-- **APIs de Afiliados** - Criação e validação de links reais (Amazon Associates, Awin, Rakuten, Shopee, AliExpress, Mercado Livre, Magazine Luiza)
+- **APIs de Afiliados** - CriaÃ§Ã£o e validaÃ§Ã£o de links reais (Amazon Associates, Awin, Rakuten, Shopee, AliExpress, Mercado Livre, Magazine Luiza)
 - **Bot Telegram Real** - Sistema completo de envio de ofertas com comandos
-- **Validação de Links** - Verificação automática de links de afiliados
-- **Relatórios Detalhados** - Estatísticas reais de performance e ganhos
-- **Backup Automático** - Sistema de backup completo do projeto
-- **Dashboard Funcional** - Interface Windows nativa com botões funcionais
+- **ValidaÃ§Ã£o de Links** - VerificaÃ§Ã£o automÃ¡tica de links de afiliados
+- **RelatÃ³rios Detalhados** - EstatÃ­sticas reais de performance e ganhos
+- **Backup AutomÃ¡tico** - Sistema de backup completo do projeto
+- **Dashboard Funcional** - Interface Windows nativa com botÃµes funcionais
 
-### 🔗 Sistema de Afiliados
-- **Validação automática** de conversores para Amazon, Mercado Livre, Shopee, Magazine Luiza, AliExpress, Awin e Rakuten
-- **APIs oficiais** com fallback para scraping quando necessário
-- **Cache inteligente** com Redis para otimizar conversões
-- **Validação de URLs** com regex patterns específicos por plataforma
-- **Geração de shortlinks** otimizados para cada plataforma
-- **Métricas de conversão** em tempo real por plataforma
+## 🎯 Sistema de Pontuação de Ofertas
 
-### 📱 Bot do Telegram
-- **Formatação dinâmica** de mensagens com templates específicos por plataforma
+O sistema agora inclui um motor avançado de pontuação de ofertas que classifica automaticamente as ofertas com base em múltiplos fatores:
+
+### 📊 Fatores de Pontuação
+- **Desconto**: Comparação com preço médio e histórico
+- **Histórico de Preços**: Menor preço em 40/90/180 dias
+- **Vendedor**: Lista de vendedores confiáveis
+- **Categoria**: Regras específicas por tipo de produto
+
+### 🏷️ Níveis de Oferta
+- **CRÍTICO (≥ 0.85)**: Ofertas excelentes para postagem imediata
+- **ALTA (0.75-0.84)**: Boas ofertas para a próxima janela
+- **MÉDIA (0.50-0.74)**: Ofertas razoáveis
+- **BAIXA (< 0.50)**: Abaixo do limiar de qualidade
+
+### ⚙️ Configuração
+Personalize os limiares no arquivo `.env`:
+```ini
+DEAL_SCORE_CRITICAL=0.85
+DEAL_SCORE_HIGH=0.75
+ELECTRONICS_MIN_DISC=0.20
+PERIPHERALS_MIN_DISC=0.25
+APPLIANCES_MIN_DISC=0.18
+```
+
+Consulte [docs/DEAL_SCORING.md](docs/DEAL_SCORING.md) para detalhes completos.
+
+### ðŸ”— Sistema de Afiliados
+- **ValidaÃ§Ã£o automÃ¡tica** de conversores para Amazon, Mercado Livre, Shopee, Magazine Luiza, AliExpress, Awin e Rakuten
+- **APIs oficiais** com fallback para scraping quando necessÃ¡rio
+- **Cache inteligente** com Redis para otimizar conversÃµes
+- **ValidaÃ§Ã£o de URLs** com regex patterns especÃ­ficos por plataforma
+- **GeraÃ§Ã£o de shortlinks** otimizados para cada plataforma
+- **MÃ©tricas de conversÃ£o** em tempo real por plataforma
+
+### ðŸ“± Bot do Telegram
+- **FormataÃ§Ã£o dinÃ¢mica** de mensagens com templates especÃ­ficos por plataforma
 - **Emojis contextuais** baseados no tipo de oferta e qualidade
-- **Sistema de notificações** configurável para administradores
+- **Sistema de notificaÃ§Ãµes** configurÃ¡vel para administradores
 - **Templates personalizados** para cada plataforma de afiliados
-- **Modo DRY_RUN** para testes sem publicação
+- **Modo DRY_RUN** para testes sem publicaÃ§Ã£o
 - **Comandos administrativos** (/on, /off, /status, /testpost)
 
-### ⏰ Sistema de Agendamento Cron
-- **Tarefas automáticas** para coleta de ofertas (90s)
-- **Enriquecimento de preços** em background (15min)
-- **Postagem automática** na fila (45s)
-- **Agregação de preços** para análise (30min)
-- **Sistema assíncrono** com timeouts e backoff
-- **Retry automático** para jobs falhados
+### â�° Sistema de Agendamento Cron
+- **Tarefas automÃ¡ticas** para coleta de ofertas (90s)
+- **Enriquecimento de preÃ§os** em background (15min)
+- **Postagem automÃ¡tica** na fila (45s)
+- **AgregaÃ§Ã£o de preÃ§os** para anÃ¡lise (30min)
+- **Sistema assÃ­ncrono** com timeouts e backoff
+- **Retry automÃ¡tico** para jobs falhados
 
-### 📋 Sistema de Fila e Moderação
-- **Fila prioritária** de ofertas com scoring automático
-- **Sistema de moderação** manual e automática
-- **Controle de qualidade** com validação de afiliados
-- **Processamento assíncrono** de ofertas
-- **Sistema de prioridades** dinâmicas
-- **Workflow de aprovação** em múltiplos níveis
+### ðŸ“‹ Sistema de Fila e ModeraÃ§Ã£o
+- **Fila prioritÃ¡ria** de ofertas com scoring automÃ¡tico
+- **Sistema de moderaÃ§Ã£o** manual e automÃ¡tica
+- **Controle de qualidade** com validaÃ§Ã£o de afiliados
+- **Processamento assÃ­ncrono** de ofertas
+- **Sistema de prioridades** dinÃ¢micas
+- **Workflow de aprovaÃ§Ã£o** em mÃºltiplos nÃ­veis
 
-### 🔄 Pipelines de Processamento
-- **Ingestão de ofertas** via APIs e scrapers
-- **Enriquecimento automático** de dados
-- **Coleta de preços** históricos
-- **Agregação inteligente** de dados
-- **Sistema de cache** distribuído
+### ðŸ”„ Pipelines de Processamento
+- **IngestÃ£o de ofertas** via APIs e scrapers
+- **Enriquecimento automÃ¡tico** de dados
+- **Coleta de preÃ§os** histÃ³ricos
+- **AgregaÃ§Ã£o inteligente** de dados
+- **Sistema de cache** distribuÃ­do
 - **Processamento em lote** otimizado
 
-### 📝 Sistema de Postagem Automática
-- **Formatação profissional** de mensagens por plataforma
+### ðŸ“� Sistema de Postagem AutomÃ¡tica
+- **FormataÃ§Ã£o profissional** de mensagens por plataforma
 - **Templates com emojis** e campos opcionais
 - **Agendador de jobs** (coleta 90s, enriquecimento 15min, postagem 45s)
 - **Gerenciador de postagem** com controle de qualidade
-- **Aprovação automática** baseada em score (threshold 0.8)
-- **Sistema de moderação** manual para ofertas de baixa qualidade
-- **Controle de rate limiting** e prevenção de spam
-- **Validação de mensagens** antes da postagem
+- **AprovaÃ§Ã£o automÃ¡tica** baseada em score (threshold 0.8)
+- **Sistema de moderaÃ§Ã£o** manual para ofertas de baixa qualidade
+- **Controle de rate limiting** e prevenÃ§Ã£o de spam
+- **ValidaÃ§Ã£o de mensagens** antes da postagem
 
-### 🕷️ Sistema de Scrapers
-- **Scrapers de lojas** com afiliação ativa
+### ðŸ•·ï¸� Sistema de Scrapers
+- **Scrapers de lojas** com afiliaÃ§Ã£o ativa
 - **Scrapers de comunidades** (Promobit, Pelando, MeuPC)
-- **Scrapers de preços** (Zoom, Buscapé)
+- **Scrapers de preÃ§os** (Zoom, BuscapÃ©)
 - **Medidas anti-bot** e rate limiting
 - **Cache inteligente** de dados coletados
 - **Tratamento de erros** robusto
 
-### 📊 Dashboard e Monitoramento
+### ðŸ“Š Dashboard e Monitoramento
 - **Dashboard Flet** responsivo e interativo
-- **Métricas de produção** em tempo real
-- **Sistema de alertas** automáticos
-- **Logs estruturados** e legíveis
+- **MÃ©tricas de produÃ§Ã£o** em tempo real
+- **Sistema de alertas** automÃ¡ticos
+- **Logs estruturados** e legÃ­veis
 - **Health checks** do sistema
-- **Relatórios automáticos** de performance
+- **RelatÃ³rios automÃ¡ticos** de performance
 
-### 🚀 Produção e Escalabilidade
-- **Configuração Redis** otimizada para produção
-- **Cache distribuído** com fallback em memória
+### ðŸš€ ProduÃ§Ã£o e Escalabilidade
+- **ConfiguraÃ§Ã£o Redis** otimizada para produÃ§Ã£o
+- **Cache distribuÃ­do** com fallback em memÃ³ria
 - **Rate limiting** inteligente por API
-- **Sistema de deduplicação** de ofertas
+- **Sistema de deduplicaÃ§Ã£o** de ofertas
 - **Circuit breaker** para falhas de API
-- **Auto-scaling** baseado em métricas
+- **Auto-scaling** baseado em mÃ­tricas
 
-## 🎮 **SISTEMA GEEK COMPLETO IMPLEMENTADO (2025)**
+## ðŸŽ® **SISTEMA GEEK COMPLETO IMPLEMENTADO (2025)**
 
-### **🚀 Sistema de Priorização Geek/Gamer**
+### **ðŸš€ Sistema de PriorizaÃ§Ã£o Geek/Gamer**
 - **GeekPrioritizer**: Algoritmo inteligente para calcular scores geek de produtos
-- **Categorias Primárias**: Gaming, Tech Geek, PC Gaming, Smart Home, Audio Premium, Anime/Otaku, Collectibles
-- **Categorias Secundárias**: Eletrodomésticos Tech, Mobile & Wearables, Fitness Tech, Eletrônicos Gerais
-- **Sistema de Scores**: 0.0-1.0 com níveis Crítico, Alta, Média e Baixa prioridade
-- **Palavras-chave Específicas**: Detecção automática de produtos geek por categoria
-- **Produtos Sempre Prioritários**: PlayStation, Xbox, RTX, Smart TVs, Headphones Bluetooth, etc.
+- **Categorias PrimÃ¡rias**: Gaming, Tech Geek, PC Gaming, Smart Home, Audio Premium, Anime/Otaku, Collectibles
+- **Categorias SecundÃ¡rias**: EletrodomÃ­sticos Tech, Mobile & Wearables, Fitness Tech, EletrÃ´nicos Gerais
+- **Sistema de Scores**: 0.0-1.0 com nÃ­veis CrÃ­tico, Alta, MÃ­dia e Baixa prioridade
+- **Sistema de Scores**: 0.0-1.0 com nÃ­veis CrÃ­tico, Alta, MÃ©dia e Baixa prioridade
+- **Palavras-chave EspecÃ­ficas**: DetecÃ§Ã£o automÃ¡tica de produtos geek por categoria
+- **Produtos Sempre PrioritÃ¡rios**: PlayStation, Xbox, RTX, Smart TVs, Headphones Bluetooth, etc.
 
-### **🚨 Sistema de Alertas Geek Inteligente**
-- **GeekAlertManager**: Monitoramento automático de produtos de alta prioridade
-- **Alertas por Score**: Crítico (0.9+), Alta (0.8+), Média (0.7+)
-- **Tipos de Alerta**: Alta prioridade, queda de preço, estoque limitado
-- **Limites Inteligentes**: Máximo de alertas por hora/dia para evitar spam
-- **Histórico de Alertas**: Tracking completo de alertas enviados e pendentes
-- **Estatísticas em Tempo Real**: Métricas de performance do sistema geek
+### **ðŸš¨ Sistema de Alertas Geek Inteligente**
+- **GeekAlertManager**: Monitoramento automÃ¡tico de produtos de alta prioridade
+- **Alertas por Score**: CrÃ­tico (0.9+), Alta (0.8+), MÃ©dia (0.7+)
+- **Tipos de Alerta**: Alta prioridade, queda de preÃ§o, estoque limitado
+- **Limites Inteligentes**: MÃ¡ximo de alertas por hora/dia para evitar spam
+- **HistÃ³rico de Alertas**: Tracking completo de alertas enviados e pendentes
+- **EstatÃ­sticas em Tempo Real**: MÃ©tricas de performance do sistema geek
 
-### **📱 Comandos Específicos do Bot Telegram**
-- **/geek**: Ofertas geek prioritárias gerais
-- **/gaming**: Filtro específico para gaming (consoles, periféricos, jogos)
+### **ðŸ“± Comandos EspecÃ­ficos do Bot Telegram**
+- **/geek**: Ofertas geek prioritÃ¡rias gerais
+- **/gaming**: Filtro especÃ­fico para gaming (consoles, perifÃ©ricos, jogos)
 - **/tech**: Produtos tech premium (smartphones, tablets, notebooks)
-- **/anime**: Produtos anime/otaku (figuras, mangás, cosplay)
-- **/smart**: Smart home e IoT (smart TVs, speakers, automação)
+- **/anime**: Produtos anime/otaku (figuras, mangÃ¡s, cosplay)
+- **/smart**: Smart home e IoT (smart TVs, speakers, automaÃ§Ã£o)
 - **/audio**: Audio premium e gaming (headphones, headsets, soundbars)
-- **/collectibles**: Collectibles e edições limitadas
-- **/geekstats**: Estatísticas geek do sistema
+- **/collectibles**: Collectibles e ediÃ§Ãµes limitadas
+- **/geekstats**: EstatÃ­sticas geek do sistema
 - **/geekhelp**: Ajuda sobre comandos geek
 
-### **📊 Dashboard de Métricas Geek**
-- **Aba Específica**: Métricas dedicadas para produtos geek/gamer
-- **Cards de Métricas**: Total de ofertas geek, score médio, alertas críticos, taxa de conversão
-- **Gráficos Interativos**: Distribuição por categoria, performance por categoria
+### **ðŸ“Š Dashboard de MÃ©tricas Geek**
+- **Aba EspecÃ­fica**: MÃ©tricas dedicadas para produtos geek/gamer
+- **Cards de MÃ©tricas**: Total de ofertas geek, score mÃ©dio, alertas crÃ­ticos, taxa de conversÃ£o
+- **GrÃ¡ficos Interativos**: DistribuiÃ§Ã£o por categoria, performance por categoria
 - **Top Produtos**: Lista dos produtos geek com maior score
-- **Painel de Alertas**: Estatísticas de alertas por prioridade e tipo
-- **Atualização Automática**: Refresh automático a cada 5 minutos
+- **Painel de Alertas**: EstatÃ­sticas de alertas por prioridade e tipo
+- **AtualizaÃ§Ã£o AutomÃ¡tica**: Refresh automÃ¡tico a cada 5 minutos
 
-### **🧪 Sistema de Testes Completo**
-- **Testes Unitários**: Cobertura completa de GeekPrioritizer, GeekAlertManager e GeekCommands
-- **Testes de Integração**: Workflow completo do sistema geek
-- **Testes de Consistência**: Validação de configurações e priorização
-- **Mocks e Fixtures**: Dados de teste realistas para validação
-- **Cobertura de Cenários**: Gaming, Tech, Smart Home, Audio, Anime, Collectibles
+### **ðŸ§ª Sistema de Testes Completo**
+- **Testes UnitÃ¡rios**: Cobertura completa de GeekPrioritizer, GeekAlertManager e GeekCommands
+- **Testes de IntegraÃ§Ã£o**: Workflow completo do sistema geek
+- **Testes de ConsistÃªncia**: ValidaÃ§Ã£o de configuraÃ§Ãµes e priorizaÃ§Ã£o
+- **Mocks e Fixtures**: Dados de teste realistas para validaÃ§Ã£o
+- **Cobertura de CenÃ¡rios**: Gaming, Tech, Smart Home, Audio, Anime, Collectibles
 
-### **⚡ Integração com Sistema Existente**
-- **Quality Controller**: Integração completa com sistema de qualidade
-- **Pipelines**: Priorização geek em todos os pipelines de processamento
-- **Scrapers**: Foco automático em produtos geek durante coleta
-- **Postagem**: Priorização de ofertas geek na fila de postagem
-- **Cache**: Otimização de cache para produtos geek frequentes
+### **âš¡ IntegraÃ§Ã£o com Sistema Existente**
+- **Quality Controller**: IntegraÃ§Ã£o completa com sistema de qualidade
+- **Pipelines**: PriorizaÃ§Ã£o geek em todos os pipelines de processamento
+- **Scrapers**: Foco automÃ¡tico em produtos geek durante coleta
+- **Postagem**: PriorizaÃ§Ã£o de ofertas geek na fila de postagem
+- **Cache**: OtimizaÃ§Ã£o de cache para produtos geek frequentes
 
-## 🆕 **SISTEMA INTELIGENTE DE COLETA AUTOMÁTICA AWIN**
+## ðŸ†• **SISTEMA INTELIGENTE DE COLETA AUTOMÃ�TICA AWIN**
 
-## 🔑 **NOVOS TOKENS IMPLEMENTADOS (31/08/2025)**
+## ðŸ”‘ **NOVOS TOKENS IMPLEMENTADOS (31/08/2025)**
 
-### **🟠 RAKUTEN ADVERTISING**
-- **Web Service Token**: Configurado e funcionando ✅
-- **Security Token**: Configurado e funcionando ✅
+### **ðŸŸ  RAKUTEN ADVERTISING**
+- **Web Service Token**: Configurado e funcionando âœ…
+- **Security Token**: Configurado e funcionando âœ…
 - **Status**: API habilitada e integrada ao sistema
-- **Funcionalidades**: Geração de deeplinks, healthcheck, cache
+- **Funcionalidades**: GeraÃ§Ã£o de deeplinks, healthcheck, cache
 
-### **🟡 SHOPEE AFFILIATE OPEN API**
-- **App ID**: `18330800803` ✅
-- **Secret**: Configurado e funcionando ✅
+### **ðŸŸ¡ SHOPEE AFFILIATE OPEN API**
+- **App ID**: `18330800803` âœ…
+- **Secret**: Configurado e funcionando âœ…
 - **Status**: API habilitada e integrada ao sistema
-- **Funcionalidades**: Geração de shortlinks, validação de URLs, cache SQLite
+- **Funcionalidades**: GeraÃ§Ã£o de shortlinks, validaÃ§Ã£o de URLs, cache SQLite
 
-### **📊 Resultado dos Testes**
-- **Rakuten**: ✅ Cliente criado, healthcheck funcionando, deeplinks gerados
-- **Shopee**: ✅ Validação de URLs, geração de shortlinks, cache funcionando
-- **Sistema**: ✅ Integração completa, testes passando, pronto para produção
+### **ðŸ“Š Resultado dos Testes**
+- **Rakuten**: âœ… Cliente criado, healthcheck funcionando, deeplinks gerados
+- **Shopee**: âœ… ValidaÃ§Ã£o de URLs, geraÃ§Ã£o de shortlinks, cache funcionando
+- **Sistema**: âœ… IntegraÃ§Ã£o completa, testes passando, pronto para produÃ§Ã£o
 
-### **🎯 Coleta Automática de Ofertas**
-- **9 Afiliações Ativas**: COMFY, Trocafy, LG, Kabum, Samsung, Gigantec BR, Ninja, **Rakuten**, **Shopee**
-- **API Oficial Awin**: Integração completa com Publisher API
-- **API Rakuten**: Web Service + Security Tokens configurados ✅
-- **API Shopee**: App ID + Secret configurados ✅
-- **Coleta Contínua**: Pipeline automático configurável (padrão: 1 hora)
+### **ðŸŽ¯ Coleta AutomÃ¡tica de Ofertas**
+- **9 AfiliaÃ§Ãµes Ativas**: COMFY, Trocafy, LG, Kabum, Samsung, Gigantec BR, Ninja, **Rakuten**, **Shopee**
+- **API Oficial Awin**: IntegraÃ§Ã£o completa com Publisher API
+- **API Rakuten**: Web Service + Security Tokens configurados âœ…
+- **API Shopee**: App ID + Secret configurados âœ…
+- **Coleta ContÃ­nua**: Pipeline automÃ¡tico configurÃ¡vel (padrÃ£o: 1 hora)
 - **Fallback Inteligente**: Product Feed API + Link Builder API
 
-### **🔧 Filtros Automáticos Inteligentes**
-- **5 Filtros Padrão**: Desconto, preço, categoria, loja, qualidade
-- **Operadores Flexíveis**: EQUALS, GREATER_THAN, IN, BETWEEN, etc.
-- **Regras Complexas**: Lógica AND/OR/XOR com prioridades
-- **Perfis Personalizáveis**: Configurações para diferentes cenários
+### **ðŸ”§ Filtros AutomÃ¡ticos Inteligentes**
+- **5 Filtros PadrÃ£o**: Desconto, preÃ§o, categoria, loja, qualidade
+- **Operadores FlexÃ­veis**: EQUALS, GREATER_THAN, IN, BETWEEN, etc.
+- **Regras Complexas**: LÃ³gica AND/OR/XOR com prioridades
+- **Perfis PersonalizÃ¡veis**: ConfiguraÃ§Ãµes para diferentes cenÃ¡rios
 - **Performance Alta**: 333.252 ofertas/segundo
 
-### **📊 Pipeline de Ingestão Automática**
-- **Validação Automática**: URLs de afiliado e qualidade
-- **Deduplicação Inteligente**: Cache para evitar duplicatas
-- **Postagem Automática**: Telegram com rate limiting
-- **Estatísticas Completas**: Performance e métricas em tempo real
+### **ðŸ“Š Pipeline de IngestÃ£o AutomÃ¡tica**
+- **ValidaÃ§Ã£o AutomÃ¡tica**: URLs de afiliado e qualidade
+- **DeduplicaÃ§Ã£o Inteligente**: Cache para evitar duplicatas
+- **Postagem AutomÃ¡tica**: Telegram com rate limiting
+- **EstatÃ­sticas Completas**: Performance e mÃ©tricas em tempo real
 
-## 🤖 **SISTEMA AUTOMÁTICO DE POSTAGEM TELEGRAM**
+## ðŸ¤– **SISTEMA AUTOMÃ�TICO DE POSTAGEM TELEGRAM**
 
-### **🚀 Automação Completa**
-- **Coleta Automática**: Ofertas coletadas a cada 5 minutos
-- **Postagem Automática**: Posts a cada 3 minutos com rate limiting
+### **ðŸš€ AutomaÃ§Ã£o Completa**
+- **Coleta AutomÃ¡tica**: Ofertas coletadas a cada 5 minutos
+- **Postagem AutomÃ¡tica**: Posts a cada 3 minutos com rate limiting
 - **Fila Inteligente**: Sistema de prioridades e controle de qualidade
-- **Scheduler Avançado**: Jobs configuráveis e monitoramento em tempo real
+- **Scheduler AvanÃ§ado**: Jobs configurÃ¡veis e monitoramento em tempo real
 
-### **📱 Integração Telegram**
-- **Bot Configurado**: Credenciais e permissões configuradas
-- **Canal Ativo**: Postagem automática no canal configurado
-- **Formatação Profissional**: Templates personalizados por plataforma
-- **Imagens Automáticas**: Suporte a imagens dos produtos
+### **ðŸ“± IntegraÃ§Ã£o Telegram**
+- **Bot Configurado**: Credenciais e permissÃµes configuradas
+- **Canal Ativo**: Postagem automÃ¡tica no canal configurado
+- **FormataÃ§Ã£o Profissional**: Templates personalizados por plataforma
+- **Imagens AutomÃ¡ticas**: Suporte a imagens dos produtos
 
-### **⚙️ Controle e Monitoramento**
-- **Sistema de Produção**: Script dedicado para ativação em produção
+### **âš™ï¸� Controle e Monitoramento**
+- **Sistema de ProduÃ§Ã£o**: Script dedicado para ativaÃ§Ã£o em produÃ§Ã£o
 - **Logs Estruturados**: Sistema de logging completo com encoding UTF-8
-- **Health Checks**: Verificação automática da saúde do sistema
+- **Health Checks**: VerificaÃ§Ã£o automÃ¡tica da saÃºde do sistema
 - **Parada Graciosa**: Controle via Ctrl+C e sinais do sistema
 - **Status em Tempo Real**: Monitoramento a cada 5 minutos
 
-### **🔧 Configurações Avançadas**
-- **Rate Limiting**: 3 minutos entre posts (configurável)
-- **Filtros de Qualidade**: Desconto mínimo de 10%
+### **ðŸ”§ ConfiguraÃ§Ãµes AvanÃ§adas**
+- **Rate Limiting**: 3 minutos entre posts (configurÃ¡vel)
+- **Filtros de Qualidade**: Desconto mÃ­nimo de 10%
 - **Categorias Permitidas**: Smartphones, Notebooks, Smart TVs, Consoles, Fones
-- **Fallback Automático**: Recuperação de erros e retry inteligente
-- **Backup Automático**: Sistema de recuperação
+- **Fallback AutomÃ¡tico**: RecuperaÃ§Ã£o de erros e retry inteligente
+- **Backup AutomÃ¡tico**: Sistema de recuperaÃ§Ã£o
 
-### **🔄 Monitoramento em Tempo Real**
-- **Status do Pipeline**: Execuções, sucessos, falhas
-- **Performance dos Filtros**: Tempo médio, ofertas processadas
-- **Saúde do Sistema**: Credenciais, conectividade, logs
-- **Atualização Automática**: Refresh configurável (padrão: 5s)
+### **ðŸ”„ Monitoramento em Tempo Real**
+- **Status do Pipeline**: ExecuÃ§Ãµes, sucessos, falhas
+- **Performance dos Filtros**: Tempo mÃ©dio, ofertas processadas
+- **SaÃºde do Sistema**: Credenciais, conectividade, logs
+- **AtualizaÃ§Ã£o AutomÃ¡tica**: Refresh configurÃ¡vel (padrÃ£o: 5s)
 
-## 🏗️ Arquitetura Completa
+## ðŸ�—ï¸� Arquitetura Completa
 
 ```
 src/
-├── affiliate/          # Conversores de afiliados
-│   ├── amazon.py      # Conversor Amazon (ASIN-first + fallback)
-│   ├── mercadolivre.py # Conversor Mercado Livre
-│   ├── shopee.py      # Conversor Shopee
-│   ├── magazineluiza.py # Conversor Magazine Luiza
-│   ├── aliexpress.py  # Conversor AliExpress
-│   ├── awin.py        # Conversor Awin
-│   ├── rakuten.py     # Conversor Rakuten
-│   ├── *_api.py       # Clientes de API oficiais
-│   └── base_api.py    # Classe base para APIs
-├── app/                # Aplicação principal
-│   ├── queue/         # Sistema de fila de ofertas
-│   │   ├── offer_queue.py      # Fila principal
-│   │   ├── moderation_system.py # Sistema de moderação
-│   │   ├── quality_controller.py # Controle de qualidade
-│   │   └── queue_manager.py    # Gerenciador da fila
-│   ├── scheduler/     # Agendador cron
-│   │   ├── cron_manager.py     # Gerenciador de cron jobs
-│   │   ├── job_scheduler.py    # Agendador de tarefas
-│   │   ├── task_runner.py     # Executor de tarefas
-│   │   └── post_scheduler.py  # Agendador de postagens
-│   ├── dashboard/     # Dashboard interno
-│   └── bot/           # Bot interno
-├── core/               # Componentes principais
-│   ├── models.py      # Modelos de dados (Offer, etc.)
-│   ├── settings.py    # Configurações (.env)
-│   ├── database.py    # Banco de dados SQLite
-│   ├── db_init.py     # Inicialização do banco
-│   ├── affiliate_*.py # Sistema de afiliados
-│   ├── conversion_metrics.py  # Métricas de conversão
-│   ├── failure_alerts.py      # Sistema de alertas
-│   ├── optimization_engine.py # Motor de otimização
-│   ├── performance_logger.py  # Logger de performance
-│   ├── enhanced_metrics.py    # Métricas avançadas
-│   ├── alert_system.py        # Sistema de alertas
-│   ├── analytics_queries.py   # Queries analíticas
-│   ├── cache_config.py        # Configuração de cache
-│   ├── deduplication.py       # Sistema de deduplicação
-│   ├── rate_limiter.py        # Rate limiting
-│   ├── affiliate_cache.py     # Cache de afiliados
-│   ├── offer_pipeline.py      # Pipeline de ofertas
-│   ├── affiliate_converter.py # Conversor de afiliados
-│   ├── matchers.py            # Sistema de matching
-│   ├── metrics.py             # Métricas básicas
-│   ├── platforms.py           # Configurações de plataformas
-│   ├── live_logs.py           # Logs em tempo real
-│   ├── logging_setup.py       # Configuração de logs
-│   ├── storage.py             # Sistema de armazenamento
-│   ├── monitoring/            # Sistema de monitoramento
-│   └── cache/                 # Sistema de cache
-├── pipelines/          # Pipelines de processamento
-│   ├── ingest_offers_api.py   # Ingestão via APIs
-│   ├── enrich_offers_api.py   # Enriquecimento de dados
-│   ├── price_collect.py       # Coleta de preços
-│   ├── price_enrich.py        # Enriquecimento de preços
-│   └── price_aggregate.py     # Agregação de preços
-├── posting/            # Sistema de postagem
-│   ├── message_formatter.py   # Formatação de mensagens
-│   └── posting_manager.py     # Gerenciador de postagens
-├── scrapers/           # Sistema de scrapers
-│   ├── base_scraper.py        # Classe base para scrapers
-│   ├── lojas/                 # Scrapers de lojas
-│   ├── comunidades/           # Scrapers de comunidades
-│   │   ├── promobit/          # Scraper Promobit
-│   │   ├── pelando/           # Scraper Pelando
-│   │   └── meupc/             # Scraper MeuPC
-│   └── precos/                # Scrapers de preços
-│       ├── zoom/              # Scraper Zoom
-│       └── buscape/           # Scraper Buscapé
-├── telegram_bot/       # Bot do Telegram
-│   ├── bot.py                 # Bot principal
-│   ├── bot_manager.py         # Gerenciador do bot
-│   ├── message_builder.py     # Construtor de mensagens
-│   └── notification_manager.py # Gerenciador de notificações
-├── utils/              # Utilitários
-│   ├── anti_bot.py            # Medidas anti-bot
-│   ├── affiliate_validator.py # Validador de URLs
-│   ├── asin_cache.py          # Cache de ASINs
-│   ├── url_utils.py           # Utilitários de URL
-│   └── sqlite_helpers.py      # Helpers para SQLite
-├── diagnostics/        # Sistema de diagnóstico
-│   └── ui_reporter.py         # Relatórios de UI
-├── recommender/        # Sistema de recomendação
-├── db/                 # Banco de dados
-│   ├── garimpeiro_geek.db    # Banco principal
-│   ├── aff_cache.sqlite       # Cache de afiliados
-│   └── analytics.sqlite       # Banco de analytics
-├── logs/               # Logs do sistema
-├── exports/            # Exportações de dados
-└── tests/              # Testes automatizados
-    ├── unit/           # Testes unitários
-    ├── e2e/            # Testes end-to-end
-    ├── api/            # Testes de API
-    ├── helpers/        # Helpers para testes
-    └── data/           # Dados de teste
+â”œâ”€â”€ affiliate/          # Conversores de afiliados
+â”‚   â”œâ”€â”€ amazon.py      # Conversor Amazon (ASIN-first + fallback)
+â”‚   â”œâ”€â”€ mercadolivre.py # Conversor Mercado Livre
+â”‚   â”œâ”€â”€ shopee.py      # Conversor Shopee
+â”‚   â”œâ”€â”€ magazineluiza.py # Conversor Magazine Luiza
+â”‚   â”œâ”€â”€ aliexpress.py  # Conversor AliExpress
+â”‚   â”œâ”€â”€ awin.py        # Conversor Awin
+â”‚   â”œâ”€â”€ rakuten.py     # Conversor Rakuten
+â”‚   â”œâ”€â”€ *_api.py       # Clientes de API oficiais
+â”‚   â””â”€â”€ base_api.py    # Classe base para APIs
+â”œâ”€â”€ app/                # AplicaÃ§Ã£o principal
+â”‚   â”œâ”€â”€ queue/         # Sistema de fila de ofertas
+â”‚   â”‚   â”œâ”€â”€ offer_queue.py      # Fila principal
+â”‚   â”‚   â”œâ”€â”€ moderation_system.py # Sistema de moderaÃ§Ã£o
+â”‚   â”‚   â”œâ”€â”€ quality_controller.py # Controle de qualidade
+â”‚   â”‚   â””â”€â”€ queue_manager.py    # Gerenciador da fila
+â”‚   â”œâ”€â”€ scheduler/     # Agendador cron
+â”‚   â”‚   â”œâ”€â”€ cron_manager.py     # Gerenciador de cron jobs
+â”‚   â”‚   â”œâ”€â”€ job_scheduler.py    # Agendador de tarefas
+â”‚   â”‚   â”œâ”€â”€ task_runner.py     # Executor de tarefas
+â”‚   â”‚   â””â”€â”€ post_scheduler.py  # Agendador de postagens
+â”‚   â”œâ”€â”€ dashboard/     # Dashboard interno
+â”‚   â””â”€â”€ bot/           # Bot interno
+â”œâ”€â”€ core/               # Componentes principais
+â”‚   â”œâ”€â”€ models.py      # Modelos de dados (Offer, etc.)
+â”‚   â”œâ”€â”€ settings.py    # ConfiguraÃ§Ãµes (.env)
+â”‚   â”œâ”€â”€ database.py    # Banco de dados SQLite
+â”‚   â”œâ”€â”€ db_init.py     # InicializaÃ§Ã£o do banco
+â”‚   â”œâ”€â”€ affiliate_*.py # Sistema de afiliados
+â”‚   â”œâ”€â”€ conversion_metrics.py  # MÃ©tricas de conversÃ£o
+â”‚   â”œâ”€â”€ failure_alerts.py      # Sistema de alertas
+â”‚   â”œâ”€â”€ optimization_engine.py # Motor de otimizaÃ§Ã£o
+â”‚   â”œâ”€â”€ performance_logger.py  # Logger de performance
+â”‚   â”œâ”€â”€ enhanced_metrics.py    # MÃ©tricas avanÃ§adas
+â”‚   â”œâ”€â”€ alert_system.py        # Sistema de alertas
+â”‚   â”œâ”€â”€ analytics_queries.py   # Queries analÃ­ticas
+â”‚   â”œâ”€â”€ cache_config.py        # ConfiguraÃ§Ã£o de cache
+â”‚   â”œâ”€â”€ deduplication.py       # Sistema de deduplicaÃ§Ã£o
+â”‚   â”œâ”€â”€ rate_limiter.py        # Rate limiting
+â”‚   â”œâ”€â”€ affiliate_cache.py     # Cache de afiliados
+â”‚   â”œâ”€â”€ offer_pipeline.py      # Pipeline de ofertas
+â”‚   â”œâ”€â”€ affiliate_converter.py # Conversor de afiliados
+â”‚   â”œâ”€â”€ matchers.py            # Sistema de matching
+â”‚   â”œâ”€â”€ metrics.py             # MÃ©tricas bÃ¡sicas
+â”‚   â”œâ”€â”€ platforms.py           # ConfiguraÃ§Ãµes de plataformas
+â”‚   â”œâ”€â”€ live_logs.py           # Logs em tempo real
+â”‚   â”œâ”€â”€ logging_setup.py       # ConfiguraÃ§Ã£o de logs
+â”‚   â”œâ”€â”€ storage.py             # Sistema de armazenamento
+â”‚   â”œâ”€â”€ monitoring/            # Sistema de monitoramento
+â”‚   â””â”€â”€ cache/                 # Sistema de cache
+â”œâ”€â”€ pipelines/          # Pipelines de processamento
+â”‚   â”œâ”€â”€ ingest_offers_api.py   # IngestÃ£o via APIs
+â”‚   â”œâ”€â”€ enrich_offers_api.py   # Enriquecimento de dados
+â”‚   â”œâ”€â”€ price_collect.py       # Coleta de preÃ§os
+â”‚   â”œâ”€â”€ price_enrich.py        # Enriquecimento de preÃ§os
+â”‚   â””â”€â”€ price_aggregate.py     # AgregaÃ§Ã£o de preÃ§os
+â”œâ”€â”€ posting/            # Sistema de postagem
+â”‚   â”œâ”€â”€ message_formatter.py   # FormataÃ§Ã£o de mensagens
+â”‚   â””â”€â”€ posting_manager.py     # Gerenciador de postagens
+â”œâ”€â”€ scrapers/           # Sistema de scrapers
+â”‚   â”œâ”€â”€ base_scraper.py        # Classe base para scrapers
+â”‚   â”œâ”€â”€ lojas/                 # Scrapers de lojas
+â”‚   â”œâ”€â”€ comunidades/           # Scrapers de comunidades
+â”‚   â”‚   â”œâ”€â”€ promobit/          # Scraper Promobit
+â”‚   â”‚   â”œâ”€â”€ pelando/           # Scraper Pelando
+â”‚   â”‚   â””â”€â”€ meupc/             # Scraper MeuPC
+â”‚   â””â”€â”€ precos/                # Scrapers de preÃ§os
+â”‚       â”œâ”€â”€ zoom/              # Scraper Zoom
+â”‚       â””â”€â”€ buscape/           # Scraper BuscapÃ©
+â”œâ”€â”€ telegram_bot/       # Bot do Telegram
+â”‚   â”œâ”€â”€ bot.py                 # Bot principal
+â”‚   â”œâ”€â”€ bot_manager.py         # Gerenciador do bot
+â”‚   â”œâ”€â”€ message_builder.py     # Construtor de mensagens
+â”‚   â””â”€â”€ notification_manager.py # Gerenciador de notificaÃ§Ãµes
+â”œâ”€â”€ utils/              # UtilitÃ¡rios
+â”‚   â”œâ”€â”€ anti_bot.py            # Medidas anti-bot
+â”‚   â”œâ”€â”€ affiliate_validator.py # Validador de URLs
+â”‚   â”œâ”€â”€ asin_cache.py          # Cache de ASINs
+â”‚   â”œâ”€â”€ url_utils.py           # UtilitÃ¡rios de URL
+â”‚   â””â”€â”€ sqlite_helpers.py      # Helpers para SQLite
+â”œâ”€â”€ diagnostics/        # Sistema de diagnÃ³stico
+â”‚   â””â”€â”€ ui_reporter.py         # RelatÃ³rios de UI
+â”œâ”€â”€ recommender/        # Sistema de recomendaÃ§Ã£o
+â”œâ”€â”€ db/                 # Banco de dados
+â”‚   â”œâ”€â”€ garimpeiro_geek.db    # Banco principal
+â”‚   â”œâ”€â”€ aff_cache.sqlite       # Cache de afiliados
+â”‚   â””â”€â”€ analytics.sqlite       # Banco de analytics
+â”œâ”€â”€ logs/               # Logs do sistema
+â”œâ”€â”€ exports/            # ExportaÃ§Ãµes de dados
+â””â”€â”€ tests/              # Testes automatizados
+    â”œâ”€â”€ unit/           # Testes unitÃ¡rios
+    â”œâ”€â”€ e2e/            # Testes end-to-end
+    â”œâ”€â”€ api/            # Testes de API
+    â”œâ”€â”€ helpers/        # Helpers para testes
+    â””â”€â”€ data/           # Dados de teste
 
 apps/
-└── flet_dashboard/     # Dashboard Flet
-    ├── main.py         # Aplicação principal
-    ├── ui_components.py # Componentes de UI
-    └── run_dashboard.py # Script de execução
+â””â”€â”€ flet_dashboard/     # Dashboard Flet
+    â”œâ”€â”€ main.py         # AplicaÃ§Ã£o principal
+    â”œâ”€â”€ ui_components.py # Componentes de UI
+    â””â”€â”€ run_dashboard.py # Script de execuÃ§Ã£o
 ```
 
-## 🚀 Instalação
+## ðŸš€ InstalaÃ§Ã£o
 
-### Pré-requisitos
+### PrÃ©-requisitos
 - Python 3.9+
-- Redis 5.0+ (opcional, com fallback em memória)
+- Redis 5.0+ (opcional, com fallback em memÃ³ria)
 - Git
 
-### 1. Clone o repositório
+### 1. Clone o repositÃ³rio
 ```bash
 git clone https://github.com/duduzinho15/Ainda-nao-funciona.git
 cd Sistema-de-Recomendacoes-de-Ofertas-Telegram2.0
 ```
 
-### 2. Instale as dependências
+### 2. Instale as dependÃªncias
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure as variáveis de ambiente
+### 3. Configure as variÃ¡veis de ambiente
 ```bash
 cp config/env.example .env
-# Edite o arquivo .env com suas configurações
+# Edite o arquivo .env com suas configuraÃ§Ãµes
 ```
 
 ### 4. Configure o Redis (opcional)
 ```bash
-# Para desenvolvimento, o sistema usa cache em memória
-# Para produção, configure Redis conforme config/redis.production.conf
+# Para desenvolvimento, o sistema usa cache em memÃ³ria
+# Para produÃ§Ã£o, configure Redis conforme config/redis.production.conf
 ```
 
-### 5. Ative o Sistema Automático
+### 5. Ative o Sistema AutomÃ¡tico
 ```bash
 # Testar o sistema
 python test_auto_system.py
 
-# Executar demonstração
+# Executar demonstraÃ§Ã£o
 python demo_telegram_posting.py
 
-# Ativar em produção
+# Ativar em produÃ§Ã£o
 python start_production_system.py
 
 # Para parar: Ctrl+C
 ```
 
-## ⚙️ Configuração
+## âš™ï¸� ConfiguraÃ§Ã£o
 
-### Variáveis de Ambiente (.env)
+### VariÃ¡veis de Ambiente (.env)
 ```bash
 # ========================================
 # TELEGRAM
@@ -407,31 +436,31 @@ RATE_LIMIT_ENABLED=true
 BACKUP_ENABLED=true
 ```
 
-## 🧪 Testes
+## ðŸ§ª Testes
 
 ### Executar todos os testes
 ```bash
 make test
 ```
 
-### Testes unitários
+### Testes unitÃ¡rios
 ```bash
 make test-unit
 ```
 
-### Testes de integração
+### Testes de integraÃ§Ã£o
 ```bash
 make test-e2e
 ```
 
-### Linting e formatação
+### Linting e formataÃ§Ã£o
 ```bash
-make format      # Formatação com Black + Ruff
+make format      # FormataÃ§Ã£o com Black + Ruff
 make lint        # Linting com Ruff
-make type-check  # Verificação de tipos com MyPy
+make type-check  # VerificaÃ§Ã£o de tipos com MyPy
 ```
 
-### Testes específicos
+### Testes especÃ­ficos
 ```bash
 # Testar sistema de afiliados
 pytest tests/unit/test_affiliate_system.py
@@ -446,7 +475,7 @@ pytest tests/unit/test_scheduler.py
 pytest tests/unit/test_scrapers/
 ```
 
-## 🧪 Testes e Validações
+## ðŸ§ª Testes e ValidaÃ§Ãµes
 
 ### Executando Testes
 
@@ -454,52 +483,52 @@ pytest tests/unit/test_scrapers/
 # Rodar todos os testes
 make test-all
 
-# Apenas testes unitários
+# Apenas testes unitÃ¡rios
 make test-unit
 
 # Apenas testes E2E
 make test-e2e
 
-# Verificar formatação e estilo
+# Verificar formataÃ§Ã£o e estilo
 make lint
 
 # Verificar tipos
 make typecheck
 ```
 
-### Regras de Validação por Plataforma
+### Regras de ValidaÃ§Ã£o por Plataforma
 
 #### Amazon
-- ✅ URLs devem conter ASIN válido (B seguido de 9 caracteres alfanuméricos)
-- ✅ Tag de afiliado obrigatória: `tag=garimpeirogee-20`
-- ❌ Bloquear URLs sem ASIN
+- âœ… URLs devem conter ASIN vÃ¡lido (B seguido de 9 caracteres alfanumÃ©ricos)
+- âœ… Tag de afiliado obrigatÃ³ria: `tag=garimpeirogee-20`
+- â�Œ Bloquear URLs sem ASIN
 
 #### Awin
-- ✅ MID permitidos: 23377, 51277, 33061, 17729, 106765, 25539
-- ✅ AFFID permitidos: 2370719, 2510157
-- ❌ Bloquear URLs com parâmetros inválidos
+- âœ… MID permitidos: 23377, 51277, 33061, 17729, 106765, 25539
+- âœ… AFFID permitidos: 2370719, 2510157
+- â�Œ Bloquear URLs com parÃ¢metros invÃ¡lidos
 
 #### Shopee
-- ✅ Apenas shortlinks: `s.shopee.com.br`
-- ❌ Bloquear URLs completas
-- ❌ Bloquear categorias não permitidas
+- âœ… Apenas shortlinks: `s.shopee.com.br`
+- â�Œ Bloquear URLs completas
+- â�Œ Bloquear categorias nÃ£o permitidas
 
 #### AliExpress
-- ✅ Apenas shortlinks: `s.click.aliexpress.com/e/`
-- ✅ Exigir `tracking_id=telegram`
-- ❌ Bloquear URLs diretas
+- âœ… Apenas shortlinks: `s.click.aliexpress.com/e/`
+- âœ… Exigir `tracking_id=telegram`
+- â�Œ Bloquear URLs diretas
 
 #### Mercado Livre
-- ✅ Apenas URLs sociais e shortlinks
-- ❌ Bloquear URLs de produto diretas
+- âœ… Apenas URLs sociais e shortlinks
+- â�Œ Bloquear URLs de produto diretas
 
 #### Magazine Luiza
-- ✅ Apenas vitrine: `magazinevoce.com.br/magazinegarimpeirogeek`
-- ❌ Bloquear `magazineluiza.com.br`
+- âœ… Apenas vitrine: `magazinevoce.com.br/magazinegarimpeirogeek`
+- â�Œ Bloquear `magazineluiza.com.br`
 
 ### Modo DRY_RUN
 
-Para testar sem publicar ofertas, use a variável de ambiente:
+Para testar sem publicar ofertas, use a variÃ¡vel de ambiente:
 
 ```bash
 # No Windows
@@ -511,7 +540,7 @@ export DRY_RUN=1
 python -m src.app.main
 ```
 
-## 🚀 Execução
+## ðŸš€ ExecuÃ§Ã£o
 
 ### 1. Executar o sistema principal
 ```bash
@@ -528,64 +557,64 @@ python -m src.telegram_bot.bot
 python apps/flet_dashboard/run_dashboard.py
 ```
 
-### 4. Executar scrapers específicos
+### 4. Executar scrapers especÃ­ficos
 ```bash
 # Scraper Promobit
 python -m src.scrapers.comunidades.promobit
 
-# Scraper de preços Zoom
+# Scraper de preÃ§os Zoom
 python -m src.scrapers.precos.zoom
 ```
 
 ### 5. Executar pipelines
 ```bash
-# Pipeline de ingestão
+# Pipeline de ingestÃ£o
 python -m src.pipelines.ingest_offers_api
 
 # Pipeline de enriquecimento
 python -m src.pipelines.enrich_offers_api
 ```
 
-### 6. Executar demonstrações dos sistemas
+### 6. Executar demonstraÃ§Ãµes dos sistemas
 ```bash
-# Demonstração do sistema de testes em produção
+# DemonstraÃ§Ã£o do sistema de testes em produÃ§Ã£o
 python demo_production_testing.py
 
-# Demonstração do sistema de monitoramento de conversão
+# DemonstraÃ§Ã£o do sistema de monitoramento de conversÃ£o
 python demo_conversion_monitoring.py
 
-# Demonstração do sistema de feedback dos usuários
+# DemonstraÃ§Ã£o do sistema de feedback dos usuÃ¡rios
 python demo_user_feedback.py
 
-# Demonstração do sistema de expansão de categorias
+# DemonstraÃ§Ã£o do sistema de expansÃ£o de categorias
 python demo_category_expansion.py
 
-# Teste rápido do sistema de expansão de categorias
+# Teste rÃ¡pido do sistema de expansÃ£o de categorias
 python demo_category_expansion.py quick
 
-# Demonstração do sistema de IA para otimização
+# DemonstraÃ§Ã£o do sistema de IA para otimizaÃ§Ã£o
 python demo_ai_optimization.py
 
-# Teste rápido do sistema de IA para otimização
+# Teste rÃ¡pido do sistema de IA para otimizaÃ§Ã£o
 python demo_ai_optimization.py quick
 
 # Sistema Unificado de Dashboard
 python demo_unified_dashboard.py
 
-# Teste rápido do sistema unificado
+# Teste rÃ¡pido do sistema unificado
 python demo_unified_dashboard.py quick
 
-# Testes de Performance Avançados
+# Testes de Performance AvanÃ§ados
 python demo_performance_tests.py full
 
-# Teste rápido de performance
+# Teste rÃ¡pido de performance
 python demo_performance_tests.py quick
 
-# Integração com Afiliados
+# IntegraÃ§Ã£o com Afiliados
 python demo_affiliate_integration.py full
 python demo_affiliate_integration.py quick
 
-# Métricas Avançadas
+# MÃ©tricas AvanÃ§adas
 python demo_advanced_metrics.py quick
 python demo_advanced_metrics.py full
 python demo_advanced_metrics.py dashboard
@@ -596,60 +625,60 @@ python demo_deep_learning.py full
 python demo_deep_learning.py dashboard
 ```
 
-## 📊 Monitoramento
+## ðŸ“Š Monitoramento
 
 ### Dashboard Flet
 Acesse o dashboard em tempo real para monitorar:
 
-#### **📊 Tabs Disponíveis**
-- **Visão Geral**: KPIs principais e alertas do sistema
-- **Amazon ASIN**: Qualidade de normalização e estratégias de extração
-- **🛒 Mercado Livre**: Métricas específicas de qualidade, performance e receita
-- **Afiliação**: Monitoramento de links afiliados e receita
-- **Performance**: Latência de deeplinks e freshness de preços
-- **Alertas**: Sistema de notificações e problemas detectados
-- **Controles**: Gerenciamento de plataformas e configurações
+#### **ðŸ“Š Tabs DisponÃ­veis**
+- **VisÃ£o Geral**: KPIs principais e alertas do sistema
+- **Amazon ASIN**: Qualidade de normalizaÃ§Ã£o e estratÃ©gias de extraÃ§Ã£o
+- **ðŸ›’ Mercado Livre**: MÃ©tricas especÃ­ficas de qualidade, performance e receita
+- **AfiliaÃ§Ã£o**: Monitoramento de links afiliados e receita
+- **Performance**: LatÃªncia de deeplinks e freshness de preÃ§os
+- **Alertas**: Sistema de notificaÃ§Ãµes e problemas detectados
+- **Controles**: Gerenciamento de plataformas e configuraÃ§Ãµes
 
-#### **🛒 Aba Mercado Livre - Funcionalidades**
+#### **ðŸ›’ Aba Mercado Livre - Funcionalidades**
 - **Qualidade dos Links**: Shortlinks, links sociais e diretos
-- **Score de Qualidade**: Baseado em tipos de link (shortlinks têm peso maior)
-- **Performance**: Taxa de conversão e latência média
-- **Receita**: Total de receita e ticket médio por transação
-- **Gráficos**: Distribuição de tipos de link e taxa de conversão
-- **Alertas**: Notificações para qualidade < 70% e conversão < 80%
+- **Score de Qualidade**: Baseado em tipos de link (shortlinks tÃªm peso maior)
+- **Performance**: Taxa de conversÃ£o e latÃªncia mÃ©dia
+- **Receita**: Total de receita e ticket mÃ©dio por transaÃ§Ã£o
+- **GrÃ¡ficos**: DistribuiÃ§Ã£o de tipos de link e taxa de conversÃ£o
+- **Alertas**: NotificaÃ§Ãµes para qualidade < 70% e conversÃ£o < 80%
 
-#### **🔧 Aba Moderação ML - Sistema Completo de Workflow**
-- **Scraping Automático**: Coleta ofertas das melhores categorias (smartphones, notebooks, smart-tvs, consoles)
-- **Filtros de Qualidade**: Desconto mínimo 10%, preço máximo R$ 5.000, avaliação mínima 4.0
-- **Moderação Manual**: Interface para converter links para afiliados via dashboard
-- **Validação Automática**: Verificação de URLs de afiliado (shortlinks e links sociais)
-- **Pipeline Integrado**: Fluxo completo desde scraping até postagem no Telegram
+#### **ðŸ”§ Aba ModeraÃ§Ã£o ML - Sistema Completo de Workflow**
+- **Scraping AutomÃ¡tico**: Coleta ofertas das melhores categorias (smartphones, notebooks, smart-tvs, consoles)
+- **Filtros de Qualidade**: Desconto mÃ­nimo 10%, preÃ§o mÃ¡ximo R$ 5.000, avaliaÃ§Ã£o mÃ­nima 4.0
+- **ModeraÃ§Ã£o Manual**: Interface para converter links para afiliados via dashboard
+- **ValidaÃ§Ã£o AutomÃ¡tica**: VerificaÃ§Ã£o de URLs de afiliado (shortlinks e links sociais)
+- **Pipeline Integrado**: Fluxo completo desde scraping atÃ© postagem no Telegram
 - **Controle de Status**: Acompanhamento de tarefas pendentes, aprovadas e prontas para postagem
 
-### Métricas Disponíveis
-- **Conversões**: Total, sucesso, falha por plataforma
+### MÃ©tricas DisponÃ­veis
+- **ConversÃµes**: Total, sucesso, falha por plataforma
 - **Performance**: Tempo de resposta, cache hits/misses
-- **Qualidade**: Score das ofertas, taxa de aprovação
-- **Sistema**: Uso de memória, conexões, uptime
+- **Qualidade**: Score das ofertas, taxa de aprovaÃ§Ã£o
+- **Sistema**: Uso de memÃ³ria, conexÃµes, uptime
 - **Scrapers**: Taxa de sucesso, erros, performance
 
 ### Logs Estruturados
-- Logs de aplicação em `src/logs/`
-- Logs de performance e métricas
+- Logs de aplicaÃ§Ã£o em `src/logs/`
+- Logs de performance e mÃ©tricas
 - Logs de erros e alertas
-- Logs de auditoria e segurança
+- Logs de auditoria e seguranÃ§a
 
-## 🔧 Desenvolvimento
+## ðŸ”§ Desenvolvimento
 
-### Formatação de Código
+### FormataÃ§Ã£o de CÃ³digo
 ```bash
-# Formatação automática
+# FormataÃ§Ã£o automÃ¡tica
 make format
 
 # Linting
 make lint
 
-# Verificação de tipos
+# VerificaÃ§Ã£o de tipos
 make type-check
 
 # Limpeza
@@ -657,37 +686,37 @@ make clean
 ```
 
 ### Estrutura de Commits
-Seguimos o padrão [Conventional Commits](https://www.conventionalcommits.org/):
+Seguimos o padrÃ£o [Conventional Commits](https://www.conventionalcommits.org/):
 - `feat:` Nova funcionalidade
-- `fix:` Correção de bug
-- `docs:` Documentação
-- `style:` Formatação
-- `refactor:` Refatoração
+- `fix:` CorreÃ§Ã£o de bug
+- `docs:` DocumentaÃ§Ã£o
+- `style:` FormataÃ§Ã£o
+- `refactor:` RefatoraÃ§Ã£o
 - `test:` Testes
-- `chore:` Manutenção
+- `chore:` ManutenÃ§Ã£o
 
-### Padrões de Código
-- **Type hints** obrigatórios em todas as funções públicas
+### PadrÃµes de CÃ³digo
+- **Type hints** obrigatÃ³rios em todas as funÃ§Ãµes pÃºblicas
 - **Docstrings** claras e objetivas
 - **Logs estruturados** com contexto
 - **Tratamento de erros** robusto
-- **Testes unitários** para todas as funcionalidades
+- **Testes unitÃ¡rios** para todas as funcionalidades
 - **Imports absolutos** a partir de `src/`
 
-## 📚 Documentação
+## ðŸ“š DocumentaÃ§Ã£o
 
-- [📋 TODO Unificado](TODO.md) - Roadmap completo do projeto
-- [🔧 Especificações Técnicas](docs/ESPECIFICACAO_GARIMPEIRO_GEEK_COM_RAKUTEN.md)
-- [🤖 Documentação do Bot](docs/telegram_bot.md)
-- [🔗 APIs de Integração](docs/apis_integracao.md)
-- [📊 Exemplos de Afiliados](docs/affiliate_examples.md)
-- [📊 Dados Históricos](docs/dados_historico_precos.md)
+- [ðŸ“‹ TODO Unificado](TODO.md) - Roadmap completo do projeto
+- [ðŸ”§ EspecificaÃ§Ãµes TÃ©cnicas](docs/ESPECIFICACAO_GARIMPEIRO_GEEK_COM_RAKUTEN.md)
+- [ðŸ¤– DocumentaÃ§Ã£o do Bot](docs/telegram_bot.md)
+- [ðŸ”— APIs de IntegraÃ§Ã£o](docs/apis_integracao.md)
+- [ðŸ“Š Exemplos de Afiliados](docs/affiliate_examples.md)
+- [ðŸ“Š Dados HistÃ³ricos](docs/dados_historico_precos.md)
 
-## 🤝 Contribuição
+## ðŸ¤� ContribuiÃ§Ã£o
 
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'feat: Add some AmazingFeature'`)
+3. Commit suas mudanÃ§as (`git commit -m 'feat: Add some AmazingFeature'`)
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
@@ -697,210 +726,210 @@ Seguimos o padrão [Conventional Commits](https://www.conventionalcommits.org/):
 make format && make lint && make type-check && make test
 
 # Verificar cobertura de testes
-make test  # Inclui relatório de cobertura
+make test  # Inclui relatÃ³rio de cobertura
 ```
 
-## 📄 Licença
+## ðŸ“„ LicenÃ§a
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto estÃ¡ sob a licenÃ§a MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 🆘 Suporte
+## ðŸ†˜ Suporte
 
-Para suporte e dúvidas:
+Para suporte e dÃºvidas:
 - Abra uma [Issue](https://github.com/duduzinho15/Ainda-nao-funciona/issues)
-- Consulte a [documentação](docs/)
+- Consulte a [documentaÃ§Ã£o](docs/)
 - Verifique os [exemplos](tests/)
 - Consulte o [TODO.md](TODO.md) para roadmap
 
-## 🎯 Roadmap
+## ðŸŽ¯ Roadmap
 
-### ✅ Implementado
+### âœ… Implementado
 - [x] Sistema de afiliados completo
 - [x] Bot do Telegram funcional
-- [x] Sistema de fila e moderação
+- [x] Sistema de fila e moderaÃ§Ã£o
 - [x] Pipelines de processamento
 - [x] Scrapers organizados
 - [x] Dashboard Flet
 - [x] Sistema de monitoramento
 
-### ✅ Recentemente Implementado
+### âœ… Recentemente Implementado
 - [x] Testes E2E completos
-- [x] Sistema de postagem automática
-- [x] Otimizações de performance
-- [x] Análise completa do projeto
+- [x] Sistema de postagem automÃ¡tica
+- [x] OtimizaÃ§Ãµes de performance
+- [x] AnÃ¡lise completa do projeto
 - [x] Gigantec BR integrada ao Awin
 - [x] Sistema 100% funcional
 - [x] **Tokens Rakuten implementados** (Web Service + Security)
 - [x] **Tokens Shopee implementados** (App ID + Secret)
 - [x] **APIs Rakuten e Shopee habilitadas e funcionais**
-- [x] **🛒 Aba Mercado Livre implementada no Dashboard** (Métricas específicas, qualidade de links, performance e receita)
-- [x] **🔧 Sistema Completo de Moderação Manual do Mercado Livre** (Scraping automático, conversão manual via dashboard, postagem automática)
-- [x] **🎯 Sistema de Priorização Geek Completo** (Algoritmo de score, alertas, comandos Telegram, dashboard Flet)
-- [x] **📊 Sistema de Teste em Produção** (Pipeline de dados reais, monitor de performance, validador do sistema)
-- [x] **📈 Sistema de Monitoramento de Conversão Geek vs Geral** (Rastreamento, análise, dashboard, relatórios)
-- [x] **🔄 Sistema de Feedback dos Usuários** (Coleta, análise, ajuste automático de scores, dashboard interativo)
-- [x] **📈 Sistema de Expansão de Categorias** (Análise de tendências, pesquisa de mercado, expansão automática, otimização)
-- [x] **🤖 Sistema de IA para Otimização Automática** (Machine Learning, predição de scores, otimização automática, dashboard interativo)
-- [x] **🎛️ Sistema Unificado de Dashboard** (Integração completa de todos os sistemas, métricas consolidadas, controle centralizado)
-- [x] **🔗 Sistema de Integração com Afiliados Reais** (APIs oficiais, validação de links, múltiplas redes, dashboard dedicado)
-- [x] **📊 Sistema de Métricas Avançadas** (Análise temporal, segmentação demográfica, sazonalidade, engajamento, insights preditivos)
-- [x] **🤖 Sistema de Deep Learning** (Redes neurais avançadas, predições inteligentes, otimização automática de priorização)
+- [x] **ðŸ›’ Aba Mercado Livre implementada no Dashboard** (MÃ©tricas especÃ­ficas, qualidade de links, performance e receita)
+- [x] **ðŸ”§ Sistema Completo de ModeraÃ§Ã£o Manual do Mercado Livre** (Scraping automÃ¡tico, conversÃ£o manual via dashboard, postagem automÃ¡tica)
+- [x] **ðŸŽ¯ Sistema de PriorizaÃ§Ã£o Geek Completo** (Algoritmo de score, alertas, comandos Telegram, dashboard Flet)
+- [x] **ðŸ“Š Sistema de Teste em ProduÃ§Ã£o** (Pipeline de dados reais, monitor de performance, validador do sistema)
+- [x] **ðŸ“ˆ Sistema de Monitoramento de ConversÃ£o Geek vs Geral** (Rastreamento, anÃ¡lise, dashboard, relatÃ³rios)
+- [x] **ðŸ”„ Sistema de Feedback dos UsuÃ¡rios** (Coleta, anÃ¡lise, ajuste automÃ¡tico de scores, dashboard interativo)
+- [x] **ðŸ“ˆ Sistema de ExpansÃ£o de Categorias** (AnÃ¡lise de tendÃªncias, pesquisa de mercado, expansÃ£o automÃ¡tica, otimizaÃ§Ã£o)
+- [x] **ðŸ¤– Sistema de IA para OtimizaÃ§Ã£o AutomÃ¡tica** (Machine Learning, prediÃ§Ã£o de scores, otimizaÃ§Ã£o automÃ¡tica, dashboard interativo)
+- [x] **ðŸŽ›ï¸� Sistema Unificado de Dashboard** (IntegraÃ§Ã£o completa de todos os sistemas, mÃ©tricas consolidadas, controle centralizado)
+- [x] **ðŸ”— Sistema de IntegraÃ§Ã£o com Afiliados Reais** (APIs oficiais, validaÃ§Ã£o de links, mÃºltiplas redes, dashboard dedicado)
+- [x] **ðŸ“Š Sistema de MÃ©tricas AvanÃ§adas** (AnÃ¡lise temporal, segmentaÃ§Ã£o demogrÃ¡fica, sazonalidade, engajamento, insights preditivos)
+- [x] **ðŸ¤– Sistema de Deep Learning** (Redes neurais avanÃ§adas, prediÃ§Ãµes inteligentes, otimizaÃ§Ã£o automÃ¡tica de priorizaÃ§Ã£o)
 
-### **🤖 Sistema de IA para Otimização Automática de Priorização**
+### **ðŸ¤– Sistema de IA para OtimizaÃ§Ã£o AutomÃ¡tica de PriorizaÃ§Ã£o**
 - **AIOptimizer**: Otimizador principal que coordena todo o sistema de IA
-- **DataCollector**: Coleta dados históricos e features para treinamento dos modelos
+- **DataCollector**: Coleta dados histÃ³ricos e features para treinamento dos modelos
 - **ModelTrainer**: Treina modelos de machine learning (Random Forest, Gradient Boosting, Linear Regression)
-- **PredictionEngine**: Motor de predição que otimiza scores baseado em dados históricos
+- **PredictionEngine**: Motor de prediÃ§Ã£o que otimiza scores baseado em dados histÃ³ricos
 - **OptimizationDashboard**: Interface interativa para monitorar e controlar o sistema
-- **Features Inteligentes**: Preço, score geek, taxa de conversão, engajamento, horário, estação, reputação da loja
-- **Modelos de IA**: 3 algoritmos diferentes com métricas de performance (R², MSE, MAE, Cross-Validation)
+- **Features Inteligentes**: PreÃ§o, score geek, taxa de conversÃ£o, engajamento, horÃ¡rio, estaÃ§Ã£o, reputaÃ§Ã£o da loja
+- **Modelos de IA**: 3 algoritmos diferentes com mÃ©tricas de performance (RÂ², MSE, MAE, Cross-Validation)
 - **Auto-retreinamento**: Sistema que retreina modelos automaticamente baseado em novos dados
-- **Confiança e Insights**: Análise de confiança das predições e fatores-chave que influenciam os scores
-- **Otimização em Lote**: Processamento eficiente de múltiplas ofertas simultaneamente
-- **Histórico Completo**: Tracking de todas as otimizações realizadas pelo sistema
+- **ConfianÃ§a e Insights**: AnÃ¡lise de confianÃ§a das prediÃ§Ãµes e fatores-chave que influenciam os scores
+- **OtimizaÃ§Ã£o em Lote**: Processamento eficiente de mÃºltiplas ofertas simultaneamente
+- **HistÃ³rico Completo**: Tracking de todas as otimizaÃ§Ãµes realizadas pelo sistema
 
-### **🧪 Sistema de Testes de Performance Avançados**
+### **ðŸ§ª Sistema de Testes de Performance AvanÃ§ados**
 
-Sistema completo de testes de stress, carga, concorrência, memória, rede e benchmark para validar a performance do sistema em diferentes cenários.
+Sistema completo de testes de stress, carga, concorrÃªncia, memÃ³ria, rede e benchmark para validar a performance do sistema em diferentes cenÃ¡rios.
 
 #### **Componentes Implementados:**
 
-1. **📊 Performance Monitor** (`src/tests/performance/performance_monitor.py`)
-   - Monitoramento em tempo real de CPU, memória, disco e rede
+1. **ðŸ“Š Performance Monitor** (`src/tests/performance/performance_monitor.py`)
+   - Monitoramento em tempo real de CPU, memÃ³ria, disco e rede
    - Registro de tempos de resposta
-   - Alertas configuráveis para thresholds
+   - Alertas configurÃ¡veis para thresholds
 
-2. **⚡ Stress Tester** (`src/tests/performance/stress_tester.py`)
+2. **âš¡ Stress Tester** (`src/tests/performance/stress_tester.py`)
    - Testes de stress com ramp-up/down
-   - Usuários concorrentes configuráveis
-   - Cenários simulados (scraping, processing, posting, validation)
+   - UsuÃ¡rios concorrentes configurÃ¡veis
+   - CenÃ¡rios simulados (scraping, processing, posting, validation)
 
-3. **📈 Load Generator** (`src/tests/performance/load_generator.py`)
+3. **ðŸ“ˆ Load Generator** (`src/tests/performance/load_generator.py`)
    - Testes de carga progressiva
-   - Aumento gradual de usuários
-   - Métricas de throughput e latência
+   - Aumento gradual de usuÃ¡rios
+   - MÃ©tricas de throughput e latÃªncia
 
-4. **🔄 Concurrency Tester** (`src/tests/performance/concurrency_tester.py`)
-   - Testes de concorrência com ThreadPoolExecutor
-   - Tarefas distribuídas por peso
-   - Análise de deadlocks e race conditions
+4. **ðŸ”„ Concurrency Tester** (`src/tests/performance/concurrency_tester.py`)
+   - Testes de concorrÃªncia com ThreadPoolExecutor
+   - Tarefas distribuÃ­das por peso
+   - AnÃ¡lise de deadlocks e race conditions
 
-5. **💾 Memory Profiler** (`src/tests/performance/memory_profiler.py`)
-   - Monitoramento de uso de memória
-   - Detecção de vazamentos com tracemalloc
-   - Forçar garbage collection
+5. **ðŸ’¾ Memory Profiler** (`src/tests/performance/memory_profiler.py`)
+   - Monitoramento de uso de memÃ³ria
+   - DetecÃ§Ã£o de vazamentos com tracemalloc
+   - ForÃ§ar garbage collection
 
-6. **🌐 Network Simulator** (`src/tests/performance/network_simulator.py`)
-   - Simulação de condições de rede (latência, jitter, packet loss)
-   - Interceptação de chamadas socket
+6. **ðŸŒ� Network Simulator** (`src/tests/performance/network_simulator.py`)
+   - SimulaÃ§Ã£o de condiÃ§Ãµes de rede (latÃªncia, jitter, packet loss)
+   - InterceptaÃ§Ã£o de chamadas socket
    - Testes de conectividade
 
-7. **⚡ Benchmark Runner** (`src/tests/performance/benchmark_runner.py`)
-   - Benchmarks específicos para funções
+7. **âš¡ Benchmark Runner** (`src/tests/performance/benchmark_runner.py`)
+   - Benchmarks especÃ­ficos para funÃ§Ãµes
    - Profiling de CPU com cProfile
-   - Métricas de performance detalhadas
+   - MÃ©tricas de performance detalhadas
 
 #### **Como Usar:**
 
 ```bash
-# Demonstração rápida
+# DemonstraÃ§Ã£o rÃ¡pida
 python demo_performance_tests.py quick
 
-# Demonstração completa
+# DemonstraÃ§Ã£o completa
 python demo_performance_tests.py full
 ```
 
-#### **Métricas Coletadas:**
+#### **MÃ©tricas Coletadas:**
 - Throughput (RPS - Requests Per Second)
-- Tempo médio de resposta
+- Tempo mÃ©dio de resposta
 - Taxa de erro
-- Uso de CPU e memória
-- Vazamentos de memória
-- Latência de rede
+- Uso de CPU e memÃ³ria
+- Vazamentos de memÃ³ria
+- LatÃªncia de rede
 - Performance de benchmarks
 
 ---
 
-### **🔗 Sistema de Integração com Afiliados Reais**
+### **ðŸ”— Sistema de IntegraÃ§Ã£o com Afiliados Reais**
 
-Sistema completo para integração com redes de afiliados reais, incluindo APIs oficiais, validação de links e monitoramento de métricas.
+Sistema completo para integraÃ§Ã£o com redes de afiliados reais, incluindo APIs oficiais, validaÃ§Ã£o de links e monitoramento de mÃ©tricas.
 
 #### **Componentes Principais:**
 
 1. **AffiliateIntegrationManager** (`src/core/affiliate_integration.py`)
    - Gerenciamento centralizado de redes de afiliados
-   - Configuração de APIs oficiais
-   - Validação de links em lote
+   - ConfiguraÃ§Ã£o de APIs oficiais
+   - ValidaÃ§Ã£o de links em lote
    - Armazenamento em banco SQLite
-   - Métricas de performance
+   - MÃ©tricas de performance
 
 2. **AffiliateLinkValidator** (`src/core/affiliate_integration.py`)
-   - Validação automática de links de afiliado
-   - Detecção de rede por URL
-   - Cache de validações
+   - ValidaÃ§Ã£o automÃ¡tica de links de afiliado
+   - DetecÃ§Ã£o de rede por URL
+   - Cache de validaÃ§Ãµes
    - Teste de acessibilidade
    - Rate limiting inteligente
 
 3. **AffiliateAPIClient** (`src/core/affiliate_integration.py`)
    - Cliente base para APIs de afiliados
-   - Rate limiting automático
+   - Rate limiting automÃ¡tico
    - Retry com backoff exponencial
    - Tratamento de erros robusto
 
 4. **AmazonAPIClient** (`src/core/affiliate_integration.py`)
-   - Integração específica com Amazon Associates
+   - IntegraÃ§Ã£o especÃ­fica com Amazon Associates
    - Busca de produtos via API oficial
-   - Geração automática de links de afiliado
+   - GeraÃ§Ã£o automÃ¡tica de links de afiliado
    - Tratamento de categorias
 
 5. **AwinAPIClient** (`src/core/affiliate_integration.py`)
-   - Integração com rede Awin
-   - Listagem de programas disponíveis
+   - IntegraÃ§Ã£o com rede Awin
+   - Listagem de programas disponÃ­veis
    - Busca de produtos por programa
-   - Métricas de conversão
+   - MÃ©tricas de conversÃ£o
 
 6. **AffiliateDashboard** (`src/core/affiliate_dashboard.py`)
    - Interface console para gerenciamento
-   - Configuração de redes
-   - Validação de links
+   - ConfiguraÃ§Ã£o de redes
+   - ValidaÃ§Ã£o de links
    - Busca de produtos
-   - Relatórios e métricas
+   - RelatÃ³rios e mÃ©tricas
 
 #### **Redes Suportadas:**
-- **Amazon Associates**: API oficial, busca de produtos, geração de links
-- **Awin**: API REST, programas de afiliados, métricas detalhadas
-- **Rakuten**: Plataforma de afiliados globais, múltiplas categorias
+- **Amazon Associates**: API oficial, busca de produtos, geraÃ§Ã£o de links
+- **Awin**: API REST, programas de afiliados, mÃ©tricas detalhadas
+- **Rakuten**: Plataforma de afiliados globais, mÃºltiplas categorias
 - **Shopee**: Marketplace com programa de afiliados
 - **AliExpress**: Plataforma global de e-commerce
-- **Mercado Livre**: Maior plataforma de e-commerce da América Latina
+- **Mercado Livre**: Maior plataforma de e-commerce da AmÃ©rica Latina
 - **Magazine Luiza**: Varejista brasileiro com programa de afiliados
 - **Perfect Pay**: Gateway de pagamentos
 - **Kiwify**: Plataforma de produtos digitais
 
 #### **Funcionalidades:**
-- ✅ **Configuração de Redes**: Adicionar, editar, remover redes de afiliados
-- ✅ **Validação de Links**: Verificação automática de links válidos
-- ✅ **Busca de Produtos**: Busca em múltiplas redes simultaneamente
-- ✅ **Métricas de Performance**: CTR, conversão, receita, comissões
-- ✅ **Cache Inteligente**: Cache de validações para performance
-- ✅ **Rate Limiting**: Controle automático de requisições
-- ✅ **Tratamento de Erros**: Recuperação robusta de falhas
-- ✅ **Dashboard Interativo**: Interface console completa
+- âœ… **ConfiguraÃ§Ã£o de Redes**: Adicionar, editar, remover redes de afiliados
+- âœ… **ValidaÃ§Ã£o de Links**: VerificaÃ§Ã£o automÃ¡tica de links vÃ¡lidos
+- âœ… **Busca de Produtos**: Busca em mÃºltiplas redes simultaneamente
+- âœ… **MÃ©tricas de Performance**: CTR, conversÃ£o, receita, comissÃµes
+- âœ… **Cache Inteligente**: Cache de validaÃ§Ãµes para performance
+- âœ… **Rate Limiting**: Controle automÃ¡tico de requisiÃ§Ãµes
+- âœ… **Tratamento de Erros**: RecuperaÃ§Ã£o robusta de falhas
+- âœ… **Dashboard Interativo**: Interface console completa
 
 #### **Como Usar:**
 
 ```bash
-# Demonstração rápida
+# DemonstraÃ§Ã£o rÃ¡pida
 python demo_affiliate_integration.py quick
 
-# Demonstração completa
+# DemonstraÃ§Ã£o completa
 python demo_affiliate_integration.py full
 
 # Dashboard interativo
 python -c "from src.core.affiliate_dashboard import affiliate_dashboard; import asyncio; asyncio.run(affiliate_dashboard.show_main_menu())"
 ```
 
-#### **Configuração de Redes:**
+#### **ConfiguraÃ§Ã£o de Redes:**
 
 ```python
 from src.core.affiliate_integration import AffiliateConfig, AffiliateNetwork
@@ -923,7 +952,7 @@ awin_config = AffiliateConfig(
 )
 ```
 
-#### **Validação de Links:**
+#### **ValidaÃ§Ã£o de Links:**
 
 ```python
 from src.core.affiliate_integration import affiliate_manager
@@ -936,64 +965,64 @@ urls = [
 
 results = await affiliate_manager.validate_links(urls)
 for result in results:
-    print(f"{result.url}: {'✅' if result.is_valid else '❌'}")
+    print(f"{result.url}: {'âœ…' if result.is_valid else 'â�Œ'}")
 ```
 
 #### **Busca de Produtos:**
 
 ```python
-# Buscar produtos em múltiplas redes
+# Buscar produtos em mÃºltiplas redes
 products = await affiliate_manager.search_products(
     keywords="headphone gamer",
-    category="Eletrônicos"
+    category="EletrÃ´nicos"
 )
 
 for product in products:
     print(f"{product.name}: R$ {product.price:.2f}")
 ```
 
-#### **Métricas Coletadas:**
-- Taxa de validação de links
+#### **MÃ©tricas Coletadas:**
+- Taxa de validaÃ§Ã£o de links
 - Performance por rede
 - Produtos encontrados
-- Conversões e cliques
-- Receita e comissões
+- ConversÃµes e cliques
+- Receita e comissÃµes
 - Tempo de resposta das APIs
 
 ---
 
-### **🎛️ Sistema Unificado de Dashboard**
+### **ðŸŽ›ï¸� Sistema Unificado de Dashboard**
 - **UnifiedDashboard**: Dashboard principal que coordena todos os sistemas implementados
 - **SystemStatus**: Monitoramento de status de cada sistema em tempo real
-- **DashboardMetrics**: Métricas consolidadas de todos os sistemas
-- **Health Monitoring**: Monitoramento de saúde do sistema completo
-- **Integração Total**: Todos os 5 sistemas implementados integrados em uma interface única
-- **Relatórios Unificados**: Relatórios consolidados de todos os sistemas
-- **Controle Centralizado**: Interface única para controle de todos os sistemas
+- **DashboardMetrics**: MÃ©tricas consolidadas de todos os sistemas
+- **Health Monitoring**: Monitoramento de saÃºde do sistema completo
+- **IntegraÃ§Ã£o Total**: Todos os 5 sistemas implementados integrados em uma interface Ãºnica
+- **RelatÃ³rios Unificados**: RelatÃ³rios consolidados de todos os sistemas
+- **Controle Centralizado**: Interface Ãºnica para controle de todos os sistemas
 
-### 📋 Planejado
-- [ ] Machine Learning para scoring avançado
+### ðŸ“‹ Planejado
+- [ ] Machine Learning para scoring avanÃ§ado
 - [ ] Machine Learning para scoring
-- [ ] Integração com mais plataformas
-- [ ] Sistema de notificações push
-- [ ] API REST para integrações
+- [ ] IntegraÃ§Ã£o com mais plataformas
+- [ ] Sistema de notificaÃ§Ãµes push
+- [ ] API REST para integraÃ§Ãµes
 - [ ] Dashboard mobile responsivo
-- [ ] Sistema de backup automático
+- [ ] Sistema de backup automÃ¡tico
 
 ---
 
-## 🔄 Atualizações Automáticas
+## ðŸ”„ AtualizaÃ§Ãµes AutomÃ¡ticas
 
-**⚠️ IMPORTANTE**: Este README é atualizado automaticamente sempre que:
-- Novos módulos são criados
-- Estrutura de pastas é alterada
-- Novas funcionalidades são implementadas
-- Configurações são modificadas
+**âš ï¸� IMPORTANTE**: Este README Ã© atualizado automaticamente sempre que:
+- Novos mÃ³dulos sÃ£o criados
+- Estrutura de pastas Ã© alterada
+- Novas funcionalidades sÃ£o implementadas
+- ConfiguraÃ§Ãµes sÃ£o modificadas
 
-### **Sistema de Atualização Automática**
-O projeto inclui um sistema inteligente que mantém o README sempre sincronizado:
+### **Sistema de AtualizaÃ§Ã£o AutomÃ¡tica**
+O projeto inclui um sistema inteligente que mantÃ©m o README sempre sincronizado:
 
-#### **Atualização Manual**
+#### **AtualizaÃ§Ã£o Manual**
 ```bash
 # Windows (PowerShell)
 .\scripts\update_readme.ps1
@@ -1001,30 +1030,39 @@ O projeto inclui um sistema inteligente que mantém o README sempre sincronizado
 # Linux/Mac
 python scripts/update_readme.py
 
-# Via Makefile (se disponível)
+# Via Makefile (se disponÃ­vel)
 make update-readme
 ```
 
-#### **Atualização Automática**
+#### **AtualizaÃ§Ã£o AutomÃ¡tica**
 - **Git Hook**: Executa automaticamente antes de cada commit
-- **Detecção Inteligente**: Identifica mudanças na estrutura
-- **Cache de Performance**: Evita atualizações desnecessárias
-- **Integração Total**: Funciona em Windows, Linux e Mac
+- **DetecÃ§Ã£o Inteligente**: Identifica mudanÃ§as na estrutura
+- **Cache de Performance**: Evita atualizaÃ§Ãµes desnecessÃ¡rias
+- **IntegraÃ§Ã£o Total**: Funciona em Windows, Linux e Mac
 
-#### **Documentação Completa**
-Para detalhes sobre o sistema de atualização, consulte:
-- [📋 Sistema de Atualização Automática](docs/README_UPDATE_SYSTEM.md)
+#### **DocumentaÃ§Ã£o Completa**
+Para detalhes sobre o sistema de atualizaÃ§Ã£o, consulte:
+- [ðŸ“‹ Sistema de AtualizaÃ§Ã£o AutomÃ¡tica](docs/README_UPDATE_SYSTEM.md)
 
 **Para manter o README atualizado**:
-1. ✅ **Sempre crie arquivos** dentro da estrutura definida
-2. ✅ **Use os padrões** de nomenclatura estabelecidos
-3. ✅ **Documente novas funcionalidades**
-4. ✅ **O sistema atualiza automaticamente** via Git hooks
+1. âœ… **Sempre crie arquivos** dentro da estrutura definida
+2. âœ… **Use os padrÃµes** de nomenclatura estabelecidos
+3. âœ… **Documente novas funcionalidades**
+4. âœ… **O sistema atualiza automaticamente** via Git hooks
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade de ofertas e promoções**
+**Desenvolvido com â�¤ï¸� para a comunidade de ofertas e promoÃ§Ãµes**
 
-**Versão**: 2.0  
-**Última Análise**: 31-08-2025 12:30:00  
-**Status**: ✅ Sistema 100% Funcional e Pronto para Produção
+**VersÃ£o**: 2.0  
+**Ãšltima AnÃ¡lise**: 31-08-2025 12:30:00  
+**Status**: âœ… Sistema 100% Funcional e Pronto para ProduÃ§Ã£o
+
+### Guardrail de Publicação
+- Método central: `is_publishable_affiliate_url(url) -> (bool, reason)`
+- Awin: `https://www.awin1.com/cread.php?awinmid=...&awinaffid=...&ued=...`
+- AliExpress: `https://s.click.aliexpress.com/e/...` com `tracking_id=telegram`
+- Shopee: `https://s.shopee.com.br/{token}`
+- Magalu: `https://www.magazinevoce.com.br/magazinegarimpeirogeek/.../p/{sku}`
+- Mercado Livre: `.../sec/...` ou `.../social/garimpeirogeek?...matt_word=garimpeirogeek`
+- Amazon: ASIN-first; bloquear se não houver ASIN

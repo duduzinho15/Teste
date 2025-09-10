@@ -22,6 +22,7 @@ class Settings:
     TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
     TELEGRAM_CHANNEL_ID: str = os.getenv("TELEGRAM_CHANNEL_ID", "")
     TELEGRAM_ADMIN_USER_ID: str = os.getenv("TELEGRAM_ADMIN_USER_ID", "")
+    TELEGRAM_ADMIN_IDS: str = os.getenv("TELEGRAM_ADMIN_IDS", "")
 
     # Configurações de banco de dados
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///garimpeiro_geek.db")
@@ -46,6 +47,26 @@ class Settings:
     AFFILIATE_RAKUTEN_ID: str = os.getenv("AFFILIATE_RAKUTEN_ID", "")
     AFFILIATE_RAKUTEN_MERCHANT_ID: str = os.getenv("AFFILIATE_RAKUTEN_MERCHANT_ID", "")
 
+    # Configurações de Pontuação de Ofertas
+    DEAL_SCORE_CRITICAL: float = float(os.getenv("DEAL_SCORE_CRITICAL", "0.85"))
+    DEAL_SCORE_HIGH: float = float(os.getenv("DEAL_SCORE_HIGH", "0.75"))
+    
+    # Limiares de desconto por categoria (em decimal: 0.20 = 20%)
+    ELECTRONICS_MIN_DISC: float = float(os.getenv("ELECTRONICS_MIN_DISC", "0.20"))
+    PERIPHERALS_MIN_DISC: float = float(os.getenv("PERIPHERALS_MIN_DISC", "0.25"))
+    APPLIANCES_MIN_DISC: float = float(os.getenv("APPLIANCES_MIN_DISC", "0.18"))
+    
+    # Vendedores confiáveis (separados por vírgula)
+    TRUSTED_SELLERS: str = os.getenv("TRUSTED_SELLERS", "Magazine Luiza,Kabum,Pichau,Americanas,Submarino")
+    
+    # Configurações de Rate Limiting do Telegram
+    TG_MIN_INTERVAL_CRITICAL: int = int(os.getenv("TG_MIN_INTERVAL_CRITICAL", "20"))  # segundos
+    TG_MIN_INTERVAL_HIGH: int = int(os.getenv("TG_MIN_INTERVAL_HIGH", "120"))  # segundos
+    TG_MAX_PER_HOUR: int = int(os.getenv("TG_MAX_PER_HOUR", "20"))
+    
+    # Janelas de pico (horários em que as ofertas têm maior engajamento)
+    PEAK_HOURS: str = os.getenv("PEAK_HOURS", "07:30-09:30,12:00-14:00,19:00-22:30")
+    
     # Configurações Rakuten (desabilitado por padrão)
     RAKUTEN_ENABLED: bool = os.getenv("RAKUTEN_ENABLED", "false").lower() == "true"
     RAKUTEN_WEBSERVICE_TOKEN: str = os.getenv("RAKUTEN_WEBSERVICE_TOKEN", "")
@@ -81,9 +102,39 @@ class Settings:
     USE_API_SHOPEE: bool = os.getenv("USE_API_SHOPEE", "false").lower() == "true"
     USE_API_AWIN: bool = os.getenv("USE_API_AWIN", "false").lower() == "true"
 
+    # Flags "API-first" (forçar uso da API quando disponível)
+    USE_API_FIRST_SHOPEE: bool = (
+        os.getenv("USE_API_FIRST_SHOPEE", "true").lower() == "true"
+    )
+    USE_API_FIRST_ALIEXPRESS: bool = (
+        os.getenv("USE_API_FIRST_ALIEXPRESS", "true").lower() == "true"
+    )
+
+    # DRY-RUN de postagem (padrão: True)
+    DRY_RUN: bool = os.getenv("DRY_RUN", "true").lower() == "true"
+
+    @classmethod
+    def is_dry_run(cls) -> bool:
+        """Retorna se o sistema está em DRY_RUN (não publica de fato)."""
+        return cls.DRY_RUN
+
+    @classmethod
+    def get_admin_ids(cls) -> list:
+        """Retorna lista de admin IDs (strings) a partir do env.
+
+        Usa TELEGRAM_ADMIN_IDS (separado por vírgulas) e TELEGRAM_ADMIN_USER_ID como fallback.
+        """
+        ids = []
+        if cls.TELEGRAM_ADMIN_IDS:
+            ids.extend([x.strip() for x in cls.TELEGRAM_ADMIN_IDS.split(",") if x.strip()])
+        if cls.TELEGRAM_ADMIN_USER_ID:
+            ids.append(cls.TELEGRAM_ADMIN_USER_ID.strip())
+        # normalizar para únicos
+        return list(dict.fromkeys(ids))
+
     # Configurações de notificações
     NOTIFICATIONS_ENABLED: bool = (
-        os.getenv("NOTIFICATIONS_ENABLED", "true").lower() == "true"
+        os.getenv("NOTIFICATIONS_ENABLED", "true").lower() in ("1", "true", "yes", "on")
     )
     NOTIFICATION_INTERVAL: int = int(
         os.getenv("NOTIFICATION_INTERVAL", "3600")

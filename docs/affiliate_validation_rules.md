@@ -97,3 +97,17 @@ make test-all
 
 - **2025-09-06**: VersÃ£o inicial do documento
 - **2025-09-06**: Adicionadas regras para todas as plataformas suportadas
+
+## Guardrail (Publicação)
+
+- Função: `is_publishable_affiliate_url(url) -> (bool, reason)`
+- Awin: domain == `www.awin1.com`, path == `/cread.php`, exige `awinmid`, `awinaffid`, `ued` (URL destino codificada)
+- AliExpress: somente `https://s.click.aliexpress.com/e/...` com `tracking_id=telegram`
+- Shopee: somente `https://s.shopee.com.br/{token}`
+- Magazine Luiza: somente `https://www.magazinevoce.com.br/magazinegarimpeirogeek/.../p/{sku}`
+- Mercado Livre: somente `.../sec/...` OU `.../social/garimpeirogeek?...matt_word=garimpeirogeek`
+- Amazon: ASIN-first; inválido se não houver ASIN válido
+
+Exemplos:
+- Awin válido: `https://www.awin1.com/cread.php?awinmid=23377&awinaffid=2370719&ued=https%3A%2F%2Fexample.com%2Fp%2F123`
+- AliExpress válido: `https://s.click.aliexpress.com/e/abc123?tracking_id=telegram`
