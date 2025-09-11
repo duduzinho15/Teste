@@ -21,8 +21,8 @@ from src.core.models import Offer
 from src.posting.message_formatter import MessageFormatter
 
 # Credenciais do Telegram
-TELEGRAM_BOT_TOKEN = "8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ"
-TELEGRAM_CHANNEL_ID = "-1002853967960"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
 
 class TelegramImagePoster:
     """Classe para fazer posts com imagens no Telegram"""
