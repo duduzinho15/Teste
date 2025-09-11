@@ -7,12 +7,26 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
+import yaml
 from dotenv import load_dotenv
 
 # Carregar variáveis de ambiente do arquivo .env
 ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 if ENV_FILE.exists():
     load_dotenv(ENV_FILE)
+
+# Carregar configurações adicionais do arquivo settings.yaml
+SETTINGS_FILE = Path(__file__).parent.parent.parent / "settings.yaml"
+
+
+def _load_yaml_settings() -> Dict[str, Any]:
+    if SETTINGS_FILE.exists():
+        with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    return {}
+
+
+YAML_SETTINGS = _load_yaml_settings()
 
 
 class Settings:
@@ -63,6 +77,11 @@ class Settings:
     TG_MIN_INTERVAL_CRITICAL: int = int(os.getenv("TG_MIN_INTERVAL_CRITICAL", "20"))  # segundos
     TG_MIN_INTERVAL_HIGH: int = int(os.getenv("TG_MIN_INTERVAL_HIGH", "120"))  # segundos
     TG_MAX_PER_HOUR: int = int(os.getenv("TG_MAX_PER_HOUR", "20"))
+
+    # Configurações de postagem
+    POSTING_MIN_DELAY_SECONDS: int = int(
+        YAML_SETTINGS.get("posting", {}).get("min_delay_seconds", 180)
+    )
     
     # Janelas de pico (horários em que as ofertas têm maior engajamento)
     PEAK_HOURS: str = os.getenv("PEAK_HOURS", "07:30-09:30,12:00-14:00,19:00-22:30")
@@ -255,6 +274,13 @@ class Settings:
             "awin_publisher_id": cls.AFFILIATE_AWIN_PUBLISHER_ID,
             "rakuten_id": cls.AFFILIATE_RAKUTEN_ID,
             "rakuten_merchant_id": cls.AFFILIATE_RAKUTEN_MERCHANT_ID,
+        }
+
+    @classmethod
+    def get_posting_config(cls) -> Dict[str, Any]:
+        """Retorna configurações de postagem"""
+        return {
+            "min_delay_seconds": cls.POSTING_MIN_DELAY_SECONDS,
         }
 
     @classmethod

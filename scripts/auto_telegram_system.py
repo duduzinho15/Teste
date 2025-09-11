@@ -17,6 +17,7 @@ import logging
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from src.core.models import Offer
+from src.core.settings import settings
 from src.posting.message_formatter import MessageFormatter
 from src.posting.scheduler import JobScheduler, job_scheduler
 
@@ -43,7 +44,7 @@ class AutoTelegramSystem:
         
         # Configurações do sistema
         self.max_offers_per_hour = 20
-        self.min_delay_between_posts = 180  # 3 minutos
+        self.min_delay_between_posts = settings.POSTING_MIN_DELAY_SECONDS
         self.last_post_time = None
         
         # Credenciais do Telegram
@@ -250,10 +251,13 @@ class AutoTelegramSystem:
         
         # Verificar rate limiting
         if self.last_post_time:
-            time_since_last = (datetime.now() - self.last_post_time).total_seconds()
-            if time_since_last < self.min_delay_between_posts:
-                self.logger.info(f"⏳ Aguardando para respeitar rate limit ({self.min_delay_between_posts - time_since_last:.0f}s restantes)")
-                return
+            elapsed = (datetime.now() - self.last_post_time).total_seconds()
+            wait_time = max(0, self.min_delay_between_posts - elapsed)
+            if wait_time > 0:
+                self.logger.info(
+                    f"⏳ Aguardando para respeitar rate limit ({wait_time:.0f}s restantes)"
+                )
+                await asyncio.sleep(wait_time)
         
         try:
             # Pegar próxima oferta da fila

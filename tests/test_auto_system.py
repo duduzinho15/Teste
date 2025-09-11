@@ -6,14 +6,65 @@ Testa a funcionalidade do sistema automático de postagem
 
 import asyncio
 import sys
+import time
 from pathlib import Path
 from datetime import datetime
+from decimal import Decimal
 
-# Adicionar src ao path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+import pytest
+
+# Criar loop de evento antes do patch de rede
+EVENT_LOOP = asyncio.new_event_loop()
+asyncio.set_event_loop(EVENT_LOOP)
+
+# Adicionar src e scripts ao path
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR / "src"))
+sys.path.insert(0, str(ROOT_DIR / "scripts"))
+
+# Garantir diretório de logs para inicialização do sistema
+(ROOT_DIR / "logs").mkdir(exist_ok=True)
 
 from auto_telegram_system import AutoTelegramSystem
+from src.core.models import Offer
 
+
+def test_post_offers_job_respects_interval():
+    class DummyBot:
+        async def send_message(self, *args, **kwargs):
+            return True
+
+    system = AutoTelegramSystem()
+    system.bot = DummyBot()
+    system.min_delay_between_posts = 0.2
+    system.offer_queue.extend(
+        [
+            Offer(
+                title="Oferta 1",
+                price=Decimal("10"),
+                url="http://exemplo.com/1",
+                store="Loja",
+            ),
+            Offer(
+                title="Oferta 2",
+                price=Decimal("20"),
+                url="http://exemplo.com/2",
+                store="Loja",
+            ),
+        ]
+    )
+
+    async def run():
+        await system.post_offers_job()
+        start = time.perf_counter()
+        await system.post_offers_job()
+        elapsed = time.perf_counter() - start
+        assert elapsed >= system.min_delay_between_posts
+
+    EVENT_LOOP.run_until_complete(run())
+
+
+@pytest.mark.skip("teste legado que requer bot do Telegram")
 async def test_auto_system():
     """Testa o sistema automático"""
     print("🧪 TESTE DO SISTEMA AUTOMÁTICO - GARIMPEIRO GEEK")
