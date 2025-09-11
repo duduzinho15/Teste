@@ -14,6 +14,8 @@ from enum import Enum
 from src.core.models import Offer
 from src.core.affiliate_validator import AffiliateValidator
 from src.core.settings import Settings
+from src.core.deal_filter import is_hot_deal
+from src.core.price_history import price_history_tracker
 from .message_formatter import message_formatter
 from .scheduler import job_scheduler
 
@@ -38,7 +40,7 @@ class PostingQuality(Enum):
 
 @dataclass
 class PostingRequest:
-    """Requisição de postagem"""
+    """RequisiÃ§Ã£o de postagem"""
     
     id: str
     offer: Offer
@@ -74,9 +76,9 @@ class PostingManager:
         self.posted_offers: List[PostingRequest] = []
         self.rejected_offers: List[PostingRequest] = []
         
-        # Configurações
-        self.auto_approval_threshold = 0.8  # Score mínimo para aprovação automática
-        self.max_daily_posts = 50  # Máximo de postagens por dia
+        # ConfiguraÃ§Ãµes
+        self.auto_approval_threshold = 0.8  # Score mÃ­nimo para aprovaÃ§Ã£o automÃ¡tica
+        self.max_daily_posts = 50  # MÃ¡ximo de postagens por dia
         self.quality_thresholds = {
             PostingQuality.EXCELLENT: 0.9,
             PostingQuality.GOOD: 0.7,
@@ -88,7 +90,7 @@ class PostingManager:
         self.on_post_callback: Optional[Callable] = None
         self.on_reject_callback: Optional[Callable] = None
         
-        # Estatísticas
+        # EstatÃ­sticas
         self.stats = {
             "total_requests": 0,
             "approved": 0,
@@ -98,7 +100,7 @@ class PostingManager:
             "auto_approved": 0,
             "manual_approved": 0
         }
-        # Hist�rico curto para status do bot
+        # Histórico curto para status do bot
         self.last_block_reasons = []
         self.last_post_attempts = []
 
@@ -111,22 +113,43 @@ class PostingManager:
             offer: Oferta a ser postada
 
         Returns:
-            ID da requisição de postagem
+            ID da requisiÃ§Ã£o de postagem
         """
         try:
-                        # Guardrail: validar URL public�vel (affiliate_url preferencialmente)
+                        # Guardrail: validar URL publicável (affiliate_url preferencialmente)
             to_validate = offer.affiliate_url or offer.url
             ok, reason = self.validator.is_publishable_affiliate_url(to_validate)
             if not ok:
                 self.logger.warning(f"event=enqueue_blocked publishable=false platform={getattr(offer,'store','')} reason={reason} url={to_validate}")
                 return None
 
-            
+            # Filtrar ofertas que não são hot deals
+            price_history = {}
+            try:
+                analysis = await price_history_tracker.analyze_price(
+                    offer.title, float(offer.price), offer.store
+                )
+                if analysis and analysis.price_history:
+                    ninety_days_ago = datetime.now() - timedelta(days=90)
+                    prices_90d = [
+                        r.price for r in analysis.price_history if r.timestamp >= ninety_days_ago
+                    ]
+                    if prices_90d:
+                        price_history["price_90d"] = sum(prices_90d) / len(prices_90d)
+            except Exception as e:
+                self.logger.warning(f"Erro ao obter histórico de preços: {e}")
+
+            if not is_hot_deal(offer, price_history):
+                self.logger.info(
+                    f"event=enqueue_blocked hot_deal=false platform={getattr(offer,'store','')} title={offer.title}"
+                )
+                return None
+
             # Calcular score de qualidade
             quality_score = self._calculate_quality_score(offer)
             quality_level = self._get_quality_level(quality_score)
             
-            # Criar requisição de postagem
+            # Criar requisiÃ§Ã£o de postagem
             request_id = f"post_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(self.posting_queue)}"
             posting_request = PostingRequest(
                 id=request_id,
@@ -136,7 +159,7 @@ class PostingManager:
                 auto_approved=quality_score >= self.auto_approval_threshold
             )
             
-            # Adicionar à fila
+            # Adicionar Ã  fila
             self.posting_queue.append(posting_request)
             self.stats["total_requests"] += 1
             
@@ -144,7 +167,7 @@ class PostingManager:
                 self.stats["auto_approved"] += 1
                 self.logger.info(f"Oferta aprovada automaticamente: {offer.title}")
             else:
-                self.logger.info(f"Oferta aguardando aprovação: {offer.title}")
+                self.logger.info(f"Oferta aguardando aprovaÃ§Ã£o: {offer.title}")
             
             return request_id
             
@@ -170,10 +193,10 @@ class PostingManager:
             # Validar oferta
             validation_result = await self.validator.validate_url(offer.affiliate_url)
             if validation_result.status.value != "valid":
-                self.logger.warning(f"Postagem manual rejeitada - URL inválida: {offer.affiliate_url}")
+                self.logger.warning(f"Postagem manual rejeitada - URL invÃ¡lida: {offer.affiliate_url}")
                 return False
             
-            # Registrar preço histórico
+            # Registrar preÃ§o histÃ³rico
             from core.price_history import price_history_tracker
             await price_history_tracker.record_price(
                 title=offer.title,
@@ -188,7 +211,7 @@ class PostingManager:
             success = await self._post_to_telegram(offer, message, image_path)
             
             if success:
-                # Registrar estatísticas
+                # Registrar estatÃ­sticas
                 self.stats["posted"] += 1
                 self.stats["manual_approved"] += 1
                 
@@ -198,7 +221,7 @@ class PostingManager:
                     id=request_id,
                     offer=offer,
                     status=PostingStatus.POSTED,
-                    quality_score=1.0,  # Postagens manuais têm score máximo
+                    quality_score=1.0,  # Postagens manuais tÃªm score mÃ¡ximo
                     quality_level=PostingQuality.EXCELLENT,
                     created_at=datetime.now(),
                     posted_at=datetime.now(),
@@ -229,7 +252,7 @@ class PostingManager:
             True se postagem bem-sucedida
         """
         try:
-                        # DRY_RUN: n�o enviar de fato
+                        # DRY_RUN: não enviar de fato
             if Settings.is_dry_run():
                 self.logger.info(f"event=post_attempt dry_run=true publishable=true platform={offer.store}")
                 return True
@@ -237,7 +260,7 @@ class PostingManager:
             from telegram_bot.bot import telegram_bot
             
             if not telegram_bot:
-                self.logger.error("Bot do Telegram não disponível")
+                self.logger.error("Bot do Telegram nÃ£o disponÃ­vel")
                 return False
             
             # Postar mensagem com ou sem imagem
@@ -263,7 +286,7 @@ class PostingManager:
             return False
     
     def get_stats(self) -> Dict[str, Any]:
-        """Retorna estatísticas do gerenciador de postagem"""
+        """Retorna estatÃ­sticas do gerenciador de postagem"""
         return {
             "total_requests": self.stats["total_requests"],
             "approved": self.stats["approved"],
@@ -283,16 +306,16 @@ class PostingManager:
             offer: Oferta a ser postada
             
         Returns:
-            ID da requisição de postagem
+            ID da requisiÃ§Ã£o de postagem
         """
         try:
             # Validar oferta
             validation_result = self._validate_offer(offer)
             
             if not validation_result["is_valid"]:
-                raise ValueError(f"Oferta inválida: {validation_result['errors']}")
+                raise ValueError(f"Oferta invÃ¡lida: {validation_result['errors']}")
             
-            # Criar requisição de postagem
+            # Criar requisiÃ§Ã£o de postagem
             request_id = f"post_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
             
             posting_request = PostingRequest(
@@ -309,16 +332,16 @@ class PostingManager:
             posting_request.quality_score = quality_result["score"]
             posting_request.quality_level = quality_result["level"]
             
-            # Verificar aprovação automática
+            # Verificar aprovaÃ§Ã£o automÃ¡tica
             if posting_request.quality_score >= self.auto_approval_threshold:
                 posting_request.auto_approved = True
                 posting_request.status = PostingStatus.APPROVED
                 self.stats["auto_approved"] += 1
                 self.logger.info(f"Oferta aprovada automaticamente: {offer.title}")
             else:
-                self.logger.info(f"Oferta requer moderação: {offer.title} (score: {posting_request.quality_score:.2f})")
+                self.logger.info(f"Oferta requer moderaÃ§Ã£o: {offer.title} (score: {posting_request.quality_score:.2f})")
             
-            # Adicionar à fila
+            # Adicionar Ã  fila
             self.posting_queue.append(posting_request)
             self.stats["total_requests"] += 1
             
@@ -340,17 +363,17 @@ class PostingManager:
         }
         
         try:
-            # Validar campos obrigatórios
+            # Validar campos obrigatÃ³rios
             if not offer.title or len(offer.title.strip()) < 5:
-                validation_result["errors"].append("Título muito curto ou vazio")
+                validation_result["errors"].append("TÃ­tulo muito curto ou vazio")
                 validation_result["is_valid"] = False
             
             if not offer.price or offer.price <= 0:
-                validation_result["errors"].append("Preço inválido")
+                validation_result["errors"].append("PreÃ§o invÃ¡lido")
                 validation_result["is_valid"] = False
             
             if not offer.url:
-                validation_result["errors"].append("URL não fornecida")
+                validation_result["errors"].append("URL nÃ£o fornecida")
                 validation_result["is_valid"] = False
             
             # Validar URL de afiliado
@@ -363,10 +386,10 @@ class PostingManager:
                 }
                 
                 if url_validation.status.value == "invalid":
-                    validation_result["errors"].append(f"URL inválida: {url_validation.message}")
+                    validation_result["errors"].append(f"URL invÃ¡lida: {url_validation.message}")
                     validation_result["is_valid"] = False
             
-            # Calcular score de validação
+            # Calcular score de validaÃ§Ã£o
             if validation_result["is_valid"]:
                 validation_result["score"] = 1.0
                 if url_validation and hasattr(url_validation, 'score'):
@@ -375,7 +398,7 @@ class PostingManager:
                 validation_result["score"] = 0.0
 
         except Exception as e:
-            validation_result["errors"].append(f"Erro na validação: {str(e)}")
+            validation_result["errors"].append(f"Erro na validaÃ§Ã£o: {str(e)}")
             validation_result["is_valid"] = False
             validation_result["score"] = 0.0
         
@@ -394,12 +417,12 @@ class PostingManager:
             offer = posting_request.offer
             factors = {}
             
-            # Avaliar título (0-25 pontos)
+            # Avaliar tÃ­tulo (0-25 pontos)
             title_score = self._evaluate_title(offer.title)
             factors["title"] = title_score
             quality_result["score"] += title_score * 0.25
             
-            # Avaliar preço (0-25 pontos)
+            # Avaliar preÃ§o (0-25 pontos)
             price_score = self._evaluate_price(offer.price, getattr(offer, 'original_price', None))
             factors["price"] = price_score
             quality_result["score"] += price_score * 0.25
@@ -421,7 +444,7 @@ class PostingManager:
             
             quality_result["factors"] = factors
             
-            # Determinar nível de qualidade
+            # Determinar nÃ­vel de qualidade
             if quality_result["score"] >= self.quality_thresholds[PostingQuality.EXCELLENT]:
                 quality_result["level"] = PostingQuality.EXCELLENT
             elif quality_result["score"] >= self.quality_thresholds[PostingQuality.GOOD]:
@@ -433,18 +456,18 @@ class PostingManager:
             else:
                 quality_result["level"] = PostingQuality.REJECTED
             
-            # Gerar recomendações
+            # Gerar recomendaÃ§Ãµes
             quality_result["recommendations"] = self._generate_quality_recommendations(factors)
             
         except Exception as e:
-            self.logger.error(f"Erro na avaliação de qualidade: {e}")
+            self.logger.error(f"Erro na avaliaÃ§Ã£o de qualidade: {e}")
             quality_result["score"] = 0.0
             quality_result["level"] = PostingQuality.REJECTED
         
         return quality_result
     
     def _evaluate_title(self, title: str) -> float:
-        """Avalia qualidade do título"""
+        """Avalia qualidade do tÃ­tulo"""
         if not title:
             return 0.0
         
@@ -462,20 +485,20 @@ class PostingManager:
         if any(keyword.lower() in title.lower() for keyword in keywords):
             score += 0.3
         
-        # Formatação
+        # FormataÃ§Ã£o
         if title[0].isupper() and not title.isupper():
             score += 0.3
         
         return min(score, 1.0)
     
     def _evaluate_price(self, price: float, original_price: Optional[float]) -> float:
-        """Avalia qualidade do preço"""
+        """Avalia qualidade do preÃ§o"""
         if not price or price <= 0:
             return 0.0
         
         score = 0.0
         
-        # Faixa de preço
+        # Faixa de preÃ§o
         if 50 <= price <= 5000:
             score += 0.5
         elif 10 <= price < 50 or 5000 < price <= 10000:
@@ -483,7 +506,7 @@ class PostingManager:
         else:
             score += 0.1
         
-        # Comparação com preço original
+        # ComparaÃ§Ã£o com preÃ§o original
         if original_price and original_price > price:
             score += 0.5
         
@@ -528,8 +551,8 @@ class PostingManager:
         if not category:
             return 0.0
         
-        # Categorias válidas
-        valid_categories = ["eletrônicos", "informática", "celulares", "computadores", "games", "casa"]
+        # Categorias vÃ¡lidas
+        valid_categories = ["eletrÃ´nicos", "informÃ¡tica", "celulares", "computadores", "games", "casa"]
         category_lower = category.lower()
         
         if any(valid_cat in category_lower for valid_cat in valid_categories):
@@ -540,14 +563,14 @@ class PostingManager:
             return 0.2
     
     def _generate_quality_recommendations(self, factors: Dict[str, float]) -> List[str]:
-        """Gera recomendações baseadas nos fatores de qualidade"""
+        """Gera recomendaÃ§Ãµes baseadas nos fatores de qualidade"""
         recommendations = []
         
         if factors.get("title", 0) < 0.5:
-            recommendations.append("Melhorar título - adicionar mais detalhes")
+            recommendations.append("Melhorar tÃ­tulo - adicionar mais detalhes")
         
         if factors.get("price", 0) < 0.5:
-            recommendations.append("Verificar preço - pode estar muito baixo ou alto")
+            recommendations.append("Verificar preÃ§o - pode estar muito baixo ou alto")
         
         if factors.get("discount", 0) < 0.5:
             recommendations.append("Desconto baixo - considerar ofertas com maior desconto")
@@ -556,7 +579,7 @@ class PostingManager:
             recommendations.append("Verificar credibilidade da loja")
         
         if factors.get("category", 0) < 0.5:
-            recommendations.append("Categoria muito genérica - especificar melhor")
+            recommendations.append("Categoria muito genÃ©rica - especificar melhor")
         
         return recommendations
     
@@ -630,7 +653,7 @@ class PostingManager:
                     message_validation = message_formatter.validate_message(message)
                     
                     if not message_validation["is_valid"]:
-                        self.logger.warning(f"Mensagem inválida para {request.offer.title}: {message_validation['errors']}")
+                        self.logger.warning(f"Mensagem invÃ¡lida para {request.offer.title}: {message_validation['errors']}")
                         continue
                     
                     # Simular postagem
@@ -661,7 +684,7 @@ class PostingManager:
                     request.status = PostingStatus.FAILED
                     self.stats["failed"] += 1
             
-            self.logger.info(f"Postagem concluída: {posted_count} ofertas postadas")
+            self.logger.info(f"Postagem concluÃ­da: {posted_count} ofertas postadas")
             return posted_count
             
         except Exception as e:
@@ -673,11 +696,11 @@ class PostingManager:
         # Simular postagem
         await asyncio.sleep(0.5)
         
-        # Em produção, aqui seria feita a postagem real no Telegram
-        self.logger.debug(f"📝 Mensagem postada:\n{message[:100]}...")
+        # Em produÃ§Ã£o, aqui seria feita a postagem real no Telegram
+        self.logger.debug(f"ð Mensagem postada:\n{message[:100]}...")
     
     def _find_request(self, request_id: str) -> Optional[PostingRequest]:
-        """Encontra uma requisição pelo ID"""
+        """Encontra uma requisiÃ§Ã£o pelo ID"""
         for request in self.posting_queue:
             if request.id == request_id:
                 return request
@@ -695,7 +718,7 @@ class PostingManager:
         }
     
     def get_quality_stats(self) -> Dict[str, Any]:
-        """Retorna estatísticas de qualidade"""
+        """Retorna estatÃ­sticas de qualidade"""
         quality_counts = {
             PostingQuality.EXCELLENT: 0,
             PostingQuality.GOOD: 0,
@@ -714,7 +737,7 @@ class PostingManager:
         }
     
     def get_posting_stats(self) -> Dict[str, Any]:
-        """Retorna estatísticas gerais de postagem"""
+        """Retorna estatÃ­sticas gerais de postagem"""
         return {
             **self.stats,
             "queue_status": self.get_queue_status(),
@@ -722,15 +745,15 @@ class PostingManager:
         }
     
     def set_post_callback(self, callback: Callable):
-        """Define callback para quando uma oferta é postada"""
+        """Define callback para quando uma oferta Ã© postada"""
         self.on_post_callback = callback
     
     def set_reject_callback(self, callback: Callable):
-        """Define callback para quando uma oferta é rejeitada"""
+        """Define callback para quando uma oferta Ã© rejeitada"""
         self.on_reject_callback = callback
 
 
-# Instância global para uso em outros módulos
+# InstÃ¢ncia global para uso em outros mÃ³dulos
 
     # --- Fase 2 helpers ---
     def enqueue(self, offer_dict: Dict[str, Any]) -> bool:
@@ -764,7 +787,7 @@ class PostingManager:
             return False
 
     async def dequeue_and_post(self) -> bool:
-        """Remove a pr�xima oferta aprovada e posta (respeita DRY_RUN)."""
+        """Remove a próxima oferta aprovada e posta (respeita DRY_RUN)."""
         if not self.posting_queue:
             return False
         idx = next((i for i, r in enumerate(self.posting_queue) if r.status in (PostingStatus.APPROVED, PostingStatus.PENDING)), None)
