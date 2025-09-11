@@ -12,6 +12,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from decimal import Decimal
 import logging
+import pickle
 
 # Adicionar src ao path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
@@ -19,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from src.core.models import Offer
 from src.posting.message_formatter import MessageFormatter
 from src.posting.scheduler import JobScheduler, job_scheduler
+from src.core.deduplication import OfferDeduplicator
 
 # Configurar logging
 logging.basicConfig(
@@ -40,6 +42,11 @@ class AutoTelegramSystem:
         self.posted_count = 0
         self.offer_queue = []
         self.running = False
+
+        # Deduplicação
+        self.deduplicator = OfferDeduplicator()
+        self.dedup_cache_path = Path("aff_cache") / "dedup_cache.pkl"
+        self._load_dedup_cache()
         
         # Configurações do sistema
         self.max_offers_per_hour = 20
@@ -50,6 +57,35 @@ class AutoTelegramSystem:
         self.telegram_bot_token = "8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ"
         self.telegram_channel_id = "-1002853967960"
         self.bot = None
+
+    def _load_dedup_cache(self):
+        """Carrega cache de deduplicação do disco"""
+        try:
+            if self.dedup_cache_path.exists():
+                with self.dedup_cache_path.open("rb") as f:
+                    cache = pickle.load(f)
+                    self.deduplicator.seen_offers = cache.get("seen_offers", {})
+                    self.deduplicator.url_cache = cache.get("url_cache", {})
+                    self.deduplicator.title_cache = cache.get("title_cache", {})
+                self.logger.info("✅ Cache de deduplicação carregado")
+        except Exception as e:
+            self.logger.error(f"❌ Falha ao carregar cache de deduplicação: {e}")
+
+    def _save_dedup_cache(self):
+        """Salva cache de deduplicação no disco"""
+        try:
+            self.dedup_cache_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.dedup_cache_path.open("wb") as f:
+                pickle.dump(
+                    {
+                        "seen_offers": self.deduplicator.seen_offers,
+                        "url_cache": self.deduplicator.url_cache,
+                        "title_cache": self.deduplicator.title_cache,
+                    },
+                    f,
+                )
+        except Exception as e:
+            self.logger.error(f"❌ Falha ao salvar cache de deduplicação: {e}")
         
     async def setup_telegram_bot(self):
         """Configura o bot do Telegram"""
@@ -225,15 +261,28 @@ class AutoTelegramSystem:
             
             # Filtrar ofertas com desconto mínimo
             filtered_offers = [
-                offer for offer in offers 
+                offer for offer in offers
                 if offer.discount_percentage >= 10
             ]
-            
-            # Adicionar à fila
-            self.offer_queue.extend(filtered_offers)
-            
-            self.logger.info(f"✅ {len(filtered_offers)} ofertas coletadas e adicionadas à fila")
+
+            added_count = 0
+            for offer in filtered_offers:
+                result = self.deduplicator.check_duplicate(offer)
+                if result.is_duplicate:
+                    self.logger.info(
+                        f"🔁 Oferta duplicada ignorada: {offer.title} ({result.reason})"
+                    )
+                else:
+                    self.offer_queue.append(offer)
+                    added_count += 1
+
+            self.logger.info(
+                f"✅ {added_count} ofertas coletadas e adicionadas à fila"
+            )
             self.logger.info(f"📊 Total na fila: {len(self.offer_queue)} ofertas")
+
+            # Persistir cache de deduplicação
+            self._save_dedup_cache()
             
         except Exception as e:
             self.logger.error(f"❌ Erro na coleta de ofertas: {e}")
@@ -363,7 +412,10 @@ class AutoTelegramSystem:
         
         if self.scheduler:
             await self.scheduler.stop()
-        
+
+        # Salvar cache de deduplicação ao parar
+        self._save_dedup_cache()
+
         self.logger.info("✅ Sistema automático parado")
     
     def get_system_status(self) -> dict:
