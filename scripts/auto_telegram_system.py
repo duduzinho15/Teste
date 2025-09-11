@@ -47,8 +47,8 @@ class AutoTelegramSystem:
         self.last_post_time = None
         
         # Credenciais do Telegram
-        self.telegram_bot_token = "8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ"
-        self.telegram_channel_id = "-1002853967960"
+        self.telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        self.telegram_channel_id = os.getenv("TELEGRAM_CHANNEL_ID")
         self.bot = None
         
     async def setup_telegram_bot(self):

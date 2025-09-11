@@ -38,40 +38,22 @@ Este guia explica como configurar e usar o bot do Telegram para postagem automá
 2. Envie `/start`
 3. O bot responderá com seu User ID (ex: `123456789`)
 
-## ⚙️ **PASSO 4: CONFIGURAR O SISTEMA**
+## ⚙️ **PASSO 4: CONFIGURAR O ARQUIVO `.env`**
 
-### **4.1 Editar telegram_config.py**
-Abra o arquivo `telegram_config.py` e configure:
+1. Copie o arquivo de exemplo e crie seu `.env` na raiz do projeto:
 
-```python
-TELEGRAM_CONFIG = {
-    # Token do seu bot (obtido do @BotFather)
-    "BOT_TOKEN": "1234567890:ABCdefGHIjklMNOpqrsTUVwxyz",
-    
-    # ID do canal onde as mensagens serão postadas
-    "CHANNEL_ID": "-1001234567890",
-    
-    # Seu User ID do Telegram (para comandos admin)
-    "ADMIN_USER_ID": 123456789,
-    
-    # Modo de teste (False = postagem real)
-    "DRY_RUN": False,
-    
-    # ... outras configurações ...
-}
-```
-
-### **4.2 Verificar Configuração**
-Execute:
 ```bash
-python telegram_config.py
+cp config/env.example .env
 ```
 
-Deve mostrar:
+2. Abra o arquivo `.env` e preencha as variáveis obrigatórias:
+
 ```
-✅ Configuração do Telegram válida
-🚀 Modo produção ativo - mensagens serão enviadas para o canal
+TELEGRAM_BOT_TOKEN=seu_token_do_bot
+TELEGRAM_CHANNEL_ID=seu_id_do_canal
 ```
+
+3. Salve o arquivo. O sistema lerá esses valores automaticamente ao iniciar.
 
 ## 🧪 **PASSO 5: TESTAR O SISTEMA**
 
