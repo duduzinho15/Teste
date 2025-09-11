@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from src.core.models import Offer
 from src.posting.message_formatter import MessageFormatter
 from src.posting.scheduler import JobScheduler, job_scheduler
+from src.pipelines.ingest_offers_api import APIOfferIngestionPipeline, APIOffer
 
 # Configurar logging
 logging.basicConfig(
@@ -50,6 +51,7 @@ class AutoTelegramSystem:
         self.telegram_bot_token = "8478680741:AAHguaQAL1bTDTqr3AQke1BqAqLeiv1TXnQ"
         self.telegram_channel_id = "-1002853967960"
         self.bot = None
+        self.pipeline = APIOfferIngestionPipeline()
         
     async def setup_telegram_bot(self):
         """Configura o bot do Telegram"""
@@ -195,8 +197,39 @@ class AutoTelegramSystem:
         
         for i, offer in enumerate(sample_offers):
             offer.image_url = image_urls[i]
-        
+
         return sample_offers
+
+    async def fetch_new_offers(self) -> list[Offer]:
+        """Coleta novas ofertas via APIs e converte para o modelo Offer"""
+        offers: list[Offer] = []
+        try:
+            api_offers: list[APIOffer] = await self.pipeline.collect_good_deals()
+            for api_offer in api_offers:
+                try:
+                    offer = Offer(
+                        title=api_offer.title,
+                        price=Decimal(str(api_offer.price)),
+                        original_price=(
+                            Decimal(str(api_offer.original_price))
+                            if api_offer.original_price
+                            else None
+                        ),
+                        discount_percentage=api_offer.discount,
+                        store=api_offer.store or "",
+                        category=api_offer.category,
+                        url=api_offer.product_url,
+                        affiliate_url=api_offer.affiliate_url,
+                    )
+                    offer.source = api_offer.source
+                    offers.append(offer)
+                except Exception as e:
+                    self.logger.error(
+                        f"Erro ao converter oferta da fonte {api_offer.source}: {e}"
+                    )
+        except Exception as e:
+            self.logger.error(f"Erro ao coletar ofertas via API: {e}")
+        return offers
     
     def detect_platform(self, offer: Offer) -> str:
         """Detecta a plataforma baseada na loja"""
@@ -218,10 +251,9 @@ class AutoTelegramSystem:
     async def collect_offers_job(self):
         """Job de coleta de ofertas"""
         self.logger.info("🎯 Executando coleta de ofertas...")
-        
+
         try:
-            # Simular coleta de ofertas
-            offers = self.create_sample_offers()
+            offers = await self.fetch_new_offers()
             
             # Filtrar ofertas com desconto mínimo
             filtered_offers = [
