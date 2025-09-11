@@ -6,13 +6,14 @@ Coleta ofertas de AliExpress, Rakuten, Shopee e Awin via APIs
 import asyncio
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 from src.affiliate.aliexpress_api_client import get_aliexpress_client
 from src.affiliate.awin_api import get_awin_client
 from src.affiliate.rakuten_api import get_rakuten_client
 from src.affiliate.shopee_api import get_shopee_client
+from src.core.price_history import PriceHistoryTracker
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,8 @@ class APIOfferIngestionPipeline:
             "offers_by_source": {},
             "errors_by_source": {},
             "last_run": None,
+            "good_deals_by_source": {},
+            "total_good_deals": 0,
         }
 
         # Inicializar clientes das APIs
@@ -463,6 +466,85 @@ class APIOfferIngestionPipeline:
             self.ingestion_stats["errors_by_source"]["API_AWIN"] = str(e)
 
         return offers
+
+    async def collect_good_deals(
+        self, queries: List[str], advertiser_ids: Optional[List[str]] = None
+    ) -> List[APIOffer]:
+        """Coleta ofertas e retorna apenas os bons descontos"""
+
+        if advertiser_ids is None:
+            advertiser_ids = ["17729", "23377", "33061"]
+
+        # Ingestões paralelas de todas as fontes
+        tasks = [
+            self.ingest_aliexpress_offers(queries),
+            self.ingest_rakuten_offers(queries),
+            self.ingest_shopee_offers(queries),
+            self.ingest_awin_offers(advertiser_ids),
+        ]
+
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        all_offers: List[APIOffer] = []
+        for result in results:
+            if isinstance(result, list):
+                all_offers.extend(result)
+            else:
+                logger.error(f"Erro durante ingestão: {result}")
+
+        tracker = PriceHistoryTracker()
+        good_deals: List[APIOffer] = []
+        good_deals_by_source: Dict[str, int] = {}
+
+        for offer in all_offers:
+            try:
+                # Calcular desconto percentual
+                if offer.original_price and offer.original_price > offer.price:
+                    offer.discount = (
+                        (offer.original_price - offer.price) / offer.original_price
+                    ) * 100
+                elif offer.discount is None:
+                    offer.discount = 0.0
+
+                # Registrar preço e analisar histórico
+                await tracker.record_price(
+                    title=offer.title,
+                    platform=offer.source,
+                    price=offer.price,
+                    original_price=offer.original_price,
+                    url=offer.product_url,
+                    category=offer.category or "",
+                )
+                analysis = await tracker.analyze_price(
+                    offer.title, offer.price, offer.source
+                )
+
+                ninety_days_ago = datetime.now() - timedelta(days=90)
+                prices_90d = [
+                    r.price
+                    for r in (analysis.price_history if analysis else [])
+                    if r.timestamp >= ninety_days_ago
+                ]
+                avg_90d = (
+                    sum(prices_90d) / len(prices_90d)
+                    if prices_90d
+                    else offer.price
+                )
+
+                if (offer.discount and offer.discount >= 30) or (
+                    offer.price <= 0.8 * avg_90d
+                ):
+                    good_deals.append(offer)
+                    src = offer.source
+                    good_deals_by_source[src] = good_deals_by_source.get(src, 0) + 1
+
+            except Exception as e:
+                logger.error(f"Erro ao avaliar oferta {offer.title}: {e}")
+
+        self.ingestion_stats["good_deals_by_source"] = good_deals_by_source
+        self.ingestion_stats["total_good_deals"] = len(good_deals)
+
+        return good_deals
 
     async def run_full_ingestion(
         self, queries: List[str] = None, advertiser_ids: List[str] = None
